@@ -16,9 +16,7 @@
 package com.coralblocks.coralds;
 
 import java.lang.ref.SoftReference;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * A generic container that stores elements in an array and allows dynamic resizing. 
@@ -36,7 +34,7 @@ public class ArrayBag<E> implements Iterable<E> {
 	public static float DEFAULT_GROWTH_FACTOR = 1.75f;
 	
 	private E[] array;
-	private List<SoftReference<E[]>> oldArrays = new ArrayList<>(64);
+	private LinkedObjectList<SoftReference<E[]>> oldArrays = new LinkedObjectList<>(64);
 	private int count = 0;
 	private final float growthFactor;
 	
@@ -90,7 +88,7 @@ public class ArrayBag<E> implements Iterable<E> {
 		E[] newArray = (E[]) new Object[newSize];
 		System.arraycopy(oldArray, 0, newArray, 0, oldArray.length);
 		for(int i = 0; i < oldArray.length; i++) oldArray[i] = null;
-		oldArrays.add(new SoftReference<E[]>(oldArray));
+		oldArrays.addLast(new SoftReference<E[]>(oldArray));
 		return newArray;
 	}
 	
