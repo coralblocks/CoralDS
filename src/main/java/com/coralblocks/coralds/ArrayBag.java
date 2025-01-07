@@ -33,8 +33,11 @@ public class ArrayBag<E> implements Iterable<E> {
 	/** The default growth factor */
 	public static float DEFAULT_GROWTH_FACTOR = 1.75f;
 	
+	/* Our LinkedObjectList does not produce any garbage, not even when it grows */
+	private final static int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
+	
 	private E[] array;
-	private LinkedObjectList<SoftReference<E[]>> oldArrays = new LinkedObjectList<>(64);
+	private LinkedObjectList<SoftReference<E[]>> oldArrays = new LinkedObjectList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
 	private int count = 0;
 	private final float growthFactor;
 	

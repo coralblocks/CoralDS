@@ -41,8 +41,14 @@ import com.coralblocks.coralds.util.MathUtils;
  */
 public class LongMap<E> implements Iterable<E> {
 	
-	private static final int DEFAULT_INITIAL_CAPACITY = 128;
-	private static final float DEFAULT_LOAD_FACTOR = 0.80f;
+	/** The default initial capacity if not provided in the constructor */
+	public static int DEFAULT_INITIAL_CAPACITY = 128;
+	
+	/** The default load factor if not provided in the constructor */
+	public static float DEFAULT_LOAD_FACTOR = 0.80f;
+	
+	/* Our LinkedObjectList does not produce any garbage, not even when it grows */
+	private final static int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
 	private static class Entry<T> {
 		long key;
@@ -64,7 +70,7 @@ public class LongMap<E> implements Iterable<E> {
 
 	private Entry<E> poolHead;
 	
-	private final LinkedObjectList<SoftReference<Entry<E>[]>> oldArrays = new LinkedObjectList<>(64);
+	private final LinkedObjectList<SoftReference<Entry<E>[]>> oldArrays = new LinkedObjectList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
 
 	private final ReusableIterator reusableIter = new ReusableIterator();
 
