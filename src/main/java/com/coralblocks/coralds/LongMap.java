@@ -15,6 +15,7 @@
  */
 package com.coralblocks.coralds;
 
+import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -52,6 +53,8 @@ public class LongMap<E> implements Iterable<E> {
 	private Entry<E>[] data;
 
 	private int lengthMinusOne;
+	private int length;
+	private final boolean isPowerOfTwo;
 
 	private int count;
 
@@ -60,6 +63,8 @@ public class LongMap<E> implements Iterable<E> {
 	private float loadFactor;
 
 	private Entry<E> poolHead;
+	
+	private final LinkedObjectList<SoftReference<Entry<E>[]>> oldArrays = new LinkedObjectList<>(64);
 
 	private final ReusableIterator reusableIter = new ReusableIterator();
 
@@ -89,15 +94,19 @@ public class LongMap<E> implements Iterable<E> {
 	 */
 	@SuppressWarnings("unchecked")
 	public LongMap(int initialCapacity, float loadFactor) {
-
-		if (!MathUtils.isPowerOfTwo(initialCapacity)) {
-			throw new IllegalArgumentException("Size must be power of two: " + initialCapacity);
-		}
-
+		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;
+		this.length = initialCapacity;
 		this.loadFactor = loadFactor;
 		this.threshold =  Math.round(initialCapacity * loadFactor);
+	}
+	
+	/*
+	 * For testing
+	 */
+	int getCurrentArrayLength() {
+		return data.length;
 	}
 	
 	private Entry<E> getEntryFromPool(long key, E value, Entry<E> next) {
@@ -178,7 +187,11 @@ public class LongMap<E> implements Iterable<E> {
 	}
 
 	private final int toArrayIndex(long key) {
-		return (((int) key) & 0x7FFFFFFF) & lengthMinusOne;
+		if (isPowerOfTwo) {
+			return (((int) key) & 0x7FFFFFFF) & lengthMinusOne;
+		} else {
+			return (((int) key) & 0x7FFFFFFF) % length;
+		}
 	}
 
 	/**
@@ -234,17 +247,18 @@ public class LongMap<E> implements Iterable<E> {
 
 		Entry<E> oldData[] = data;
 
-		int newCapacity = oldCapacity * 2; // power of two, always!
+		int newCapacity = oldCapacity * 2; // always so power of two remains power of two
 
 		data = new Entry[newCapacity];
 		lengthMinusOne = newCapacity - 1;
+		length = newCapacity;
 
 		threshold = Math.round(newCapacity * loadFactor);
 
 		for(int i = oldCapacity - 1; i >= 0; i--) {
 
 			Entry<E> old = oldData[i];
-
+			
 			while(old != null) {
 
 				Entry<E> e = old;
@@ -257,7 +271,18 @@ public class LongMap<E> implements Iterable<E> {
 
 				data[index] = e;
 			}
+			
+			oldData[i] = null; // nullify not to hold entry objects
 		}
+		
+		oldArrays.addLast(new SoftReference<Entry<E>[]>(oldData));
+	}
+	
+	/**
+     * Clears all soft references to old arrays to free memory.
+     */
+	public void clearSoftReferences() {
+		oldArrays.clear();
 	}
 	
 	/**
@@ -274,7 +299,7 @@ public class LongMap<E> implements Iterable<E> {
 		}
 
 		int index = toArrayIndex(key);
-
+		
 		Entry<E> e = data[index];
 
 		while(e != null) {
@@ -284,7 +309,7 @@ public class LongMap<E> implements Iterable<E> {
 				E old = e.value;
 
 				e.value = value;
-
+				
 				return old;
 			}
 
@@ -292,7 +317,7 @@ public class LongMap<E> implements Iterable<E> {
 		}
 
 		if (count >= threshold) {
-
+			
 			rehash();
 
 			index = toArrayIndex(key); // lengthMinusOne has changed!
@@ -300,7 +325,7 @@ public class LongMap<E> implements Iterable<E> {
 			data[index] = getEntryFromPool(key, value, data[index]);
 
 		} else {
-
+			
 			data[index] = getEntryFromPool(key, value, data[index]);
 		}
 
