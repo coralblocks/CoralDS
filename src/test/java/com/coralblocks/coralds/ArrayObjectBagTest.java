@@ -22,13 +22,13 @@ import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ArrayBagTest {
+public class ArrayObjectBagTest {
 
-    private ArrayBag<String> bag;
+    private ArrayObjectBag<String> bag;
 
     @Before
     public void setUp() {
-        bag = new ArrayBag<>(5);
+        bag = new ArrayObjectBag<>(5);
     }
 
     @Test

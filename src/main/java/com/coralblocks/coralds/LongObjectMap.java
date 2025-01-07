@@ -39,7 +39,7 @@ import com.coralblocks.coralds.util.MathUtils;
  * 
  * @param <E> the entry type this hash map will hold
  */
-public class LongMap<E> implements Iterable<E> {
+public class LongObjectMap<E> implements Iterable<E> {
 	
 	/** The default initial capacity if not provided in the constructor */
 	public static int DEFAULT_INITIAL_CAPACITY = 128;
@@ -79,7 +79,7 @@ public class LongMap<E> implements Iterable<E> {
 	/**
 	 * Creates a LongMap with the default initial capacity and load factor.
 	 */
-	public LongMap() {
+	public LongObjectMap() {
 		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -88,7 +88,7 @@ public class LongMap<E> implements Iterable<E> {
 	 * 
 	 * @param initialCapacity the desired initial capacity
 	 */
-	public LongMap(int initialCapacity) {
+	public LongObjectMap(int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -99,7 +99,7 @@ public class LongMap<E> implements Iterable<E> {
 	 * @param loadFactor the desired load factor
 	 */
 	@SuppressWarnings("unchecked")
-	public LongMap(int initialCapacity, float loadFactor) {
+	public LongObjectMap(int initialCapacity, float loadFactor) {
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;

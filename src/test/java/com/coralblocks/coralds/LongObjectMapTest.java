@@ -21,15 +21,15 @@ import org.junit.Test;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LongMapTest {
+public class LongObjectMapTest {
     
-    private LongMap<String> mapRegular;
-    private LongMap<String> mapPowerOfTwo;
+    private LongObjectMap<String> mapRegular;
+    private LongObjectMap<String> mapPowerOfTwo;
     
     @Before
     public void setUp() {
-        mapRegular = new LongMap<>(3);
-        mapPowerOfTwo = new LongMap<>(4);
+        mapRegular = new LongObjectMap<>(3);
+        mapPowerOfTwo = new LongObjectMap<>(4);
     }
     
     @Test
@@ -320,7 +320,7 @@ public class LongMapTest {
     
     @Test
     public void testCustomInitialCapacity1() {
-        LongMap<String> customMap = new LongMap<>(210);
+        LongObjectMap<String> customMap = new LongObjectMap<>(210);
         for (int i = 0; i < 200; i++) {
             customMap.put(i, "value" + i);
         }
@@ -329,7 +329,7 @@ public class LongMapTest {
     
     @Test
     public void testCustomInitialCapacity2() {
-        LongMap<String> customMap = new LongMap<>(256);
+        LongObjectMap<String> customMap = new LongObjectMap<>(256);
         for (int i = 0; i < 200; i++) {
             customMap.put(i, "value" + i);
         }

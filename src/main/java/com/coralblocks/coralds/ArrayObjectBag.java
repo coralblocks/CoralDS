@@ -28,7 +28,7 @@ import java.util.Iterator;
  *
  * @param <E> the type of elements stored in the ArrayBag
  */
-public class ArrayBag<E> implements Iterable<E> {
+public class ArrayObjectBag<E> implements Iterable<E> {
 	
 	/** The default growth factor */
 	public static float DEFAULT_GROWTH_FACTOR = 1.75f;
@@ -48,7 +48,7 @@ public class ArrayBag<E> implements Iterable<E> {
      * @param growthFactor the factor by which the array size increases when full
      */
 	@SuppressWarnings("unchecked")
-	public ArrayBag(int initialSize, float growthFactor) {
+	public ArrayObjectBag(int initialSize, float growthFactor) {
 		if (growthFactor <= 1) throw new IllegalArgumentException("growthFactor must be greater than one: " + growthFactor);
 		if (initialSize <= 0) throw new IllegalArgumentException("initialSize must be greater than zero: " + initialSize);
 		this.array = (E[]) new Object[initialSize];
@@ -60,7 +60,7 @@ public class ArrayBag<E> implements Iterable<E> {
      *
      * @param initialSize the initial size of the internal array
      */
-	public ArrayBag(int initialSize) {
+	public ArrayObjectBag(int initialSize) {
 		this(initialSize, DEFAULT_GROWTH_FACTOR);
 	}
 	
@@ -213,7 +213,7 @@ public class ArrayBag<E> implements Iterable<E> {
 
 		@Override
 		public final void remove() {
-			ArrayBag.this.remove(--counter);
+			ArrayObjectBag.this.remove(--counter);
 		}
 	}
 	
