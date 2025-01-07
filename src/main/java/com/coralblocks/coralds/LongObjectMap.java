@@ -80,14 +80,14 @@ public class LongObjectMap<E> implements Iterable<E> {
 	private long currIteratorKey;
 
 	/**
-	 * Creates a LongMap with the default initial capacity and load factor.
+	 * Creates a <code>LongObjectMap</code> with the default initial capacity and load factor.
 	 */
 	public LongObjectMap() {
 		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);
 	}
 
 	/**
-	 * Creates a LongMap with the default load factor.
+	 * Creates a <code>LongObjectMap</code> with the default load factor.
 	 * 
 	 * @param initialCapacity the desired initial capacity
 	 */
@@ -96,7 +96,7 @@ public class LongObjectMap<E> implements Iterable<E> {
 	}
 
 	/**
-	 * Creates a LongMap.
+	 * Creates a <code>LongObjectMap</code>.
 	 * 
 	 * @param initialCapacity the desired initial capacity
 	 * @param loadFactor the desired load factor
@@ -145,7 +145,7 @@ public class LongObjectMap<E> implements Iterable<E> {
 	}
 	
 	/**
-	 * When using the Iterator for this LongMap, this method will return the current key of the last 
+	 * When using the Iterator for this <code>LongObjectMap</code>, this method will return the current key of the last 
 	 * element returned by Iterator.next().
 	 * 
 	 * @return the current key of the last iterated element
