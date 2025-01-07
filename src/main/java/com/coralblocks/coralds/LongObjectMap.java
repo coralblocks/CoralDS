@@ -20,6 +20,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.coralblocks.coralds.util.MathUtils;
+import com.coralblocks.coralpool.ArrayObjectPool;
+import com.coralblocks.coralpool.ObjectPool;
+import com.coralblocks.coralpool.util.Builder;
 
 /**
  * <p>A fast hash map that uses long primitives as keys.</p>
@@ -68,7 +71,7 @@ public class LongObjectMap<E> implements Iterable<E> {
 
 	private float loadFactor;
 
-	private Entry<E> poolHead;
+	private final ObjectPool<Entry<E>> entryPool;
 	
 	private final LinkedObjectList<SoftReference<Entry<E>[]>> oldArrays = new LinkedObjectList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
 
@@ -105,7 +108,16 @@ public class LongObjectMap<E> implements Iterable<E> {
 		this.lengthMinusOne = initialCapacity - 1;
 		this.length = initialCapacity;
 		this.loadFactor = loadFactor;
-		this.threshold =  Math.round(initialCapacity * loadFactor);
+		this.threshold = Math.round(initialCapacity * loadFactor);
+		
+		Builder<Entry<E>> builder = new Builder<Entry<E>>() {
+			@Override
+			public Entry<E> newInstance() {
+				return new Entry<E>();
+			}
+		};
+		
+		this.entryPool = new ArrayObjectPool<Entry<E>>(threshold, builder, 2f);
 	}
 	
 	/*
@@ -116,14 +128,8 @@ public class LongObjectMap<E> implements Iterable<E> {
 	}
 	
 	private Entry<E> getEntryFromPool(long key, E value, Entry<E> next) {
-
-		Entry<E> newEntry = poolHead;
-
-		if (newEntry != null) {
-			poolHead = newEntry.next;
-		} else {
-			newEntry = new Entry<E>();
-		}
+		
+		Entry<E> newEntry = entryPool.get();
 
 		newEntry.key = key;
 		newEntry.value = value;
@@ -132,10 +138,10 @@ public class LongObjectMap<E> implements Iterable<E> {
 		return newEntry;
 	}
 
-	private void releaseEntryBackToPool(Entry<E> e) {
-		e.value = null;
-		e.next = poolHead;
-		poolHead = e;
+	private void releaseEntryBackToPool(Entry<E> entry) {
+		entry.value = null;
+		entry.next = null;
+		entryPool.release(entry);
 	}
 	
 	/**

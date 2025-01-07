@@ -17,6 +17,10 @@ package com.coralblocks.coralds;
 
 import java.util.Iterator;
 
+import com.coralblocks.coralpool.ObjectPool;
+import com.coralblocks.coralpool.TieredObjectPool;
+import com.coralblocks.coralpool.util.Builder;
+
 /**
  * A fast and garbage-free double-linked list.
  * 
@@ -33,7 +37,7 @@ public class LinkedObjectList<E> implements Iterable<E> {
 		Entry<E> prev = null;
 	}
 	
-	private Entry<E> poolHead = null;
+	private final ObjectPool<Entry<E>> entryPool;
 	
 	private Entry<E> head = null;
 	private Entry<E> tail = null;
@@ -45,28 +49,26 @@ public class LinkedObjectList<E> implements Iterable<E> {
 	 * @param initialCapacity the initial number of preallocated internal entries
 	 */
 	public LinkedObjectList(int initialCapacity) {
-		for(int i = 0; i < initialCapacity; i++) {
-			releaseEntryBackToPool(new Entry<E>());
-		}
+		
+		Builder<Entry<E>> builder = new Builder<Entry<E>>() {
+			@Override
+			public Entry<E> newInstance() {
+				return new Entry<E>();
+			}
+		};
+
+		this.entryPool = new TieredObjectPool<Entry<E>>(initialCapacity, builder);
 	}
 	
 	private Entry<E> getEntryFromPool() {
-		if (poolHead != null) {
-			Entry<E> toReturn = poolHead;
-			poolHead = poolHead.next;
-			toReturn.next = null;
-			toReturn.prev = null;
-			return toReturn;
-		} else {
-			return new Entry<E>();
-		}
+		return entryPool.get();
 	}
 	
 	private void releaseEntryBackToPool(Entry<E> entry) {
 		entry.value = null;
-		entry.prev = null; // the pool does not need/use this reference for anything...
-		entry.next = poolHead;
-		poolHead = entry;
+		entry.prev = null;
+		entry.next = null;
+		entryPool.release(entry);
 	}
 	
 	/**
