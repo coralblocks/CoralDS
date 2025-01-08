@@ -105,9 +105,11 @@ public class LongObjectMapTest {
         mapRegular.put(1L, "one");
         mapRegular.put(2L, "two");
         
-        assertTrue(mapRegular.contains("one"));
-        assertTrue(mapRegular.contains("two"));
-        assertFalse(mapRegular.contains("three"));
+        assertTrue(mapRegular.contains("one").isPresent());
+        assertEquals(1L, mapRegular.contains("one").getValue());
+        assertTrue(mapRegular.contains("two").isPresent());
+        assertEquals(2L, mapRegular.contains("two").getValue());
+        assertFalse(mapRegular.contains("three").isPresent());
     }
     
     @Test
@@ -115,9 +117,11 @@ public class LongObjectMapTest {
     	mapPowerOfTwo.put(1L, "one");
     	mapPowerOfTwo.put(2L, "two");
         
-        assertTrue(mapPowerOfTwo.contains("one"));
-        assertTrue(mapPowerOfTwo.contains("two"));
-        assertFalse(mapPowerOfTwo.contains("three"));
+        assertTrue(mapPowerOfTwo.contains("one").isPresent());
+        assertEquals(1L, mapPowerOfTwo.contains("one").getValue());
+        assertTrue(mapPowerOfTwo.contains("two").isPresent());
+        assertEquals(2L, mapPowerOfTwo.contains("two").getValue());
+        assertFalse(mapPowerOfTwo.contains("three").isPresent());
     }
     
     @Test
@@ -211,7 +215,7 @@ public class LongObjectMapTest {
         
         while (iter.hasNext()) {
             String value = iter.next();
-            assertTrue(mapRegular.contains(value));
+            assertTrue(mapRegular.contains(value).isPresent());
             count++;
         }
         
@@ -229,7 +233,7 @@ public class LongObjectMapTest {
         
         while (iter.hasNext()) {
             String value = iter.next();
-            assertTrue(mapPowerOfTwo.contains(value));
+            assertTrue(mapPowerOfTwo.contains(value).isPresent());
             count++;
         }
         

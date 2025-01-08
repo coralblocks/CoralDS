@@ -19,6 +19,7 @@ import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.coralblocks.coralds.util.IntHolder;
 import com.coralblocks.coralds.util.MathUtils;
 import com.coralblocks.coralpool.ArrayObjectPool;
 import com.coralblocks.coralpool.ObjectPool;
@@ -78,6 +79,8 @@ public class IntObjectMap<E> implements Iterable<E> {
 	private final ReusableIterator reusableIter = new ReusableIterator();
 
 	private int currIteratorKey;
+	
+	private final IntHolder intHolder = new IntHolder();
 
 	/**
 	 * Creates a <code>IntObjectMap</code> with the default initial capacity and load factor.
@@ -176,9 +179,9 @@ public class IntObjectMap<E> implements Iterable<E> {
 	 * Does the map contain the given value?
 	 * 
 	 * @param value the value to be checked
-	 * @return true if the map contains this value
+	 * @return an IntHolder that might contain the key for the given value or nothing to indicate that the value is not present
 	 */
-	public boolean contains(E value) {
+	public IntHolder contains(E value) {
 		
 		ensureNotNull(value);
 
@@ -190,14 +193,14 @@ public class IntObjectMap<E> implements Iterable<E> {
 
 				if (e.value.equals(value)) {
 
-					return true;
+					return intHolder.set(e.key);
 				}
 
 				e = e.next;
 			}
 		}
 		
-		return false;
+		return intHolder.clear();
 	}
 
 	private final int toArrayIndex(int key) {
