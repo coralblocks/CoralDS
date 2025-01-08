@@ -30,7 +30,7 @@ import com.coralblocks.coralds.holder.CharHolder;
 public final class CharObjectMap<E> implements Iterable<E> {
 
 	@SuppressWarnings("unchecked")
-	private final E[] data = (E[]) new Object[256];
+	private final E[] data = (E[]) new Object[128];
 	
 	private final ReusableIterator iter = new ReusableIterator();
 	
@@ -48,7 +48,10 @@ public final class CharObjectMap<E> implements Iterable<E> {
 	}
 
 	private final int convert(char key) {
-		return ((byte) key) & 0xff;
+		if (key < 0 || key > 127) {
+			throw new IllegalArgumentException("Only ascii chars between 0 and 127 (inclusive) are supported: " + ((int) key));
+		}
+		return (int) key;
 	}
 	
 	/**

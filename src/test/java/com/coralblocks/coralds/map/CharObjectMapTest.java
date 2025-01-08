@@ -102,19 +102,6 @@ public class CharObjectMapTest {
     }
     
     @Test
-    public void testExtendedAsciiCharacters() {
-        // Test characters beyond ASCII 127
-        char extendedChar = 'ñ';  // ASCII value 241
-        map.put(extendedChar, "value-extended");
-        assertEquals("value-extended", map.get(extendedChar));
-        
-        // Test byte overflow handling
-        char overflowChar = 'Ā';  // ASCII value 256
-        map.put(overflowChar, "value-overflow");
-        assertEquals("value-overflow", map.get(overflowChar));
-    }
-    
-    @Test
     public void testIterator() {
         map.put('a', "value-a");
         map.put('b', "value-b");
@@ -159,28 +146,17 @@ public class CharObjectMapTest {
     
     @Test
     public void testFullMapCapacity() {
-        // Test adding 256 elements (full capacity)
-        for (int i = 0; i < 256; i++) {
+        // Test adding 128 elements (full capacity)
+        for (int i = 0; i < 128; i++) {
             map.put((char) i, "value-" + i);
         }
         
-        assertEquals(256, map.size());
+        assertEquals(128, map.size());
         
         // Verify all values are correctly stored
-        for (int i = 0; i < 256; i++) {
+        for (int i = 0; i < 128; i++) {
             assertEquals("value-" + i, map.get((char) i));
         }
-    }
-    
-    @Test
-    public void testKeyWrapping() {
-        // Test that keys properly wrap around when their value exceeds 255
-        char key1 = 0;    // 0
-        char key2 = 256;  // Should wrap to 0
-        
-        map.put(key1, "value1");
-        assertEquals("value1", map.get(key2));
-        assertEquals(1, map.size()); // Should only count as one entry since they map to same index
     }
     
     @Test
