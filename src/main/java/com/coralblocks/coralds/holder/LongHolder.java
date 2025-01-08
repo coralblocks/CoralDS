@@ -13,22 +13,22 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.coralblocks.coralds.util;
+package com.coralblocks.coralds.holder;
 
 /**
- * A container class that holds an optional integer value. This class provides a way to represent
- * a nullable integer primitive without using the Integer wrapper class.
+ * A container class that holds an optional long value. This class provides a way to represent
+ * a nullable long primitive without using the Long wrapper class.
  */
-public final class IntHolder {
+public final class LongHolder {
 
     private boolean isPresent = false;
     
-    private int value = 0;
+    private long value = 0;
 
     /**
-     * Constructs an empty IntHolder with no value present.
+     * Constructs an empty LongHolder with no value present.
      */
-    public IntHolder() {
+    public LongHolder() {
     	
     }
 
@@ -42,33 +42,33 @@ public final class IntHolder {
     }
 
     /**
-     * Retrieves the stored integer value.
+     * Retrieves the stored long value.
      *
-     * @return the stored integer value
+     * @return the stored long value
      * @throws RuntimeException if no value is present when this method is called
      */
-    public final int getValue() {
-        if (!isPresent) throw new RuntimeException("Tried to get an int value that is not present!");
+    public final long getValue() {
+        if (!isPresent) throw new RuntimeException("Tried to get a long value that is not present!");
         return value;
     }
 
     /**
      * Clears the stored value, marking this holder as empty.
      * 
-     * @return the instance of this IntHolder
+     * @return the instance of this LongHolder
      */
-    public final IntHolder clear() {
+    public final LongHolder clear() {
         isPresent = false;
         return this;
     }
 
     /**
-     * Stores an integer value in this holder.
+     * Stores a long value in this holder.
      *
-     * @param value the integer value to store
-     * @return the instance of this IntHolder
+     * @param value the long value to store
+     * @return the instance of this LongHolder
      */
-    public final IntHolder set(int value) {
+    public final LongHolder set(long value) {
         isPresent = true;
         this.value = value;
         return this;
