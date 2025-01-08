@@ -18,6 +18,8 @@ package com.coralblocks.coralds;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.coralblocks.coralds.holder.CharHolder;
+
 /**
  * A map implementation that uses 1-byte chars as keys and is backed by a fixed-size array of 256 elements,
  * providing constant-time access performance. This implementation does not accept <code>null</code> values
@@ -36,6 +38,8 @@ public final class CharObjectMap<E> implements Iterable<E> {
 	
 	private char currIteratorKey;
 	
+	private final CharHolder charHolder = new CharHolder();
+	
     /**
      * Constructs an empty <code>CharObjectMap</code>.
      */
@@ -45,6 +49,23 @@ public final class CharObjectMap<E> implements Iterable<E> {
 
 	private final int convert(char key) {
 		return ((byte) key) & 0xff;
+	}
+	
+	/**
+	 * Does the map contain the given value?
+	 * 
+	 * @param value the value to be checked
+	 * @return a CharHolder that might contain the key for the given value or nothing to indicate that the value is not present
+	 */
+	public final CharHolder contains(E value) {
+		
+		ensureNotNull(value);
+		
+		for(int i = 0; i < data.length; i++) {
+			if (value.equals(data[i])) return charHolder.set((char) i);
+		}
+		
+		return charHolder.clear();
 	}
 
     /**

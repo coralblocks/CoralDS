@@ -18,6 +18,8 @@ package com.coralblocks.coralds;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.coralblocks.coralds.holder.ByteHolder;
+
 /**
  * A map implementation that uses bytes as keys and is backed by a fixed-size array of 256 elements,
  * providing constant-time access performance. This implementation does not accept <code>null</code> values
@@ -36,6 +38,8 @@ public final class ByteObjectMap<E> implements Iterable<E> {
 	
 	private byte currIteratorKey;
 	
+	private final ByteHolder byteHolder = new ByteHolder();
+	
     /**
      * Constructs an empty <code>ByteObjectMap</code>.
      */
@@ -45,6 +49,23 @@ public final class ByteObjectMap<E> implements Iterable<E> {
 
 	private final int convert(byte key) {
 		return key & 0xff;
+	}
+	
+	/**
+	 * Does the map contain the given value?
+	 * 
+	 * @param value the value to be checked
+	 * @return a ByteHolder that might contain the key for the given value or nothing to indicate that the value is not present
+	 */
+	public final ByteHolder contains(E value) {
+		
+		ensureNotNull(value);
+		
+		for(int i = 0; i < data.length; i++) {
+			if (value.equals(data[i])) return byteHolder.set((byte) i);
+		}
+		
+		return byteHolder.clear();
 	}
 
     /**

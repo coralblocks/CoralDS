@@ -16,10 +16,14 @@
 package com.coralblocks.coralds;
 
 import static org.junit.Assert.*;
-import org.junit.Test;
-import org.junit.Before;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.coralblocks.coralds.holder.ByteHolder;
 
 public class ByteObjectMapTest {
     
@@ -30,6 +34,93 @@ public class ByteObjectMapTest {
         map = new ByteObjectMap<>();
     }
     
+
+    @Test
+    public void testEmptyMapProperties() {
+        assertTrue(map.isEmpty());
+        assertEquals(0, map.size());
+        assertNull(map.get((byte) 1));
+    }
+
+    @Test
+    public void testPutAndGet() {
+        assertNull(map.put((byte) 1, "value1"));
+        assertEquals("value1", map.get((byte) 1));
+        assertEquals(1, map.size());
+        assertFalse(map.isEmpty());
+    }
+
+    @Test
+    public void testPutReplace() {
+        map.put((byte) 1, "value1");
+        assertEquals("value1", map.put((byte) 1, "value2"));
+        assertEquals("value2", map.get((byte) 1));
+        assertEquals(1, map.size());
+    }
+
+    @Test
+    public void testRemove() {
+        map.put((byte) 1, "value1");
+        assertEquals("value1", map.remove((byte) 1));
+        assertNull(map.get((byte) 1));
+        assertEquals(0, map.size());
+        assertTrue(map.isEmpty());
+    }
+
+    @Test
+    public void testContainsKey() {
+        assertFalse(map.containsKey((byte) 1));
+        map.put((byte) 1, "value1");
+        assertTrue(map.containsKey((byte) 1));
+    }
+
+    @Test
+    public void testContains() {
+        map.put((byte) 1, "value1");
+        ByteHolder holder = map.contains("value1");
+        assertTrue(holder.isPresent());
+        assertEquals(1, holder.getValue());
+        
+        holder = map.contains("nonexistent");
+        assertFalse(holder.isPresent());
+    }
+
+    @Test
+    public void testClear() {
+        map.put((byte) 1, "value1");
+        map.put((byte) 2, "value2");
+        map.clear();
+        assertTrue(map.isEmpty());
+        assertEquals(0, map.size());
+        assertNull(map.get((byte) 1));
+        assertNull(map.get((byte) 2));
+    }
+
+    @Test
+    public void testIterator() {
+        map.put((byte) 1, "value1");
+        map.put((byte) 2, "value2");
+        
+        Iterator<String> iterator = map.iterator();
+        assertTrue(iterator.hasNext());
+        String value = iterator.next();
+        assertTrue(value.equals("value1") || value.equals("value2"));
+        assertEquals(map.getCurrIteratorKey(), value.equals("value1") ? (byte) 1 : (byte) 2);
+        
+        assertTrue(iterator.hasNext());
+        value = iterator.next();
+        assertTrue(value.equals("value1") || value.equals("value2"));
+        assertEquals(map.getCurrIteratorKey(), value.equals("value1") ? (byte) 1 : (byte) 2);
+        
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testIteratorNoMoreElements() {
+        Iterator<String> iterator = map.iterator();
+        iterator.next();
+    }
+
     @Test
     public void testIteratorWithEmptyMap() {
         Iterator<String> iterator = map.iterator();
