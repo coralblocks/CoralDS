@@ -42,6 +42,11 @@ public class ByteObjectMapTest {
         iterator.next(); // should throw NoSuchElementException
     }
     
+    @Test(expected = IllegalArgumentException.class)
+    public void testPutNull() {
+        map.put((byte) 1, null);
+    }
+    
     @Test
     public void testIteratorWithSingleElement() {
         map.put((byte) 1, "One");

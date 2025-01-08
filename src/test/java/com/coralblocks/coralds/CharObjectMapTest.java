@@ -48,7 +48,7 @@ public class CharObjectMapTest {
         assertEquals(1, map.size());
     }
     
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPutNull() {
         map.put('a', null);
     }

@@ -68,10 +68,9 @@ public final class ByteObjectMap<E> implements Iterable<E> {
      * @throws NullPointerException if the specified value is null
      */
 	public final E put(byte key, E value) {
-		if (value == null) {
-			throw new NullPointerException("ByteObjectMap does not support NULL values: " + key);
-		}
 
+		ensureNotNull(value);
+		
 		int index = convert(key);
 		E old = data[index];
 		data[index] = value;
@@ -80,6 +79,10 @@ public final class ByteObjectMap<E> implements Iterable<E> {
 			count++;
 		}
 		return old;
+	}
+	
+	private final void ensureNotNull(E value) {
+		if (value == null) throw new IllegalArgumentException("Method cannot receive null value!");
 	}
 
     /**

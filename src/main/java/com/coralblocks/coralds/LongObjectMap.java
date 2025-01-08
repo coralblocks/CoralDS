@@ -179,6 +179,8 @@ public class LongObjectMap<E> implements Iterable<E> {
 	 * @return true if the map contains this value
 	 */
 	public boolean contains(E value) {
+		
+		ensureNotNull(value);
 
 		for(int i = data.length - 1; i >= 0; i--) {
 
@@ -306,10 +308,8 @@ public class LongObjectMap<E> implements Iterable<E> {
 	 */
 	public E put(long key, E value) {
 
-		if (value == null) {
-			throw new IllegalArgumentException("Cannot put null value!");
-		}
-
+		ensureNotNull(value);
+		
 		int index = toArrayIndex(key);
 		
 		Entry<E> e = data[index];
@@ -344,6 +344,10 @@ public class LongObjectMap<E> implements Iterable<E> {
 		count++;
 
 		return null;
+	}
+	
+	private final void ensureNotNull(E value) {
+		if (value == null) throw new IllegalArgumentException("Method cannot receive null value!");
 	}
 
 	/**
