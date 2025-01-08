@@ -84,12 +84,19 @@ public class LinkedObjectList<E> implements Iterable<E> {
 		size = 0;
 	}
 	
+	private final void ensureNotNull(E value) {
+		if (value == null) throw new IllegalArgumentException("Method cannot receive null value!");
+	}
+	
 	/**
 	 * Adds an element to the head of the list.
 	 * 
 	 * @param value the value to be added
 	 */
 	public void addFirst(E value) {
+		
+		ensureNotNull(value);
+		
 		Entry<E> entry = getEntryFromPool();
 		entry.value = value;
 		if (head == null) {
@@ -112,6 +119,9 @@ public class LinkedObjectList<E> implements Iterable<E> {
 	 * @param value the value to be added
 	 */
 	public void addLast(E value) {
+		
+		ensureNotNull(value);
+		
 		Entry<E> entry = getEntryFromPool();
 		entry.value = value;
 		if (tail == null) {
