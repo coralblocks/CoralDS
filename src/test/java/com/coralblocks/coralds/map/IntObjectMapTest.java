@@ -13,23 +13,26 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.coralblocks.coralds;
+package com.coralblocks.coralds.map;
 
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.coralblocks.coralds.map.IntObjectMap;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LongObjectMapTest {
+public class IntObjectMapTest {
     
-    private LongObjectMap<String> mapRegular;
-    private LongObjectMap<String> mapPowerOfTwo;
+    private IntObjectMap<String> mapRegular;
+    private IntObjectMap<String> mapPowerOfTwo;
     
     @Before
     public void setUp() {
-        mapRegular = new LongObjectMap<>(3);
-        mapPowerOfTwo = new LongObjectMap<>(4);
+        mapRegular = new IntObjectMap<>(3);
+        mapPowerOfTwo = new IntObjectMap<>(4);
     }
     
     @Test
@@ -46,134 +49,134 @@ public class LongObjectMapTest {
     
     @Test
     public void testPutAndGet1() {
-        assertNull(mapRegular.put(1L, "one"));
-        assertEquals("one", mapRegular.get(1L));
+        assertNull(mapRegular.put(1, "one"));
+        assertEquals("one", mapRegular.get(1));
         assertEquals(1, mapRegular.size());
         assertFalse(mapRegular.isEmpty());
         
         // Test overwriting existing key
-        assertEquals("one", mapRegular.put(1L, "new-one"));
-        assertEquals("new-one", mapRegular.get(1L));
+        assertEquals("one", mapRegular.put(1, "new-one"));
+        assertEquals("new-one", mapRegular.get(1));
         assertEquals(1, mapRegular.size());
     }
     
     @Test
     public void testPutAndGet2() {
-        assertNull(mapPowerOfTwo.put(1L, "one"));
-        assertEquals("one", mapPowerOfTwo.get(1L));
+        assertNull(mapPowerOfTwo.put(1, "one"));
+        assertEquals("one", mapPowerOfTwo.get(1));
         assertEquals(1, mapPowerOfTwo.size());
         assertFalse(mapPowerOfTwo.isEmpty());
         
         // Test overwriting existing key
-        assertEquals("one", mapPowerOfTwo.put(1L, "new-one"));
-        assertEquals("new-one", mapPowerOfTwo.get(1L));
+        assertEquals("one", mapPowerOfTwo.put(1, "new-one"));
+        assertEquals("new-one", mapPowerOfTwo.get(1));
         assertEquals(1, mapPowerOfTwo.size());
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void testPutNullValue1() {
-        mapRegular.put(1L, null);
+        mapRegular.put(1, null);
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void testPutNullValue2() {
-    	mapPowerOfTwo.put(1L, null);
+    	mapPowerOfTwo.put(1, null);
     }
     
     @Test
     public void testContainsKey1() {
-        mapRegular.put(1L, "one");
-        mapRegular.put(2L, "two");
+        mapRegular.put(1, "one");
+        mapRegular.put(2, "two");
         
-        assertTrue(mapRegular.containsKey(1L));
-        assertTrue(mapRegular.containsKey(2L));
-        assertFalse(mapRegular.containsKey(3L));
+        assertTrue(mapRegular.containsKey(1));
+        assertTrue(mapRegular.containsKey(2));
+        assertFalse(mapRegular.containsKey(3));
     }
     
     @Test
     public void testContainsKey2() {
-    	mapPowerOfTwo.put(1L, "one");
-    	mapPowerOfTwo.put(2L, "two");
+    	mapPowerOfTwo.put(1, "one");
+    	mapPowerOfTwo.put(2, "two");
         
-        assertTrue(mapPowerOfTwo.containsKey(1L));
-        assertTrue(mapPowerOfTwo.containsKey(2L));
-        assertFalse(mapPowerOfTwo.containsKey(3L));
+        assertTrue(mapPowerOfTwo.containsKey(1));
+        assertTrue(mapPowerOfTwo.containsKey(2));
+        assertFalse(mapPowerOfTwo.containsKey(3));
     }
     
     @Test
     public void testContainsValue1() {
-        mapRegular.put(1L, "one");
-        mapRegular.put(2L, "two");
+        mapRegular.put(1, "one");
+        mapRegular.put(2, "two");
         
         assertTrue(mapRegular.contains("one").isPresent());
-        assertEquals(1L, mapRegular.contains("one").getValue());
+        assertEquals(1, mapRegular.contains("one").getValue());
         assertTrue(mapRegular.contains("two").isPresent());
-        assertEquals(2L, mapRegular.contains("two").getValue());
+        assertEquals(2, mapRegular.contains("two").getValue());
         assertFalse(mapRegular.contains("three").isPresent());
     }
     
     @Test
     public void testContainsValue2() {
-    	mapPowerOfTwo.put(1L, "one");
-    	mapPowerOfTwo.put(2L, "two");
+    	mapPowerOfTwo.put(1, "one");
+    	mapPowerOfTwo.put(2, "two");
         
         assertTrue(mapPowerOfTwo.contains("one").isPresent());
-        assertEquals(1L, mapPowerOfTwo.contains("one").getValue());
+        assertEquals(1, mapPowerOfTwo.contains("one").getValue());
         assertTrue(mapPowerOfTwo.contains("two").isPresent());
-        assertEquals(2L, mapPowerOfTwo.contains("two").getValue());
+        assertEquals(2, mapPowerOfTwo.contains("two").getValue());
         assertFalse(mapPowerOfTwo.contains("three").isPresent());
     }
     
     @Test
     public void testRemove1() {
-        mapRegular.put(1L, "one");
-        mapRegular.put(2L, "two");
+        mapRegular.put(1, "one");
+        mapRegular.put(2, "two");
         
-        assertEquals("one", mapRegular.remove(1L));
+        assertEquals("one", mapRegular.remove(1));
         assertEquals(1, mapRegular.size());
-        assertNull(mapRegular.get(1L));
-        assertEquals("two", mapRegular.get(2L));
+        assertNull(mapRegular.get(1));
+        assertEquals("two", mapRegular.get(2));
         
         // Test removing non-existent key
-        assertNull(mapRegular.remove(3L));
+        assertNull(mapRegular.remove(3));
     }
     
     @Test
     public void testRemove2() {
-    	mapPowerOfTwo.put(1L, "one");
-    	mapPowerOfTwo.put(2L, "two");
+    	mapPowerOfTwo.put(1, "one");
+    	mapPowerOfTwo.put(2, "two");
         
-        assertEquals("one", mapPowerOfTwo.remove(1L));
+        assertEquals("one", mapPowerOfTwo.remove(1));
         assertEquals(1, mapPowerOfTwo.size());
-        assertNull(mapPowerOfTwo.get(1L));
-        assertEquals("two", mapPowerOfTwo.get(2L));
+        assertNull(mapPowerOfTwo.get(1));
+        assertEquals("two", mapPowerOfTwo.get(2));
         
         // Test removing non-existent key
-        assertNull(mapPowerOfTwo.remove(3L));
+        assertNull(mapPowerOfTwo.remove(3));
     }
     
     @Test
     public void testClear1() {
-        mapRegular.put(1L, "one");
-        mapRegular.put(2L, "two");
+        mapRegular.put(1, "one");
+        mapRegular.put(2, "two");
         
         mapRegular.clear();
         assertEquals(0, mapRegular.size());
         assertTrue(mapRegular.isEmpty());
-        assertNull(mapRegular.get(1L));
-        assertNull(mapRegular.get(2L));
+        assertNull(mapRegular.get(1));
+        assertNull(mapRegular.get(2));
     }
     
     @Test
     public void testClear2() {
-    	mapPowerOfTwo.put(1L, "one");
-    	mapPowerOfTwo.put(2L, "two");
+    	mapPowerOfTwo.put(1, "one");
+    	mapPowerOfTwo.put(2, "two");
         
     	mapPowerOfTwo.clear();
         assertEquals(0, mapPowerOfTwo.size());
         assertTrue(mapPowerOfTwo.isEmpty());
-        assertNull(mapPowerOfTwo.get(1L));
-        assertNull(mapPowerOfTwo.get(2L));
+        assertNull(mapPowerOfTwo.get(1));
+        assertNull(mapPowerOfTwo.get(2));
     }
     
     @Test
@@ -206,9 +209,9 @@ public class LongObjectMapTest {
     
     @Test
     public void testIterator1() {
-        mapRegular.put(1L, "one");
-        mapRegular.put(2L, "two");
-        mapRegular.put(3L, "three");
+        mapRegular.put(1, "one");
+        mapRegular.put(2, "two");
+        mapRegular.put(3, "three");
         
         Iterator<String> iter = mapRegular.iterator();
         int count = 0;
@@ -224,9 +227,9 @@ public class LongObjectMapTest {
     
     @Test
     public void testIterator2() {
-    	mapPowerOfTwo.put(1L, "one");
-    	mapPowerOfTwo.put(2L, "two");
-    	mapPowerOfTwo.put(3L, "three");
+    	mapPowerOfTwo.put(1, "one");
+    	mapPowerOfTwo.put(2, "two");
+    	mapPowerOfTwo.put(3, "three");
         
         Iterator<String> iter = mapPowerOfTwo.iterator();
         int count = 0;
@@ -256,8 +259,8 @@ public class LongObjectMapTest {
     
     @Test
     public void testIteratorRemove1() {
-        mapRegular.put(1L, "one");
-        mapRegular.put(2L, "two");
+        mapRegular.put(1, "one");
+        mapRegular.put(2, "two");
         
         Iterator<String> iter = mapRegular.iterator();
         assertTrue(iter.hasNext());
@@ -283,8 +286,8 @@ public class LongObjectMapTest {
     
     @Test
     public void testIteratorRemove2() {
-    	mapPowerOfTwo.put(1L, "one");
-    	mapPowerOfTwo.put(2L, "two");
+    	mapPowerOfTwo.put(1, "one");
+    	mapPowerOfTwo.put(2, "two");
         
         Iterator<String> iter = mapPowerOfTwo.iterator();
         assertTrue(iter.hasNext());
@@ -310,21 +313,21 @@ public class LongObjectMapTest {
     
     @Test(expected = NoSuchElementException.class)
     public void testIteratorIllegalRemove1() {
-        mapRegular.put(1L, "one");
+        mapRegular.put(1, "one");
         Iterator<String> iter = mapRegular.iterator();
         iter.remove(); // Should throw exception without calling next() first
     }
     
     @Test(expected = NoSuchElementException.class)
     public void testIteratorIllegalRemove2() {
-    	mapPowerOfTwo.put(1L, "one");
+    	mapPowerOfTwo.put(1, "one");
         Iterator<String> iter = mapPowerOfTwo.iterator();
         iter.remove(); // Should throw exception without calling next() first
     }
     
     @Test
     public void testCustomInitialCapacity1() {
-        LongObjectMap<String> customMap = new LongObjectMap<>(210);
+        IntObjectMap<String> customMap = new IntObjectMap<>(210);
         for (int i = 0; i < 200; i++) {
             customMap.put(i, "value" + i);
         }
@@ -333,7 +336,7 @@ public class LongObjectMapTest {
     
     @Test
     public void testCustomInitialCapacity2() {
-        LongObjectMap<String> customMap = new LongObjectMap<>(256);
+        IntObjectMap<String> customMap = new IntObjectMap<>(256);
         for (int i = 0; i < 200; i++) {
             customMap.put(i, "value" + i);
         }
@@ -342,31 +345,31 @@ public class LongObjectMapTest {
     
     @Test
     public void testGetCurrentIteratorKey1() {
-        mapRegular.put(1L, "one");
-        mapRegular.put(2L, "two");
+        mapRegular.put(1, "one");
+        mapRegular.put(2, "two");
         
         Iterator<String> iter = mapRegular.iterator();
         iter.next();
-        long key = mapRegular.getCurrIteratorKey();
+        int key = mapRegular.getCurrIteratorKey();
         assertEquals(mapRegular.get(key), "one");
     }
     
     @Test
     public void testGetCurrentIteratorKey2() {
-    	mapPowerOfTwo.put(1L, "one");
-    	mapPowerOfTwo.put(2L, "two");
+    	mapPowerOfTwo.put(1, "one");
+    	mapPowerOfTwo.put(2, "two");
         
         Iterator<String> iter = mapPowerOfTwo.iterator();
         iter.next();
-        long key = mapPowerOfTwo.getCurrIteratorKey();
+        int key = mapPowerOfTwo.getCurrIteratorKey();
         assertEquals(mapPowerOfTwo.get(key), "one");
     }
     
     @Test
     public void testCollisions1() {
         // Create keys that will have the same hash
-        long key1 = 1L;
-        long key2 = key1 + mapRegular.getCurrentArrayLength();  // This should generate a collision
+        int key1 = 1;
+        int key2 = key1 + mapRegular.getCurrentArrayLength();  // This should generate a collision
         
         mapRegular.put(key1, "first");
         mapRegular.put(key2, "second");
@@ -379,8 +382,8 @@ public class LongObjectMapTest {
     @Test
     public void testCollisions2() {
         // Create keys that will have the same hash
-        long key1 = 1L;
-        long key2 = key1 + mapPowerOfTwo.getCurrentArrayLength();  // This should generate a collision
+        int key1 = 1;
+        int key2 = key1 + mapPowerOfTwo.getCurrentArrayLength();  // This should generate a collision
         
         mapPowerOfTwo.put(key1, "first");
         mapPowerOfTwo.put(key2, "second");

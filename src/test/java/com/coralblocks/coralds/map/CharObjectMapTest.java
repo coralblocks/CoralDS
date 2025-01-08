@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.coralblocks.coralds;
+package com.coralblocks.coralds.map;
 
 import static org.junit.Assert.*;
 
@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.coralblocks.coralds.holder.CharHolder;
+import com.coralblocks.coralds.map.CharObjectMap;
 
 public class CharObjectMapTest {
     

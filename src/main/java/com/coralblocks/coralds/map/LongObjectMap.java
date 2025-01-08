@@ -13,12 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.coralblocks.coralds;
+package com.coralblocks.coralds.map;
 
 import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.coralblocks.coralds.LinkedObjectList;
 import com.coralblocks.coralds.holder.LongHolder;
 import com.coralblocks.coralds.util.MathUtils;
 import com.coralblocks.coralpool.ArrayObjectPool;
