@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 import com.coralblocks.coralds.holder.CharHolder;
 
 /**
- * A map implementation that uses 1-byte chars as keys and is backed by a fixed-size array of 256 elements,
+ * A map implementation that uses 1-byte chars as keys and is backed by a fixed-size array of 128 elements (ASCII codes from 0 to 127),
  * providing constant-time access performance. This implementation does not accept <code>null</code> values
  * but can store any non-null object type specified by the generic parameter.
  * 
