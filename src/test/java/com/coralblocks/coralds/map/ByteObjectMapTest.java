@@ -24,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.coralblocks.coralds.holder.ByteHolder;
-import com.coralblocks.coralds.map.ByteObjectMap;
 
 public class ByteObjectMapTest {
     

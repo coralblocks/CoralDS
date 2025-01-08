@@ -16,13 +16,12 @@
 package com.coralblocks.coralds.map;
 
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.coralblocks.coralds.map.LongObjectMap;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class LongObjectMapTest {
     

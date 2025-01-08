@@ -24,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.coralblocks.coralds.holder.CharHolder;
-import com.coralblocks.coralds.map.CharObjectMap;
 
 public class CharObjectMapTest {
     
