@@ -17,9 +17,9 @@ package com.coralblocks.coralds;
 
 import java.util.Iterator;
 
+import com.coralblocks.coralpool.ObjectBuilder;
 import com.coralblocks.coralpool.ObjectPool;
 import com.coralblocks.coralpool.TieredObjectPool;
-import com.coralblocks.coralpool.util.Builder;
 
 /**
  * A fast and garbage-free double-linked list.
@@ -50,7 +50,7 @@ public class LinkedList<E> implements Iterable<E> {
 	 */
 	public LinkedList(int initialCapacity) {
 		
-		Builder<Entry<E>> builder = new Builder<Entry<E>>() {
+		ObjectBuilder<Entry<E>> builder = new ObjectBuilder<Entry<E>>() {
 			@Override
 			public Entry<E> newInstance() {
 				return new Entry<E>();

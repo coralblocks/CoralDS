@@ -22,8 +22,8 @@ import java.util.NoSuchElementException;
 import com.coralblocks.coralds.LinkedList;
 import com.coralblocks.coralds.util.MathUtils;
 import com.coralblocks.coralpool.ArrayObjectPool;
+import com.coralblocks.coralpool.ObjectBuilder;
 import com.coralblocks.coralpool.ObjectPool;
-import com.coralblocks.coralpool.util.Builder;
 
 /**
  * A hash map implementation that produces zero garbage and uses primitive {@code long} keys with generic values.
@@ -104,7 +104,7 @@ public class LongMap<E> implements Iterable<E> {
 		this.loadFactor = loadFactor;
 		this.threshold = Math.round(initialCapacity * loadFactor);
 		
-		Builder<Entry<E>> builder = new Builder<Entry<E>>() {
+		ObjectBuilder<Entry<E>> builder = new ObjectBuilder<Entry<E>>() {
 			@Override
 			public Entry<E> newInstance() {
 				return new Entry<E>();

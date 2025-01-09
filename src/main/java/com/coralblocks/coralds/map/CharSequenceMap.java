@@ -22,8 +22,8 @@ import java.util.NoSuchElementException;
 import com.coralblocks.coralds.LinkedList;
 import com.coralblocks.coralds.util.MathUtils;
 import com.coralblocks.coralpool.ArrayObjectPool;
+import com.coralblocks.coralpool.ObjectBuilder;
 import com.coralblocks.coralpool.ObjectPool;
-import com.coralblocks.coralpool.util.Builder;
 
 /**
  * A hash map implementation that uses {@link CharSequence CharSequences} as keys
@@ -170,7 +170,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
 		this.threshold = Math.round(initialCapacity * loadFactor);
 		this.maxKeyLength = maxKeyLength;
 		
-		Builder<Entry<E>> builder = new Builder<Entry<E>>() {
+		ObjectBuilder<Entry<E>> builder = new ObjectBuilder<Entry<E>>() {
 			@Override
 			public Entry<E> newInstance() {
 				return new Entry<E>(maxKeyLength);
