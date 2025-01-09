@@ -27,22 +27,15 @@ import com.coralblocks.coralpool.ObjectPool;
 import com.coralblocks.coralpool.util.Builder;
 
 /**
- * <p>A fast hash map that uses int primitives as keys.</p>
+ * A hash map implementation that produces zero garbage and uses primitive {@code int} keys with generic values.
+ * This map is optimized for performance and memory efficiency, supporting fast lookups,
+ * insertions, and deletions. It uses separate chaining for collision resolution and employs
+ * a reusable iterator not to producer any garbage.
  * 
- * <p>It produces <b>ZERO garbage.</b>.</p>
- *  
- * <p>Its default initial capacity (before a rehash is needed) is 128. The default load factor is 80%.</p>
- *  
- * <p>Initial capacity must be a <b>power of two</b> or an IllegalArgumentException will be thrown by the constructor. That's for <b>bitwise fast hashing</b>.</p>
- *  
- * <p>You should choose the initial capacity wisely, according to your needs, in order to avoid a rehash which of course produces garbage.</p>
- *  
- * <p>It re-uses the same iterator instance not to produce garbage.</p>
- *  
- * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>, in other words, 
+ *  <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>, in other words, 
  *  it will break if used concurrently by multiple threads.</p>
- * 
- * @param <E> the entry type this hash map will hold
+ *
+ * @param <E> the type of mapped values
  */
 public class IntObjectMap<E> implements Iterable<E> {
 	
