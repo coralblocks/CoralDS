@@ -329,14 +329,10 @@ public class IntObjectMap<E> implements Iterable<E> {
 			
 			rehash();
 
-			index = toArrayIndex(key); // lengthMinusOne has changed!
-
-			data[index] = getEntryFromPool(key, value, data[index]);
-
-		} else {
-			
-			data[index] = getEntryFromPool(key, value, data[index]);
+			index = toArrayIndex(key); // array length has changed
 		}
+			
+		data[index] = getEntryFromPool(key, value, data[index]);
 
 		count++;
 
