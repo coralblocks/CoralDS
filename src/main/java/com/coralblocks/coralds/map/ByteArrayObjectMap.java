@@ -342,6 +342,13 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 		
 		oldArrays.addLast(new SoftReference<Entry<E>[]>(oldData));
 	}
+	
+	/**
+     * Clears all soft references to old arrays to free memory.
+     */
+	public void clearSoftReferences() {
+		oldArrays.clear();
+	}
 
 	public final E put(byte[] key, E value) {
 		
