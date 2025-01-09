@@ -19,14 +19,14 @@ import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.coralblocks.coralds.LinkedObjectList;
+import com.coralblocks.coralds.LinkedList;
 import com.coralblocks.coralds.util.MathUtils;
 import com.coralblocks.coralpool.ArrayObjectPool;
 import com.coralblocks.coralpool.ObjectPool;
 import com.coralblocks.coralpool.util.Builder;
 
 /**
- * A hash map implementation that produces zero garbage and uses primitive {@code long} keys with generic values.
+ * A hash map implementation that produces zero garbage and uses primitive {@code int} keys with generic values.
  * This map is optimized for performance and memory efficiency, supporting fast lookups,
  * insertions, and deletions. It uses separate chaining for collision resolution and employs
  * a reusable iterator not to producer any garbage.
@@ -36,7 +36,7 @@ import com.coralblocks.coralpool.util.Builder;
  *
  * @param <E> the type of mapped values
  */
-public class LongObjectMap<E> implements Iterable<E> {
+public class IntMap<E> implements Iterable<E> {
 	
 	/** The default initial capacity if not provided in the constructor */
 	public static int DEFAULT_INITIAL_CAPACITY = 128;
@@ -44,11 +44,11 @@ public class LongObjectMap<E> implements Iterable<E> {
 	/** The default load factor if not provided in the constructor */
 	public static float DEFAULT_LOAD_FACTOR = 0.80f;
 	
-	/* Our LinkedObjectList does not produce any garbage, not even when it grows */
+	/* Our LinkedList does not produce any garbage, not even when it grows */
 	private static final int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
 	private static class Entry<T> {
-		long key;
+		int key;
 		T value;
 		Entry<T> next;
 	}
@@ -67,36 +67,36 @@ public class LongObjectMap<E> implements Iterable<E> {
 
 	private final ObjectPool<Entry<E>> entryPool;
 	
-	private final LinkedObjectList<SoftReference<Entry<E>[]>> oldArrays = new LinkedObjectList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
+	private final LinkedList<SoftReference<Entry<E>[]>> oldArrays = new LinkedList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
 
 	private final ReusableIterator reusableIter = new ReusableIterator();
 
-	private long currIteratorKey;
-	
+	private int currIteratorKey;
+
 	/**
-	 * Creates a <code>LongObjectMap</code> with the default initial capacity and load factor.
+	 * Creates a <code>IntMap</code> with the default initial capacity and load factor.
 	 */
-	public LongObjectMap() {
+	public IntMap() {
 		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);
 	}
 
 	/**
-	 * Creates a <code>LongObjectMap</code> with the default load factor.
+	 * Creates a <code>IntMap</code> with the default load factor.
 	 * 
 	 * @param initialCapacity the desired initial capacity
 	 */
-	public LongObjectMap(int initialCapacity) {
+	public IntMap(int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
 	/**
-	 * Creates a <code>LongObjectMap</code>.
+	 * Creates a <code>IntMap</code>.
 	 * 
 	 * @param initialCapacity the desired initial capacity
 	 * @param loadFactor the desired load factor
 	 */
 	@SuppressWarnings("unchecked")
-	public LongObjectMap(int initialCapacity, float loadFactor) {
+	public IntMap(int initialCapacity, float loadFactor) {
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;
@@ -121,7 +121,7 @@ public class LongObjectMap<E> implements Iterable<E> {
 		return data.length;
 	}
 	
-	private Entry<E> getEntryFromPool(long key, E value, Entry<E> next) {
+	private Entry<E> getEntryFromPool(int key, E value, Entry<E> next) {
 		
 		Entry<E> newEntry = entryPool.get();
 
@@ -139,12 +139,12 @@ public class LongObjectMap<E> implements Iterable<E> {
 	}
 	
 	/**
-	 * When using the Iterator for this <code>LongObjectMap</code>, this method will return the current key of the last 
+	 * When using the Iterator for this <code>IntMap</code>, this method will return the current key of the last 
 	 * element returned by Iterator.next().
 	 * 
 	 * @return the current key of the last iterated element
 	 */
-	public final long getCurrIteratorKey() {
+	public final int getCurrIteratorKey() {
 		return currIteratorKey;
 	}
 
@@ -166,11 +166,11 @@ public class LongObjectMap<E> implements Iterable<E> {
 		return size() == 0;
 	}
 
-	private final int toArrayIndex(long key) {
+	private final int toArrayIndex(int key) {
 		if (isPowerOfTwo) {
-			return (((int) key) & 0x7FFFFFFF) & lengthMinusOne;
+			return (key & 0x7FFFFFFF) & lengthMinusOne;
 		} else {
-			return (((int) key) & 0x7FFFFFFF) % length;
+			return (key & 0x7FFFFFFF) % length;
 		}
 	}
 
@@ -180,7 +180,7 @@ public class LongObjectMap<E> implements Iterable<E> {
 	 * @param key the key to check
 	 * @return true if the map contains the given key
 	 */
-	public boolean containsKey(long key) {
+	public boolean containsKey(int key) {
 
 		Entry<E> e = data[toArrayIndex(key)];
 
@@ -203,7 +203,7 @@ public class LongObjectMap<E> implements Iterable<E> {
 	 * @param key the key to get the value
 	 * @return the value associated with the given key
 	 */
-	public E get(long key) {
+	public E get(int key) {
 
 		Entry<E> e = data[toArrayIndex(key)];
 
@@ -272,7 +272,7 @@ public class LongObjectMap<E> implements Iterable<E> {
 	 * @param value the value to add
 	 * @return any previous value associated with the given key or null if there was not a value associated with this key
 	 */
-	public E put(long key, E value) {
+	public E put(int key, E value) {
 
 		ensureNotNull(value);
 		
@@ -298,7 +298,7 @@ public class LongObjectMap<E> implements Iterable<E> {
 			
 			rehash();
 
-			index = toArrayIndex(key); // array length has changed!
+			index = toArrayIndex(key); // array length has changed
 		}
 			
 		data[index] = getEntryFromPool(key, value, data[index]);
@@ -318,7 +318,7 @@ public class LongObjectMap<E> implements Iterable<E> {
 	 * @param key the key to remove
 	 * @return the value for the removed key
 	 */
-	public E remove(long key) {
+	public E remove(int key) {
 
 		int index = toArrayIndex(key);
 

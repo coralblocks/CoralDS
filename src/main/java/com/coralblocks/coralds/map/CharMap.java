@@ -19,41 +19,44 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * A map implementation that uses bytes as keys and is backed by a fixed-size array of 256 elements,
+ * A map implementation that uses 1-byte chars as keys and is backed by a fixed-size array of 128 elements (ASCII codes from 0 to 127),
  * providing constant-time access performance. This implementation does not accept <code>null</code> values
  * but can store any non-null object type specified by the generic parameter.
  * 
  * @param <E> the entry type this hash map will hold
  */
-public final class ByteObjectMap<E> implements Iterable<E> {
+public final class CharMap<E> implements Iterable<E> {
 
 	@SuppressWarnings("unchecked")
-	private final E[] data = (E[]) new Object[256];
+	private final E[] data = (E[]) new Object[128];
 	
 	private final ReusableIterator iter = new ReusableIterator();
 	
 	private int count = 0;
 	
-	private byte currIteratorKey;
+	private char currIteratorKey;
 	
     /**
-     * Constructs an empty <code>ByteObjectMap</code>.
+     * Constructs an empty <code>CharMap</code>.
      */
-	public ByteObjectMap() {
+	public CharMap() {
 		
 	}
 
-	private final int convert(byte key) {
-		return key & 0xff;
+	private final int convert(char key) {
+		if (key < 0 || key > 127) {
+			throw new IllegalArgumentException("Only ascii chars between 0 and 127 (inclusive) are supported: " + ((int) key));
+		}
+		return (int) key;
 	}
 	
     /**
      * Checks if the map contains a mapping for the specified key.
      *
-     * @param key the byte key whose presence in this map is to be tested
+     * @param key the char key whose presence in this map is to be tested
      * @return true if this map contains a mapping for the specified key
      */
-	public final boolean containsKey(byte key) {
+	public final boolean containsKey(char key) {
 		return data[convert(key)] != null;
 	}
 
@@ -62,12 +65,12 @@ public final class ByteObjectMap<E> implements Iterable<E> {
      * If the map previously contained a mapping for the key, the old value
      * is replaced and returned.
      *
-     * @param key the byte key with which the specified value is to be associated
+     * @param key the char key with which the specified value is to be associated
      * @param value the value to be associated with the specified key (must not be null)
      * @return the previous value associated with the key, or null if there was no mapping for the key
      * @throws NullPointerException if the specified value is null
      */
-	public final E put(byte key, E value) {
+	public final E put(char key, E value) {
 
 		ensureNotNull(value);
 		
@@ -88,20 +91,20 @@ public final class ByteObjectMap<E> implements Iterable<E> {
     /**
      * Returns the value to which the specified key is mapped.
      *
-     * @param key the byte key whose associated value is to be returned
+     * @param key the char key whose associated value is to be returned
      * @return the value to which the specified key is mapped, or null if this map contains no mapping for the key
      */
-	public final E get(byte key) {
+	public final E get(char key) {
 		return data[convert(key)];
 	}
 
     /**
      * Removes the mapping for the specified key if present.
      *
-     * @param key the byte key whose mapping is to be removed from the map
+     * @param key the char key whose mapping is to be removed from the map
      * @return the previous value associated with the key, or null if there was no mapping for the key
      */
-	public final E remove(byte key) {
+	public final E remove(char key) {
 		int index = convert(key);
 		E old = data[index];
 		data[index] = null;
@@ -113,12 +116,12 @@ public final class ByteObjectMap<E> implements Iterable<E> {
 	}
 	
 	/**
-	 * When using the Iterator for this <code>ByteObjectMap</code>, this method will return the current key of the last 
+	 * When using the Iterator for this <code>CharMap</code>, this method will return the current key of the last 
 	 * element returned by Iterator.next().
 	 * 
 	 * @return the current key of the last iterated element
 	 */
-	public final byte getCurrIteratorKey() {
+	public final char getCurrIteratorKey() {
 		return currIteratorKey;
 	}
 
@@ -151,7 +154,7 @@ public final class ByteObjectMap<E> implements Iterable<E> {
 				e = data[index];
 				index++;
 			}
-			currIteratorKey = (byte) (index - 1);
+			currIteratorKey = (char) (index - 1);
 			position++;
 			return e;
 		}

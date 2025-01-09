@@ -23,13 +23,13 @@ import java.util.NoSuchElementException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CharSequenceObjectMapTest {
+public class CharSequenceMapTest {
     
-    private CharSequenceObjectMap<String> map;
+    private CharSequenceMap<String> map;
     
     @Before
     public void setUp() {
-        map = new CharSequenceObjectMap<>();
+        map = new CharSequenceMap<>();
     }
     
     @Test
@@ -69,7 +69,7 @@ public class CharSequenceObjectMapTest {
     
     @Test
     public void testCustomCapacityAndLoadFactor() {
-        map = new CharSequenceObjectMap<>(64, 0.5f);
+        map = new CharSequenceMap<>(64, 0.5f);
         
         // Add enough entries to trigger rehash
         for (int i = 0; i < 33; i++) {
@@ -170,18 +170,18 @@ public class CharSequenceObjectMapTest {
     @Test
     public void testDifferentConstructors() {
         // Test all constructor variants
-        new CharSequenceObjectMap<String>();
-        new CharSequenceObjectMap<String>(256);
-        new CharSequenceObjectMap<String>(256, (short)128);
-        new CharSequenceObjectMap<String>(256, 0.75f);
-        new CharSequenceObjectMap<String>((short)128);
-        new CharSequenceObjectMap<String>((short)128, 0.75f);
-        new CharSequenceObjectMap<String>(0.75f);
-        new CharSequenceObjectMap<String>(256, (short)128, 0.75f);
+        new CharSequenceMap<String>();
+        new CharSequenceMap<String>(256);
+        new CharSequenceMap<String>(256, (short)128);
+        new CharSequenceMap<String>(256, 0.75f);
+        new CharSequenceMap<String>((short)128);
+        new CharSequenceMap<String>((short)128, 0.75f);
+        new CharSequenceMap<String>(0.75f);
+        new CharSequenceMap<String>(256, (short)128, 0.75f);
         
         // Verify they all work as expected
-        CharSequenceObjectMap<String> customMap = 
-            new CharSequenceObjectMap<>(32, (short)64, 0.5f);
+        CharSequenceMap<String> customMap = 
+            new CharSequenceMap<>(32, (short)64, 0.5f);
         customMap.put("test", "value");
         assertEquals("value", customMap.get("test"));
     }

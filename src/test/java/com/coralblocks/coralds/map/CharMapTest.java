@@ -23,13 +23,13 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CharObjectMapTest {
+public class CharMapTest {
     
-    private CharObjectMap<String> map;
+    private CharMap<String> map;
     
     @Before
     public void setUp() {
-        map = new CharObjectMap<>();
+        map = new CharMap<>();
     }
     
     @Test

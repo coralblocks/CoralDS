@@ -22,16 +22,16 @@ import java.nio.ByteBuffer;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ByteBufferObjectMapTest {
+public class ByteBufferMapTest {
     
-    private ByteBufferObjectMap<String> map;
+    private ByteBufferMap<String> map;
     private static final int INITIAL_CAPACITY = 16;
     private static final float LOAD_FACTOR = 0.75f;
     private static final short MAX_KEY_LENGTH = 32;
     
     @Before
     public void setUp() {
-        map = new ByteBufferObjectMap<>(INITIAL_CAPACITY, MAX_KEY_LENGTH, LOAD_FACTOR);
+        map = new ByteBufferMap<>(INITIAL_CAPACITY, MAX_KEY_LENGTH, LOAD_FACTOR);
     }
     
     @Test

@@ -23,15 +23,15 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class IntObjectMapTest {
+public class IntMapTest {
     
-    private IntObjectMap<String> mapRegular;
-    private IntObjectMap<String> mapPowerOfTwo;
+    private IntMap<String> mapRegular;
+    private IntMap<String> mapPowerOfTwo;
     
     @Before
     public void setUp() {
-        mapRegular = new IntObjectMap<>(3);
-        mapPowerOfTwo = new IntObjectMap<>(4);
+        mapRegular = new IntMap<>(3);
+        mapPowerOfTwo = new IntMap<>(4);
     }
     
     @Test
@@ -304,7 +304,7 @@ public class IntObjectMapTest {
     
     @Test
     public void testCustomInitialCapacity1() {
-        IntObjectMap<String> customMap = new IntObjectMap<>(210);
+        IntMap<String> customMap = new IntMap<>(210);
         for (int i = 0; i < 200; i++) {
             customMap.put(i, "value" + i);
         }
@@ -313,7 +313,7 @@ public class IntObjectMapTest {
     
     @Test
     public void testCustomInitialCapacity2() {
-        IntObjectMap<String> customMap = new IntObjectMap<>(256);
+        IntMap<String> customMap = new IntMap<>(256);
         for (int i = 0; i < 200; i++) {
             customMap.put(i, "value" + i);
         }

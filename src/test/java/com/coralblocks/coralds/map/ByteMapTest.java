@@ -23,13 +23,13 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ByteObjectMapTest {
+public class ByteMapTest {
     
-    private ByteObjectMap<String> map;
+    private ByteMap<String> map;
     
     @Before
     public void setUp() {
-        map = new ByteObjectMap<>();
+        map = new ByteMap<>();
     }
     
 

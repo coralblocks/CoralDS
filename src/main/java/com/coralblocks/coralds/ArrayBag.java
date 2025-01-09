@@ -28,16 +28,16 @@ import java.util.Iterator;
  *
  * @param <E> the type of elements stored in the ArrayBag
  */
-public class ArrayObjectBag<E> implements Iterable<E> {
+public class ArrayBag<E> implements Iterable<E> {
 	
 	/** The default growth factor */
 	public static float DEFAULT_GROWTH_FACTOR = 1.75f;
 	
-	/* Our LinkedObjectList does not produce any garbage, not even when it grows */
+	/* Our LinkedList does not produce any garbage, not even when it grows */
 	private final static int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
 	private E[] array;
-	private LinkedObjectList<SoftReference<E[]>> oldArrays = new LinkedObjectList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
+	private LinkedList<SoftReference<E[]>> oldArrays = new LinkedList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
 	private int count = 0;
 	private final float growthFactor;
 	
@@ -48,7 +48,7 @@ public class ArrayObjectBag<E> implements Iterable<E> {
      * @param growthFactor the factor by which the array size increases when full
      */
 	@SuppressWarnings("unchecked")
-	public ArrayObjectBag(int initialSize, float growthFactor) {
+	public ArrayBag(int initialSize, float growthFactor) {
 		if (growthFactor <= 1) throw new IllegalArgumentException("growthFactor must be greater than one: " + growthFactor);
 		if (initialSize <= 0) throw new IllegalArgumentException("initialSize must be greater than zero: " + initialSize);
 		this.array = (E[]) new Object[initialSize];
@@ -60,7 +60,7 @@ public class ArrayObjectBag<E> implements Iterable<E> {
      *
      * @param initialSize the initial size of the internal array
      */
-	public ArrayObjectBag(int initialSize) {
+	public ArrayBag(int initialSize) {
 		this(initialSize, DEFAULT_GROWTH_FACTOR);
 	}
 	
@@ -213,7 +213,7 @@ public class ArrayObjectBag<E> implements Iterable<E> {
 
 		@Override
 		public final void remove() {
-			ArrayObjectBag.this.remove(--counter);
+			ArrayBag.this.remove(--counter);
 		}
 	}
 	

@@ -20,14 +20,14 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.Iterator;
 
-public class LinkedObjectListTest {
+public class LinkedListTest {
     
-    private LinkedObjectList<String> list;
+    private LinkedList<String> list;
     private static final int INITIAL_CAPACITY = 10;
     
     @Before
     public void setUp() {
-        list = new LinkedObjectList<>(INITIAL_CAPACITY);
+        list = new LinkedList<>(INITIAL_CAPACITY);
     }
     
     @Test

@@ -29,7 +29,7 @@ import com.coralblocks.coralpool.util.Builder;
  * 
  * @param <E> the type of objects this object list will hold
  */
-public class LinkedObjectList<E> implements Iterable<E> {
+public class LinkedList<E> implements Iterable<E> {
 
 	private static class Entry<E> {
 		E value = null;
@@ -44,11 +44,11 @@ public class LinkedObjectList<E> implements Iterable<E> {
 	private int size = 0;
 
 	/**
-	 * Creates a LinkedObjectList
+	 * Creates a LinkedList
 	 * 
 	 * @param initialCapacity the initial number of preallocated internal entries
 	 */
-	public LinkedObjectList(int initialCapacity) {
+	public LinkedList(int initialCapacity) {
 		
 		Builder<Entry<E>> builder = new Builder<Entry<E>>() {
 			@Override

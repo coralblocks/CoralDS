@@ -19,7 +19,7 @@ import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.coralblocks.coralds.LinkedObjectList;
+import com.coralblocks.coralds.LinkedList;
 import com.coralblocks.coralds.util.MathUtils;
 import com.coralblocks.coralpool.ArrayObjectPool;
 import com.coralblocks.coralpool.ObjectPool;
@@ -40,7 +40,7 @@ import com.coralblocks.coralpool.util.Builder;
  *
  * @param <E> the type of mapped values
  */
-public class CharSequenceObjectMap<E> implements Iterable<E> {
+public class CharSequenceMap<E> implements Iterable<E> {
 
 	/** The default initial capacity of the map. */
 	public static final int DEFAULT_INITIAL_CAPACITY = 128;
@@ -78,81 +78,81 @@ public class CharSequenceObjectMap<E> implements Iterable<E> {
 
 	private ReusableIterator reusableIter = new ReusableIterator();
 	
-	private final LinkedObjectList<SoftReference<Entry<E>[]>> oldArrays = new LinkedObjectList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
+	private final LinkedList<SoftReference<Entry<E>[]>> oldArrays = new LinkedList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
 	
     /**
-     * Constructs a new {@code CharSequenceObjectMap} with default initial capacity, maximum key length,
+     * Constructs a new {@code CharSequenceMap} with default initial capacity, maximum key length,
      * and load factor.
      */
-	public CharSequenceObjectMap() {
+	public CharSequenceMap() {
 		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR);
 	}
 
     /**
-     * Constructs a new {@code CharSequenceObjectMap} with the specified initial capacity and default
+     * Constructs a new {@code CharSequenceMap} with the specified initial capacity and default
      * maximum key length and load factor.
      *
      * @param initialCapacity the initial capacity of the map
      */
-	public CharSequenceObjectMap(int initialCapacity) {
+	public CharSequenceMap(int initialCapacity) {
 		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR);
 	}
 	
     /**
-     * Constructs a new {@code CharSequenceObjectMap} with the specified initial capacity, maximum
+     * Constructs a new {@code CharSequenceMap} with the specified initial capacity, maximum
      * key length, and default load factor.
      *
      * @param initialCapacity the initial capacity of the map
      * @param maxKeyLength    the maximum allowed length for keys
      */
-	public CharSequenceObjectMap(int initialCapacity, short maxKeyLength) {
+	public CharSequenceMap(int initialCapacity, short maxKeyLength) {
 		this(initialCapacity, maxKeyLength, DEFAULT_LOAD_FACTOR);
 	}
 	
     /**
-     * Constructs a new {@code CharSequenceObjectMap} with the specified initial capacity, maximum key
+     * Constructs a new {@code CharSequenceMap} with the specified initial capacity, maximum key
      * length, and load factor.
      *
      * @param initialCapacity the initial capacity of the map
      * @param loadFactor      the load factor for resizing the map
      */
-	public CharSequenceObjectMap(int initialCapacity, float loadFactor) {
+	public CharSequenceMap(int initialCapacity, float loadFactor) {
 		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, loadFactor);
 	}
 	
     /**
-     * Constructs a new {@code CharSequenceObjectMap} with the specified maximum key length and default
+     * Constructs a new {@code CharSequenceMap} with the specified maximum key length and default
      * initial capacity and load factor.
      *
      * @param maxKeyLength the maximum allowed length for keys
      */
-	public CharSequenceObjectMap(short maxKeyLength) {
+	public CharSequenceMap(short maxKeyLength) {
 		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, DEFAULT_LOAD_FACTOR);
 	}
 	
     /**
-     * Constructs a new {@code CharSequenceObjectMap} with the specified maximum key length and load
+     * Constructs a new {@code CharSequenceMap} with the specified maximum key length and load
      * factor, using the default initial capacity.
      *
      * @param maxKeyLength the maximum allowed length for keys
      * @param loadFactor    the load factor for resizing the map
      */
-	public CharSequenceObjectMap(short maxKeyLength, float loadFactor) {
+	public CharSequenceMap(short maxKeyLength, float loadFactor) {
 		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, loadFactor);
 	}
 	
     /**
-     * Constructs a new {@code CharSequenceObjectMap} with the specified load factor and default
+     * Constructs a new {@code CharSequenceMap} with the specified load factor and default
      * initial capacity and maximum key length.
      *
      * @param loadFactor the load factor for resizing the map
      */
-	public CharSequenceObjectMap(float loadFactor) {
+	public CharSequenceMap(float loadFactor) {
 		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, loadFactor);
 	}
 	
     /**
-     * Constructs a new {@code CharSequenceObjectMap} with the specified initial capacity, maximum key
+     * Constructs a new {@code CharSequenceMap} with the specified initial capacity, maximum key
      * length, and load factor.
      *
      * @param initialCapacity the initial capacity of the map
@@ -160,7 +160,7 @@ public class CharSequenceObjectMap<E> implements Iterable<E> {
      * @param loadFactor      the load factor for resizing the map
      */
 	@SuppressWarnings("unchecked")
-	public CharSequenceObjectMap(int initialCapacity, short maxKeyLength, float loadFactor) {
+	public CharSequenceMap(int initialCapacity, short maxKeyLength, float loadFactor) {
 		
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];

@@ -20,7 +20,7 @@ import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.coralblocks.coralds.LinkedObjectList;
+import com.coralblocks.coralds.LinkedList;
 import com.coralblocks.coralds.util.MathUtils;
 import com.coralblocks.coralpool.ArrayObjectPool;
 import com.coralblocks.coralpool.ObjectPool;
@@ -41,7 +41,7 @@ import com.coralblocks.coralpool.util.Builder;
  *
  * @param <E> the type of mapped values
  */
-public class ByteBufferObjectMap<E> implements Iterable<E> {
+public class ByteBufferMap<E> implements Iterable<E> {
 
 	/** The default initial capacity of the map. */
 	public static final int DEFAULT_INITIAL_CAPACITY = 128;
@@ -80,81 +80,81 @@ public class ByteBufferObjectMap<E> implements Iterable<E> {
 
 	private ReusableIterator reusableIter = new ReusableIterator();
 	
-	private final LinkedObjectList<SoftReference<Entry<E>[]>> oldArrays = new LinkedObjectList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
+	private final LinkedList<SoftReference<Entry<E>[]>> oldArrays = new LinkedList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
 	
     /**
-     * Constructs a new {@code ByteBufferObjectMap} with default initial capacity, maximum key length,
+     * Constructs a new {@code ByteBufferMap} with default initial capacity, maximum key length,
      * and load factor.
      */
-	public ByteBufferObjectMap() {
+	public ByteBufferMap() {
 		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR);
 	}
 
     /**
-     * Constructs a new {@code ByteBufferObjectMap} with the specified initial capacity and default
+     * Constructs a new {@code ByteBufferMap} with the specified initial capacity and default
      * maximum key length and load factor.
      *
      * @param initialCapacity the initial capacity of the map
      */
-	public ByteBufferObjectMap(int initialCapacity) {
+	public ByteBufferMap(int initialCapacity) {
 		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR);
 	}
 	
     /**
-     * Constructs a new {@code ByteBufferObjectMap} with the specified initial capacity, maximum
+     * Constructs a new {@code ByteBufferMap} with the specified initial capacity, maximum
      * key length, and default load factor.
      *
      * @param initialCapacity the initial capacity of the map
      * @param maxKeyLength    the maximum allowed length for keys
      */
-	public ByteBufferObjectMap(int initialCapacity, short maxKeyLength) {
+	public ByteBufferMap(int initialCapacity, short maxKeyLength) {
 		this(initialCapacity, maxKeyLength, DEFAULT_LOAD_FACTOR);
 	}
 	
     /**
-     * Constructs a new {@code ByteBufferObjectMap} with the specified initial capacity, maximum key
+     * Constructs a new {@code ByteBufferMap} with the specified initial capacity, maximum key
      * length, and load factor.
      *
      * @param initialCapacity the initial capacity of the map
      * @param loadFactor      the load factor for resizing the map
      */
-	public ByteBufferObjectMap(int initialCapacity, float loadFactor) {
+	public ByteBufferMap(int initialCapacity, float loadFactor) {
 		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, loadFactor);
 	}
 	
     /**
-     * Constructs a new {@code ByteBufferObjectMap} with the specified maximum key length and default
+     * Constructs a new {@code ByteBufferMap} with the specified maximum key length and default
      * initial capacity and load factor.
      *
      * @param maxKeyLength the maximum allowed length for keys
      */
-	public ByteBufferObjectMap(short maxKeyLength) {
+	public ByteBufferMap(short maxKeyLength) {
 		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, DEFAULT_LOAD_FACTOR);
 	}
 	
     /**
-     * Constructs a new {@code ByteBufferObjectMap} with the specified maximum key length and load
+     * Constructs a new {@code ByteBufferMap} with the specified maximum key length and load
      * factor, using the default initial capacity.
      *
      * @param maxKeyLength the maximum allowed length for keys
      * @param loadFactor    the load factor for resizing the map
      */
-	public ByteBufferObjectMap(short maxKeyLength, float loadFactor) {
+	public ByteBufferMap(short maxKeyLength, float loadFactor) {
 		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, loadFactor);
 	}
 	
     /**
-     * Constructs a new {@code ByteBufferObjectMap} with the specified load factor and default
+     * Constructs a new {@code ByteBufferMap} with the specified load factor and default
      * initial capacity and maximum key length.
      *
      * @param loadFactor the load factor for resizing the map
      */
-	public ByteBufferObjectMap(float loadFactor) {
+	public ByteBufferMap(float loadFactor) {
 		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, loadFactor);
 	}
 	
     /**
-     * Constructs a new {@code ByteBufferObjectMap} with the specified initial capacity, maximum key
+     * Constructs a new {@code ByteBufferMap} with the specified initial capacity, maximum key
      * length, and load factor.
      *
      * @param initialCapacity the initial capacity of the map
@@ -162,7 +162,7 @@ public class ByteBufferObjectMap<E> implements Iterable<E> {
      * @param loadFactor      the load factor for resizing the map
      */
 	@SuppressWarnings("unchecked")
-	public ByteBufferObjectMap(int initialCapacity, short maxKeyLength, float loadFactor) {
+	public ByteBufferMap(int initialCapacity, short maxKeyLength, float loadFactor) {
 		
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
