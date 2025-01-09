@@ -53,7 +53,7 @@ public class IntObjectMap<E> implements Iterable<E> {
 	public static float DEFAULT_LOAD_FACTOR = 0.80f;
 	
 	/* Our LinkedObjectList does not produce any garbage, not even when it grows */
-	private final static int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
+	private static final int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
 	private static class Entry<T> {
 		int key;
