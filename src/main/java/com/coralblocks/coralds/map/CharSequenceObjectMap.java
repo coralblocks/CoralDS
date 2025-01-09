@@ -273,7 +273,7 @@ public class CharSequenceObjectMap<E> implements Iterable<E> {
      */
 	public final E get(CharSequence key) {
 		
-		ensureMaxKeyLength(key.length());
+		if (key.length() > maxKeyLength) return null;
 
 		int hash = hashCode(key);
 		
@@ -406,7 +406,7 @@ public class CharSequenceObjectMap<E> implements Iterable<E> {
      */
 	public final E remove(CharSequence key) {
 		
-		ensureMaxKeyLength(key.length());
+		if (key.length() > maxKeyLength) return null;
 
 		int hash = hashCode(key);
 

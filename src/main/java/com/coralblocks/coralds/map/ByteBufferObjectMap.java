@@ -333,7 +333,7 @@ public class ByteBufferObjectMap<E> implements Iterable<E> {
      */
 	public final E get(byte[] key) {
 		
-		ensureMaxKeyLength(key.length);
+		if (key.length > maxKeyLength) return null;
 
 		int hash = hashCode(key);
 		
@@ -363,7 +363,7 @@ public class ByteBufferObjectMap<E> implements Iterable<E> {
      */
 	public final E get(ByteBuffer key) {
 		
-		ensureMaxKeyLength(key.remaining());
+		if (key.remaining() > maxKeyLength) return null;
 
 		int hash = hashCode(key);
 		
@@ -395,7 +395,7 @@ public class ByteBufferObjectMap<E> implements Iterable<E> {
      */
 	public final E get(byte[] key, int start, int len) {
 		
-		ensureMaxKeyLength(len);
+		if (len > maxKeyLength) return null;
 
 		int hash = hashCode(key, start, len);
 		
@@ -653,7 +653,7 @@ public class ByteBufferObjectMap<E> implements Iterable<E> {
      */
 	public final E remove(ByteBuffer key) {
 		
-		ensureMaxKeyLength(key.remaining());
+		if (key.remaining() > maxKeyLength) return null;
 
 		int hash = hashCode(key);
 
@@ -700,7 +700,7 @@ public class ByteBufferObjectMap<E> implements Iterable<E> {
      */
 	public final E remove(byte[] key) {
 		
-		ensureMaxKeyLength(key.length);
+		if (key.length > maxKeyLength) return null;
 
 		int hash = hashCode(key);
 
@@ -749,7 +749,7 @@ public class ByteBufferObjectMap<E> implements Iterable<E> {
      */
 	public final E remove(byte[] key, int start, int len) {
 		
-		ensureMaxKeyLength(len);
+		if (len > maxKeyLength) return null;
 
 		int hash = hashCode(key, start, len);
 
