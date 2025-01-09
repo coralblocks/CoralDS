@@ -27,7 +27,7 @@ import com.coralblocks.coralpool.ObjectPool;
 import com.coralblocks.coralpool.util.Builder;
 
 /**
- * A hash map implementation that uses byte arrays or {@link ByteBuffer ByteBuffers} as keys
+ * A hash map implementation that uses {@link ByteBuffer ByteBuffers} and/or byte arrays as keys
  * and objects of type {@code E} as values. This map handles keys with variable lengths up to a
  * specified maximum and employs techniques such as soft references and object pooling to optimize
  * memory usage and performance.
@@ -41,7 +41,7 @@ import com.coralblocks.coralpool.util.Builder;
  *
  * @param <E> the type of mapped values
  */
-public class ByteArrayObjectMap<E> implements Iterable<E> {
+public class ByteBufferObjectMap<E> implements Iterable<E> {
 
 	/** The default initial capacity of the map. */
 	public static final int DEFAULT_INITIAL_CAPACITY = 128;
@@ -55,16 +55,14 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 	private static final int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
 	static class Entry<T> {
-		final ByteBuffer bb;
-		final byte[] key;
+		final ByteBuffer keyByteBuffer;
 		int keyLength;
 		int hash;
 		T value;
 		Entry<T> next;
 		
 		Entry(int maxKeyLength) {
-			this.key = new byte[maxKeyLength];
-			this.bb = ByteBuffer.wrap(this.key);
+			this.keyByteBuffer = ByteBuffer.allocateDirect(maxKeyLength);
 		}
 	}
 
@@ -85,78 +83,78 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 	private final LinkedObjectList<SoftReference<Entry<E>[]>> oldArrays = new LinkedObjectList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
 	
     /**
-     * Constructs a new {@code ByteArrayObjectMap} with default initial capacity, maximum key length,
+     * Constructs a new {@code ByteBufferObjectMap} with default initial capacity, maximum key length,
      * and load factor.
      */
-	public ByteArrayObjectMap() {
+	public ByteBufferObjectMap() {
 		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR);
 	}
 
     /**
-     * Constructs a new {@code ByteArrayObjectMap} with the specified initial capacity and default
+     * Constructs a new {@code ByteBufferObjectMap} with the specified initial capacity and default
      * maximum key length and load factor.
      *
      * @param initialCapacity the initial capacity of the map
      */
-	public ByteArrayObjectMap(int initialCapacity) {
+	public ByteBufferObjectMap(int initialCapacity) {
 		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR);
 	}
 	
     /**
-     * Constructs a new {@code ByteArrayObjectMap} with the specified initial capacity, maximum
+     * Constructs a new {@code ByteBufferObjectMap} with the specified initial capacity, maximum
      * key length, and default load factor.
      *
      * @param initialCapacity the initial capacity of the map
      * @param maxKeyLength    the maximum allowed length for keys
      */
-	public ByteArrayObjectMap(int initialCapacity, short maxKeyLength) {
+	public ByteBufferObjectMap(int initialCapacity, short maxKeyLength) {
 		this(initialCapacity, maxKeyLength, DEFAULT_LOAD_FACTOR);
 	}
 	
     /**
-     * Constructs a new {@code ByteArrayObjectMap} with the specified initial capacity, maximum key
+     * Constructs a new {@code ByteBufferObjectMap} with the specified initial capacity, maximum key
      * length, and load factor.
      *
      * @param initialCapacity the initial capacity of the map
      * @param loadFactor      the load factor for resizing the map
      */
-	public ByteArrayObjectMap(int initialCapacity, float loadFactor) {
+	public ByteBufferObjectMap(int initialCapacity, float loadFactor) {
 		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, loadFactor);
 	}
 	
     /**
-     * Constructs a new {@code ByteArrayObjectMap} with the specified maximum key length and default
+     * Constructs a new {@code ByteBufferObjectMap} with the specified maximum key length and default
      * initial capacity and load factor.
      *
      * @param maxKeyLength the maximum allowed length for keys
      */
-	public ByteArrayObjectMap(short maxKeyLength) {
+	public ByteBufferObjectMap(short maxKeyLength) {
 		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, DEFAULT_LOAD_FACTOR);
 	}
 	
     /**
-     * Constructs a new {@code ByteArrayObjectMap} with the specified maximum key length and load
+     * Constructs a new {@code ByteBufferObjectMap} with the specified maximum key length and load
      * factor, using the default initial capacity.
      *
      * @param maxKeyLength the maximum allowed length for keys
      * @param loadFactor    the load factor for resizing the map
      */
-	public ByteArrayObjectMap(short maxKeyLength, float loadFactor) {
+	public ByteBufferObjectMap(short maxKeyLength, float loadFactor) {
 		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, loadFactor);
 	}
 	
     /**
-     * Constructs a new {@code ByteArrayObjectMap} with the specified load factor and default
+     * Constructs a new {@code ByteBufferObjectMap} with the specified load factor and default
      * initial capacity and maximum key length.
      *
      * @param loadFactor the load factor for resizing the map
      */
-	public ByteArrayObjectMap(float loadFactor) {
+	public ByteBufferObjectMap(float loadFactor) {
 		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, loadFactor);
 	}
 	
     /**
-     * Constructs a new {@code ByteArrayObjectMap} with the specified initial capacity, maximum key
+     * Constructs a new {@code ByteBufferObjectMap} with the specified initial capacity, maximum key
      * length, and load factor.
      *
      * @param initialCapacity the initial capacity of the map
@@ -164,7 +162,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
      * @param loadFactor      the load factor for resizing the map
      */
 	@SuppressWarnings("unchecked")
-	public ByteArrayObjectMap(int initialCapacity, short maxKeyLength, float loadFactor) {
+	public ByteBufferObjectMap(int initialCapacity, short maxKeyLength, float loadFactor) {
 		
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
@@ -196,36 +194,6 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 		return hash & 0x7FFFFFFF;
 	}
 	
-	private static final boolean equals(byte[] internalKey, 
-										int internalKeyLength, 
-										byte[] externalKey, 
-										int externalKeyStart, 
-										int externalKeyLength) {
-		
-		if (internalKeyLength != externalKeyLength) return false;
-		
-		for(int i = 0; i < internalKeyLength; i++) {
-			if (internalKey[i] != externalKey[externalKeyStart + i]) return false;
-		}
-		
-		return true;
-	}
-	
-	private static final boolean equals(byte[] internalKey, 
-										int internalKeyLength, 
-										ByteBuffer externalKey) { 
-
-		if (internalKeyLength != externalKey.remaining()) return false;
-		
-		final int pos = externalKey.position();
-
-		for(int i = 0; i < internalKeyLength; i++) {
-			if (internalKey[i] != externalKey.get(pos + i)) return false;
-		}
-
-		return true;
-	}
-	
 	private static final int hashCode(ByteBuffer src) {
 		final int pos = src.position();
 		final int len = src.remaining();
@@ -235,6 +203,40 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 		}
 		src.position(pos);
 		return hash & 0x7FFFFFFF;
+	}
+	
+	private static final boolean equals(ByteBuffer internalKey, 
+										int internalKeyLength, 
+										byte[] externalKey, 
+										int externalKeyStart, 
+										int externalKeyLength) {
+		
+		if (internalKeyLength != externalKeyLength) return false;
+		
+		internalKey.limit(internalKeyLength).position(0);
+		
+		for(int i = 0; i < internalKeyLength; i++) {
+			if (internalKey.get(i) != externalKey[externalKeyStart + i]) return false;
+		}
+		
+		return true;
+	}
+	
+	private static final boolean equals(ByteBuffer internalKey, 
+										int internalKeyLength, 
+										ByteBuffer externalKey) { 
+
+		if (internalKeyLength != externalKey.remaining()) return false;
+		
+		internalKey.limit(internalKeyLength).position(0);
+		
+		final int pos = externalKey.position();
+
+		for(int i = 0; i < internalKeyLength; i++) {
+			if (internalKey.get(i) != externalKey.get(pos + i)) return false;
+		}
+
+		return true;
 	}
 	
 	private final int toArrayIndex(int hash) {
@@ -264,7 +266,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
      * Returns the current key from the iterator. This is useful when iterating over the map
      * to access the key corresponding to the current value.
      *
-     * @return a {@code ByteArrayHolder} containing the current key
+     * @return a {@code ByteBuffer} containing the current key
      */
 	public final ByteBuffer getCurrIteratorKey() {
 		return currIteratorKey;
@@ -341,7 +343,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 
 		while(e != null) {
 
-			if (e.hash == hash && equals(e.key, e.keyLength, key, 0, key.length)) {
+			if (e.hash == hash && equals(e.keyByteBuffer, e.keyLength, key, 0, key.length)) {
 
 				return e.value;
 			}
@@ -371,7 +373,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 
 		while(e != null) {
 
-			if (e.hash == hash && equals(e.key, e.keyLength, key)) {
+			if (e.hash == hash && equals(e.keyByteBuffer, e.keyLength, key)) {
 
 				return e.value;
 			}
@@ -403,7 +405,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 
 		while(e != null) {
 
-			if (e.hash == hash && equals(e.key, e.keyLength, key, start, len)) {
+			if (e.hash == hash && equals(e.keyByteBuffer, e.keyLength, key, start, len)) {
 
 				return e.value;
 			}
@@ -484,7 +486,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 
 		while(e != null) {
 
-			if (e.hash == hash && equals(e.key, e.keyLength, key, 0, key.length)) {
+			if (e.hash == hash && equals(e.keyByteBuffer, e.keyLength, key, 0, key.length)) {
 
 				E old = e.value;
 
@@ -506,7 +508,9 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 		Entry<E> newEntry = entryPool.get();
 
 		newEntry.keyLength = key.length;
-		System.arraycopy(key, 0, newEntry.key, 0, key.length);
+		newEntry.keyByteBuffer.clear();
+		newEntry.keyByteBuffer.put(key);
+		newEntry.keyByteBuffer.flip();
 		newEntry.hash = hash;
 		newEntry.value = value;
 		newEntry.next = data[index];
@@ -541,7 +545,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 
 		while(e != null) {
 
-			if (e.hash == hash && equals(e.key, e.keyLength, key)) {
+			if (e.hash == hash && equals(e.keyByteBuffer, e.keyLength, key)) {
 
 				E old = e.value;
 
@@ -564,7 +568,9 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 
 		newEntry.keyLength = key.remaining();
 		final int pos = key.position();
-		key.get(newEntry.key, 0, newEntry.keyLength);
+		newEntry.keyByteBuffer.clear();
+		newEntry.keyByteBuffer.put(key);
+		newEntry.keyByteBuffer.flip();
 		key.position(pos);
 		newEntry.hash = hash;
 		newEntry.value = value;
@@ -602,7 +608,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 
 		while(e != null) {
 
-			if (e.hash == hash && equals(e.key, e.keyLength, key, start, len)) {
+			if (e.hash == hash && equals(e.keyByteBuffer, e.keyLength, key, start, len)) {
 
 				E old = e.value;
 
@@ -624,7 +630,9 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 		Entry<E> newEntry = entryPool.get();
 
 		newEntry.keyLength = len;
-		System.arraycopy(key, start, newEntry.key, 0, len);
+		newEntry.keyByteBuffer.clear();
+		newEntry.keyByteBuffer.put(key, start, len);
+		newEntry.keyByteBuffer.flip();
 		newEntry.hash = hash;
 		newEntry.value = value;
 		newEntry.next = data[index];
@@ -656,7 +664,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 
 		while(e != null) {
 
-			if (e.hash == hash && equals(e.key, e.keyLength, key)) {
+			if (e.hash == hash && equals(e.keyByteBuffer, e.keyLength, key)) {
 
 				if (prev != null) {
 
@@ -703,7 +711,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 
 		while(e != null) {
 
-			if (e.hash == hash && equals(e.key, e.keyLength, key, 0, key.length)) {
+			if (e.hash == hash && equals(e.keyByteBuffer, e.keyLength, key, 0, key.length)) {
 
 				if (prev != null) {
 
@@ -752,7 +760,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 
 		while(e != null) {
 
-			if (e.hash == hash && e.key.length == len && equals(e.key, e.keyLength, key, start, len)) {
+			if (e.hash == hash && equals(e.keyByteBuffer, e.keyLength, key, start, len)) {
 
 				if (prev != null) {
 
@@ -850,8 +858,8 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 			
 			E o = entry.value;
 
-			entry.bb.limit(entry.keyLength).position(0);
-			currIteratorKey = entry.bb;
+			entry.keyByteBuffer.limit(entry.keyLength).position(0);
+			currIteratorKey = entry.keyByteBuffer;
 
 			next = entry.next;
 

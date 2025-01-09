@@ -22,16 +22,16 @@ import java.nio.ByteBuffer;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ByteArrayObjectMapTest {
+public class ByteBufferObjectMapTest {
     
-    private ByteArrayObjectMap<String> map;
+    private ByteBufferObjectMap<String> map;
     private static final int INITIAL_CAPACITY = 16;
     private static final float LOAD_FACTOR = 0.75f;
     private static final short MAX_KEY_LENGTH = 32;
     
     @Before
     public void setUp() {
-        map = new ByteArrayObjectMap<>(INITIAL_CAPACITY, MAX_KEY_LENGTH, LOAD_FACTOR);
+        map = new ByteBufferObjectMap<>(INITIAL_CAPACITY, MAX_KEY_LENGTH, LOAD_FACTOR);
     }
     
     @Test
@@ -172,12 +172,9 @@ public class ByteArrayObjectMapTest {
     }
     
     private void assertArrayEqualsByteBuffer(byte[] expected, ByteBuffer bb) {
-        byte[] actual = bb.array();
-        int length = bb.limit();
-        assertTrue("Array length mismatch", length <= actual.length);
-        assertTrue("Expected array too short", length <= expected.length);
-        for (int i = 0; i < length; i++) {
-            assertEquals("Mismatch at index " + i, expected[i], actual[i]);
+    	assertEquals(expected.length, bb.remaining());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals("Mismatch at index " + i, expected[i], bb.get(i));
         }
     }
     
