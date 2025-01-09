@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.coralblocks.coralds.LinkedObjectList;
-import com.coralblocks.coralds.holder.ByteArrayHolder;
 import com.coralblocks.coralds.util.MathUtils;
 import com.coralblocks.coralpool.ArrayObjectPool;
 import com.coralblocks.coralpool.ObjectPool;
@@ -56,6 +55,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 	private static final int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
 	static class Entry<T> {
+		final ByteBuffer bb;
 		final byte[] key;
 		int keyLength;
 		int hash;
@@ -64,6 +64,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 		
 		Entry(int maxKeyLength) {
 			this.key = new byte[maxKeyLength];
+			this.bb = ByteBuffer.wrap(this.key);
 		}
 	}
 
@@ -73,10 +74,9 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 	private int count;
 	private int threshold;
 	private float loadFactor;
-	private final ByteArrayHolder currIteratorKey = new ByteArrayHolder();
+	private ByteBuffer currIteratorKey = null;
 	private final boolean isPowerOfTwo;
 	private final int maxKeyLength;
-	private final ByteArrayHolder byteArrayHolder = new ByteArrayHolder();
 	
 	private final ObjectPool<Entry<E>> entryPool;
 
@@ -266,7 +266,7 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
      *
      * @return a {@code ByteArrayHolder} containing the current key
      */
-	public final ByteArrayHolder getCurrIteratorKey() {
+	public final ByteBuffer getCurrIteratorKey() {
 		return currIteratorKey;
 	}
 
@@ -277,36 +277,6 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
      */
 	public final boolean isEmpty() {
 		return size() == 0;
-	}
-
-    /**
-     * Checks if the map contains the specified value. If the value is found, the corresponding key
-     * is stored in the {@code ByteArrayHolder} returned by this method.
-     *
-     * @param value the value to search for
-     * @return a {@code ByteArrayHolder} containing the key if found, or an empty holder if not found
-     * @throws IllegalArgumentException if the specified value is {@code null}
-     */
-	public final ByteArrayHolder contains(E value) {
-
-		ensureNotNull(value);
-
-		for(int i = data.length - 1; i >= 0; i--) {
-
-			Entry<E> e = data[i];
-
-			while(e != null) {
-
-				if (e.value.equals(value)) {
-
-					return byteArrayHolder.set(e.key, e.keyLength);
-				}
-
-				e = e.next;
-			}
-		}
-		
-		return byteArrayHolder.clear();
 	}
 
     /**
@@ -880,7 +850,8 @@ public class ByteArrayObjectMap<E> implements Iterable<E> {
 			
 			E o = entry.value;
 
-			currIteratorKey.set(entry.key, entry.keyLength);
+			entry.bb.limit(entry.keyLength).position(0);
+			currIteratorKey = entry.bb;
 
 			next = entry.next;
 

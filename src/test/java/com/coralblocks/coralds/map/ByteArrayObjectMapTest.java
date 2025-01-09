@@ -18,12 +18,9 @@ package com.coralblocks.coralds.map;
 import static org.junit.Assert.*;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.coralblocks.coralds.holder.ByteArrayHolder;
 
 public class ByteArrayObjectMapTest {
     
@@ -174,43 +171,14 @@ public class ByteArrayObjectMapTest {
         assertEquals("Large", map.get(key3));
     }
     
-    private void assertArrayEqualsWithLength(byte[] expected, ByteArrayHolder holder) {
-        assertTrue(holder.isPresent());
-        byte[] actual = holder.getValue();
-        int length = holder.getLength();
+    private void assertArrayEqualsByteBuffer(byte[] expected, ByteBuffer bb) {
+        byte[] actual = bb.array();
+        int length = bb.limit();
         assertTrue("Array length mismatch", length <= actual.length);
         assertTrue("Expected array too short", length <= expected.length);
         for (int i = 0; i < length; i++) {
             assertEquals("Mismatch at index " + i, expected[i], actual[i]);
         }
-    }
-    
-    @Test
-    public void testContainsValue() {
-        byte[] key1 = "a".getBytes();
-        byte[] key2 = "mediumkey".getBytes();
-        byte[] key3 = "verylongkey123".getBytes();
-        
-        map.put(key1, "Short");
-        map.put(key2, "Medium");
-        map.put(key3, "Long");
-        
-        // Test contains with existing values
-        ByteArrayHolder holder = map.contains("Short");
-        assertArrayEqualsWithLength(key1, holder);
-        assertEquals(key1.length, holder.getLength());
-        
-        holder = map.contains("Medium");
-        assertArrayEqualsWithLength(key2, holder);
-        assertEquals(key2.length, holder.getLength());
-        
-        holder = map.contains("Long");
-        assertArrayEqualsWithLength(key3, holder);
-        assertEquals(key3.length, holder.getLength());
-        
-        // Test contains with non-existent value
-        holder = map.contains("NonExistent");
-        assertFalse(holder.isPresent());
     }
     
     @Test
@@ -229,20 +197,19 @@ public class ByteArrayObjectMapTest {
         boolean foundKey3 = false;
         
         for (String value : map) {
-            ByteArrayHolder currKey = map.getCurrIteratorKey();
-            assertTrue(currKey.isPresent());
+            ByteBuffer currKey = map.getCurrIteratorKey();
             
             if (value.equals("Short")) {
-                assertArrayEqualsWithLength(key1, currKey);
-                assertEquals(key1.length, currKey.getLength());
+                assertArrayEqualsByteBuffer(key1, currKey);
+                assertEquals(key1.length, currKey.limit());
                 foundKey1 = true;
             } else if (value.equals("Medium")) {
-                assertArrayEqualsWithLength(key2, currKey);
-                assertEquals(key2.length, currKey.getLength());
+                assertArrayEqualsByteBuffer(key2, currKey);
+                assertEquals(key2.length, currKey.limit());
                 foundKey2 = true;
             } else if (value.equals("Long")) {
-                assertArrayEqualsWithLength(key3, currKey);
-                assertEquals(key3.length, currKey.getLength());
+                assertArrayEqualsByteBuffer(key3, currKey);
+                assertEquals(key3.length, currKey.limit());
                 foundKey3 = true;
             }
         }
@@ -263,60 +230,22 @@ public class ByteArrayObjectMapTest {
         java.util.Iterator<String> iter = map.iterator();
         while (iter.hasNext()) {
             String value = iter.next();
-            ByteArrayHolder currKey = map.getCurrIteratorKey();
-            assertTrue(currKey.isPresent());
+            ByteBuffer currKey = map.getCurrIteratorKey();
             
             if (value.equals("Value1")) {
-                assertArrayEqualsWithLength(key1, currKey);
-                assertEquals(key1.length, currKey.getLength());
+                assertArrayEqualsByteBuffer(key1, currKey);
+                assertEquals(key1.length, currKey.limit());
                 iter.remove();
                 
                 // Key should still be available after removal
-                assertArrayEqualsWithLength(key1, currKey);
-                assertEquals(key1.length, currKey.getLength());
+                assertArrayEqualsByteBuffer(key1, currKey);
+                assertEquals(key1.length, currKey.limit());
             }
         }
         
         assertEquals(1, map.size());
         assertNull(map.get(key1));
         assertEquals("Value2", map.get(key2));
-    }
-    
-    @Test
-    public void testContainsWithDuplicateValues() {
-        byte[] key1 = "first".getBytes();
-        byte[] key2 = "second".getBytes();
-        String duplicateValue = "Same";
-        
-        map.put(key1, duplicateValue);
-        map.put(key2, duplicateValue);
-        
-        // When searching for a duplicate value, should return one of the keys
-        ByteArrayHolder holder = map.contains(duplicateValue);
-        assertTrue(holder.isPresent());
-        
-        byte[] holderValue = holder.getValue();
-        int holderLength = holder.getLength();
-        
-        boolean matchesEitherKey = 
-            (holderLength == key1.length && Arrays.equals(Arrays.copyOf(holderValue, holderLength), key1)) ||
-            (holderLength == key2.length && Arrays.equals(Arrays.copyOf(holderValue, holderLength), key2));
-            
-        assertTrue("Holder should match one of the original keys", matchesEitherKey);
-    }
-    
-    @Test
-    public void testContainsEdgeCases() {
-        // Test with empty string value
-        byte[] emptyKey = "empty".getBytes();
-        map.put(emptyKey, "");
-        
-        ByteArrayHolder holder = map.contains("");
-        assertTrue(holder.isPresent());
-        assertArrayEqualsWithLength(emptyKey, holder);
-        
-        // Test with null
-        assertThrows(IllegalArgumentException.class, () -> map.contains(null));
     }
     
     @Test(expected = IllegalArgumentException.class)

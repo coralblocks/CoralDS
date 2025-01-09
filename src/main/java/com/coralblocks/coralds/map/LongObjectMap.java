@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.coralblocks.coralds.LinkedObjectList;
-import com.coralblocks.coralds.holder.LongHolder;
 import com.coralblocks.coralds.util.MathUtils;
 import com.coralblocks.coralpool.ArrayObjectPool;
 import com.coralblocks.coralpool.ObjectPool;
@@ -74,8 +73,6 @@ public class LongObjectMap<E> implements Iterable<E> {
 
 	private long currIteratorKey;
 	
-	private final LongHolder longHolder = new LongHolder();
-
 	/**
 	 * Creates a <code>LongObjectMap</code> with the default initial capacity and load factor.
 	 */
@@ -167,34 +164,6 @@ public class LongObjectMap<E> implements Iterable<E> {
 	 */
 	public boolean isEmpty() {
 		return size() == 0;
-	}
-
-	/**
-	 * Does the map contain the given value?
-	 * 
-	 * @param value the value to be checked
-	 * @return an LongHolder that might contain the key for the given value or nothing to indicate that the value is not present
-	 */
-	public LongHolder contains(E value) {
-		
-		ensureNotNull(value);
-
-		for(int i = data.length - 1; i >= 0; i--) {
-
-			Entry<E> e = data[i];
-
-			while(e != null) {
-
-				if (e.value.equals(value)) {
-
-					return longHolder.set(e.key);
-				}
-
-				e = e.next;
-			}
-		}
-		
-		return longHolder.clear();
 	}
 
 	private final int toArrayIndex(long key) {

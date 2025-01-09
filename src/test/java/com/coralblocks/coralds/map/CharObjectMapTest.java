@@ -23,8 +23,6 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.coralblocks.coralds.holder.CharHolder;
-
 public class CharObjectMapTest {
     
     private CharObjectMap<String> map;
@@ -32,17 +30,6 @@ public class CharObjectMapTest {
     @Before
     public void setUp() {
         map = new CharObjectMap<>();
-    }
-    
-    @Test
-    public void testContains() {
-        map.put('a', "value1");
-        CharHolder holder = map.contains("value1");
-        assertTrue(holder.isPresent());
-        assertEquals('a', holder.getValue());
-        
-        holder = map.contains("nonexistent");
-        assertFalse(holder.isPresent());
     }
     
     @Test

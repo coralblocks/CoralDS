@@ -23,8 +23,6 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.coralblocks.coralds.holder.ByteHolder;
-
 public class ByteObjectMapTest {
     
     private ByteObjectMap<String> map;
@@ -72,17 +70,6 @@ public class ByteObjectMapTest {
         assertFalse(map.containsKey((byte) 1));
         map.put((byte) 1, "value1");
         assertTrue(map.containsKey((byte) 1));
-    }
-
-    @Test
-    public void testContains() {
-        map.put((byte) 1, "value1");
-        ByteHolder holder = map.contains("value1");
-        assertTrue(holder.isPresent());
-        assertEquals(1, holder.getValue());
-        
-        holder = map.contains("nonexistent");
-        assertFalse(holder.isPresent());
     }
 
     @Test
