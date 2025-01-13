@@ -52,6 +52,9 @@ public class ByteBufferMap<E> implements Iterable<E> {
 	/** The default maximum key length in bytes. */
 	public static final short DEFAULT_MAX_KEY_LENGTH = 256;
 	
+	/** The default direct buffer flag */
+	public static final boolean DEFAULT_IS_DIRECT_BUFFER = true;
+	
 	private static final int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
 	static class Entry<T> {
@@ -61,8 +64,12 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		T value;
 		Entry<T> next;
 		
-		Entry(int maxKeyLength) {
-			this.keyByteBuffer = ByteBuffer.allocateDirect(maxKeyLength);
+		Entry(int maxKeyLength, boolean isDirectBuffer) {
+			if (isDirectBuffer) {
+				this.keyByteBuffer = ByteBuffer.allocateDirect(maxKeyLength);
+			} else {
+				this.keyByteBuffer = ByteBuffer.allocate(maxKeyLength);
+			}
 		}
 	}
 
@@ -82,88 +89,206 @@ public class ByteBufferMap<E> implements Iterable<E> {
 	
 	private final LinkedList<SoftReference<Entry<E>[]>> oldArrays = new LinkedList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
 	
-    /**
-     * Constructs a new {@code ByteBufferMap} with default initial capacity, maximum key length,
-     * and load factor.
-     */
+	/**
+	 * Constructs a new {@code ByteBufferMap} with default initial capacity, maximum
+	 * key length, load factor, and {@code isDirectBuffer} setting.
+	 * <p>
+	 * This no-argument constructor uses {@link #DEFAULT_INITIAL_CAPACITY},
+	 * {@link #DEFAULT_MAX_KEY_LENGTH}, {@link #DEFAULT_LOAD_FACTOR}, and
+	 * {@link #DEFAULT_IS_DIRECT_BUFFER} as defaults.
+	 */
 	public ByteBufferMap() {
-		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR);
+		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR, DEFAULT_IS_DIRECT_BUFFER);
 	}
 
-    /**
-     * Constructs a new {@code ByteBufferMap} with the specified initial capacity and default
-     * maximum key length and load factor.
-     *
-     * @param initialCapacity the initial capacity of the map
-     */
+	/**
+	 * Constructs a new {@code ByteBufferMap} with default initial capacity, maximum
+	 * key length, and load factor, using the specified setting for
+	 * {@code isDirectBuffer}.
+	 *
+	 * @param isDirectBuffer {@code true} if the ByteBuffer for the key is direct;
+	 *                       {@code false} otherwise
+	 */
+	public ByteBufferMap(boolean isDirectBuffer) {
+		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR, isDirectBuffer);
+	}
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified initial capacity
+	 * and default maximum key length, load factor, and {@code isDirectBuffer}
+	 * setting.
+	 *
+	 * @param initialCapacity the initial capacity of the map
+	 */
 	public ByteBufferMap(int initialCapacity) {
-		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR);
+		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR, DEFAULT_IS_DIRECT_BUFFER);
 	}
-	
-    /**
-     * Constructs a new {@code ByteBufferMap} with the specified initial capacity, maximum
-     * key length, and default load factor.
-     *
-     * @param initialCapacity the initial capacity of the map
-     * @param maxKeyLength    the maximum allowed length for keys
-     */
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified initial capacity,
+	 * default maximum key length and load factor, and using the specified
+	 * {@code isDirectBuffer}.
+	 *
+	 * @param initialCapacity the initial capacity of the map
+	 * @param isDirectBuffer  {@code true} if the ByteBuffer for the key is direct;
+	 *                        {@code false} otherwise
+	 */
+	public ByteBufferMap(int initialCapacity, boolean isDirectBuffer) {
+		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR, isDirectBuffer);
+	}
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified initial capacity,
+	 * maximum key length, default load factor, and default {@code isDirectBuffer}
+	 * setting.
+	 *
+	 * @param initialCapacity the initial capacity of the map
+	 * @param maxKeyLength    the maximum allowed length for keys
+	 */
 	public ByteBufferMap(int initialCapacity, short maxKeyLength) {
-		this(initialCapacity, maxKeyLength, DEFAULT_LOAD_FACTOR);
+		this(initialCapacity, maxKeyLength, DEFAULT_LOAD_FACTOR, DEFAULT_IS_DIRECT_BUFFER);
 	}
-	
-    /**
-     * Constructs a new {@code ByteBufferMap} with the specified initial capacity, maximum key
-     * length, and load factor.
-     *
-     * @param initialCapacity the initial capacity of the map
-     * @param loadFactor      the load factor for resizing the map
-     */
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified initial capacity,
+	 * maximum key length, default load factor, and the specified
+	 * {@code isDirectBuffer}.
+	 *
+	 * @param initialCapacity the initial capacity of the map
+	 * @param maxKeyLength    the maximum allowed length for keys
+	 * @param isDirectBuffer  {@code true} if the ByteBuffer for the key is direct;
+	 *                        {@code false} otherwise
+	 */
+	public ByteBufferMap(int initialCapacity, short maxKeyLength, boolean isDirectBuffer) {
+		this(initialCapacity, maxKeyLength, DEFAULT_LOAD_FACTOR, isDirectBuffer);
+	}
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified initial capacity,
+	 * default maximum key length, specified load factor, and default
+	 * {@code isDirectBuffer} setting.
+	 *
+	 * @param initialCapacity the initial capacity of the map
+	 * @param loadFactor      the load factor for resizing the map
+	 */
 	public ByteBufferMap(int initialCapacity, float loadFactor) {
-		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, loadFactor);
+		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, loadFactor, DEFAULT_IS_DIRECT_BUFFER);
 	}
-	
-    /**
-     * Constructs a new {@code ByteBufferMap} with the specified maximum key length and default
-     * initial capacity and load factor.
-     *
-     * @param maxKeyLength the maximum allowed length for keys
-     */
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified initial capacity,
+	 * default maximum key length, specified load factor, and the specified
+	 * {@code isDirectBuffer}.
+	 *
+	 * @param initialCapacity the initial capacity of the map
+	 * @param loadFactor      the load factor for resizing the map
+	 * @param isDirectBuffer  {@code true} if the ByteBuffer for the key is direct;
+	 *                        {@code false} otherwise
+	 */
+	public ByteBufferMap(int initialCapacity, float loadFactor, boolean isDirectBuffer) {
+		this(initialCapacity, DEFAULT_MAX_KEY_LENGTH, loadFactor, isDirectBuffer);
+	}
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified maximum key length,
+	 * default initial capacity, default load factor, and default
+	 * {@code isDirectBuffer} setting.
+	 *
+	 * @param maxKeyLength the maximum allowed length for keys
+	 */
 	public ByteBufferMap(short maxKeyLength) {
-		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, DEFAULT_LOAD_FACTOR);
+		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, DEFAULT_LOAD_FACTOR, DEFAULT_IS_DIRECT_BUFFER);
 	}
-	
-    /**
-     * Constructs a new {@code ByteBufferMap} with the specified maximum key length and load
-     * factor, using the default initial capacity.
-     *
-     * @param maxKeyLength the maximum allowed length for keys
-     * @param loadFactor    the load factor for resizing the map
-     */
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified maximum key length,
+	 * default initial capacity, default load factor, and the specified
+	 * {@code isDirectBuffer}.
+	 *
+	 * @param maxKeyLength   the maximum allowed length for keys
+	 * @param isDirectBuffer {@code true} if the ByteBuffer for the key is direct;
+	 *                       {@code false} otherwise
+	 */
+	public ByteBufferMap(short maxKeyLength, boolean isDirectBuffer) {
+		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, DEFAULT_LOAD_FACTOR, isDirectBuffer);
+	}
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified maximum key length,
+	 * specified load factor, default initial capacity, and default
+	 * {@code isDirectBuffer} setting.
+	 *
+	 * @param maxKeyLength the maximum allowed length for keys
+	 * @param loadFactor   the load factor for resizing the map
+	 */
 	public ByteBufferMap(short maxKeyLength, float loadFactor) {
-		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, loadFactor);
+		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, loadFactor, DEFAULT_IS_DIRECT_BUFFER);
 	}
-	
-    /**
-     * Constructs a new {@code ByteBufferMap} with the specified load factor and default
-     * initial capacity and maximum key length.
-     *
-     * @param loadFactor the load factor for resizing the map
-     */
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified maximum key length,
+	 * specified load factor, default initial capacity, and the specified
+	 * {@code isDirectBuffer}.
+	 *
+	 * @param maxKeyLength   the maximum allowed length for keys
+	 * @param loadFactor     the load factor for resizing the map
+	 * @param isDirectBuffer {@code true} if the ByteBuffer for the key is direct;
+	 *                       {@code false} otherwise
+	 */
+	public ByteBufferMap(short maxKeyLength, float loadFactor, boolean isDirectBuffer) {
+		this(DEFAULT_INITIAL_CAPACITY, maxKeyLength, loadFactor, isDirectBuffer);
+	}
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified load factor,
+	 * default initial capacity, default maximum key length, and default
+	 * {@code isDirectBuffer} setting.
+	 *
+	 * @param loadFactor the load factor for resizing the map
+	 */
 	public ByteBufferMap(float loadFactor) {
-		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, loadFactor);
+		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, loadFactor, DEFAULT_IS_DIRECT_BUFFER);
 	}
-	
-    /**
-     * Constructs a new {@code ByteBufferMap} with the specified initial capacity, maximum key
-     * length, and load factor.
-     *
-     * @param initialCapacity the initial capacity of the map
-     * @param maxKeyLength    the maximum allowed length for keys
-     * @param loadFactor      the load factor for resizing the map
-     */
-	@SuppressWarnings("unchecked")
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified load factor,
+	 * default initial capacity, default maximum key length, and the specified
+	 * {@code isDirectBuffer}.
+	 *
+	 * @param loadFactor     the load factor for resizing the map
+	 * @param isDirectBuffer {@code true} if the ByteBuffer for the key is direct;
+	 *                       {@code false} otherwise
+	 */
+	public ByteBufferMap(float loadFactor, boolean isDirectBuffer) {
+		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, loadFactor, isDirectBuffer);
+	}
+    
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified initial capacity,
+	 * maximum key length, and load factor, using the default {@code isDirectBuffer}
+	 * setting.
+	 *
+	 * @param initialCapacity the initial capacity of the map
+	 * @param maxKeyLength    the maximum allowed length for keys
+	 * @param loadFactor      the load factor for resizing the map
+	 */
 	public ByteBufferMap(int initialCapacity, short maxKeyLength, float loadFactor) {
-		
+		this(initialCapacity, maxKeyLength, loadFactor, DEFAULT_IS_DIRECT_BUFFER);
+	}
+
+	/**
+	 * Constructs a new {@code ByteBufferMap} with the specified initial capacity,
+	 * maximum key length, load factor, and {@code isDirectBuffer} setting.
+	 *
+	 * @param initialCapacity the initial capacity of the map
+	 * @param maxKeyLength    the maximum allowed length for keys
+	 * @param loadFactor      the load factor for resizing the map
+	 * @param isDirectBuffer  {@code true} if the ByteBuffer for the key is direct;
+	 *                        {@code false} otherwise
+	 */
+    @SuppressWarnings("unchecked")
+	public ByteBufferMap(int initialCapacity, short maxKeyLength, float loadFactor, boolean isDirectBuffer) {
+
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;
@@ -171,14 +296,14 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		this.loadFactor = loadFactor;
 		this.threshold = Math.round(initialCapacity * loadFactor);
 		this.maxKeyLength = maxKeyLength;
-		
+
 		ObjectBuilder<Entry<E>> builder = new ObjectBuilder<Entry<E>>() {
 			@Override
 			public Entry<E> newInstance() {
-				return new Entry<E>(maxKeyLength);
+				return new Entry<E>(maxKeyLength, isDirectBuffer);
 			}
 		};
-		
+
 		this.entryPool = new ArrayObjectPool<Entry<E>>(threshold, builder, 2f);
 	}
 	
