@@ -23,6 +23,10 @@ import java.util.NoSuchElementException;
  * providing constant-time access performance. This implementation does not accept <code>null</code> values
  * but can store any non-null object type specified by the generic parameter.
  * 
+ * <p><b>NOTE:</b> This data structure is designed on purpose to be used by
+ * <b>single-threaded systems</b>. In other words, it will break if used concurrently by multiple
+ * threads.</p>
+ * 
  * @param <E> the entry type this hash map will hold
  */
 public final class ByteMap<E> implements Iterable<E> {

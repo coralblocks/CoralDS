@@ -27,12 +27,16 @@ import com.coralblocks.coralpool.ObjectPool;
 
 /**
  * A hash map implementation that produces zero garbage and uses primitive {@code long} keys with generic values.
- * This map is optimized for performance and memory efficiency, supporting fast lookups,
- * insertions, and deletions. It uses separate chaining for collision resolution and employs
- * a reusable iterator not to producer any garbage.
+ * This map is optimized for performance and memory efficiency, supporting fast lookups, insertions, and deletions.
+ * It uses separate chaining for collision resolution and employs a reusable iterator not to produce any garbage.
  * 
- *  <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>, in other words, 
- *  it will break if used concurrently by multiple threads.</p>
+ * <p>This data structure can handle an initial capacity of any size. However, using a power-of-two size may improve
+ * performance by allowing bitwise operations instead of the modulus operator (%). When the map reaches its load factor
+ * threshold, the internal array is rehashed, and its capacity is doubled, preserving the power-of-two property if the
+ * initial capacity was a power of two.</p>
+ * 
+ * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
+ * words, it will break if used concurrently by multiple threads.</p>
  *
  * @param <E> the type of mapped values
  */

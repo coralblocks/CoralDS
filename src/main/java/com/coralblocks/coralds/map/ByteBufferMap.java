@@ -34,10 +34,14 @@ import com.coralblocks.coralpool.ObjectPool;
  *
  * <p>The map supports various operations including insertion, retrieval, removal, and iteration
  * over the values. It also manages internal resizing based on a configurable load factor to
- * maintain efficient access times.</p>
- * 
- *  <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>, in other words, 
- *  it will break if used concurrently by multiple threads.</p>
+ * maintain efficient access times. The initial capacity can be any size; however, using a
+ * power-of-two size may improve performance by allowing bitwise operations instead of the
+ * modulus operator (%). When the map reaches its load factor threshold, its capacity is doubled,
+ * preserving the power-of-two property if the initial capacity was a power of two.</p>
+ *
+ * <p><b>NOTE:</b> This data structure is designed on purpose to be used by
+ * <b>single-threaded systems</b>. In other words, it will break if used concurrently by multiple
+ * threads.</p>
  *
  * @param <E> the type of mapped values
  */

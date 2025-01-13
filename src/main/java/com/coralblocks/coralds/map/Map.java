@@ -28,11 +28,17 @@ import com.coralblocks.coralpool.ObjectPool;
 /**
  * A hash-based map implementation that stores key-value pairs.
  * <p>
- * The map supports a configurable load factor, uses an internal array
- * of entries that may be sized to a power of two, and rehashes as needed
- * when the load factor threshold is exceeded. An internal pool of entry
- * objects is also employed for memory reuse (garbage-free).
+ * This map supports a configurable load factor and uses an internal array of entries
+ * to store the data. The initial capacity can be any size. However, if you choose a
+ * power-of-two size, the map can take advantage of faster bitwise operations instead
+ * of the modulus operator (%). When the load factor threshold is exceeded, the internal
+ * array is rehashed, and its capacity is always doubled. Thus, if the initial capacity
+ * is a power of two, it remains a power of two after rehashing. An internal pool of
+ * entry objects is also employed for memory reuse (garbage-free).
  *
+ * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
+ * words, it will break if used concurrently by multiple threads.</p>
+ * 
  * @param <K> the type of keys
  * @param <E> the type of values
  */

@@ -30,10 +30,20 @@ import com.coralblocks.coralpool.ObjectPool;
  * <p>
  * Unlike a typical map that compares keys via {@code equals()}, this map
  * treats two keys as the same if and only if they refer to the exact same object
- * reference. The map supports a configurable load factor, uses an internal
- * array of entries that may be sized to a power of two, and rehashes as needed
- * when the load factor threshold is exceeded. An internal pool of entry
- * objects is also employed for memory reuse (garbage-free).
+ * reference. The map supports a configurable load factor and uses an internal
+ * array of entries to store the data.
+ * </p>
+ * <p>
+ * This data structure can handle an initial capacity of any size. However, using
+ * a power-of-two size may improve performance by allowing bitwise operations
+ * instead of the modulus operator (%). When the map reaches its load factor
+ * threshold, the internal array is rehashed, and its capacity is doubled,
+ * preserving the power-of-two property if the initial capacity was a power of two.
+ * An internal pool of entry objects is also employed for memory reuse (garbage-free).
+ * </p>
+ * 
+ * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
+ * words, it will break if used concurrently by multiple threads.</p>
  *
  * @param <K> the type of keys
  * @param <E> the type of values
