@@ -44,7 +44,6 @@ public class IntMap<E> implements Iterable<E> {
 	/** The default load factor if not provided in the constructor */
 	public static float DEFAULT_LOAD_FACTOR = 0.80f;
 	
-	/* Our LinkedList does not produce any garbage, not even when it grows */
 	private static final int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
 	private static class Entry<T> {
