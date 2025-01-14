@@ -18,6 +18,8 @@ package com.coralblocks.coralds;
 import java.lang.ref.SoftReference;
 import java.util.Iterator;
 
+import com.coralblocks.coralds.list.LinkedList;
+
 /**
  * A generic container that stores elements in an array and allows dynamic resizing. 
  * It provides efficient addition, removal, and iteration over elements. <b>The order of the elements is not guaranteed.</b>
