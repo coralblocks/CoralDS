@@ -213,7 +213,7 @@ public class LinkedList<E> implements Iterable<E> {
 		Entry<E> start;
 		Entry<E> curr;
 
-		public void reset() {
+		void reset() {
 			this.start = head;
 			this.curr = null;
 		}

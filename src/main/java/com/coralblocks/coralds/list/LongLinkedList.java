@@ -270,7 +270,7 @@ public class LongLinkedList implements Iterable<LongHolder> {
 		Entry curr;
 		final LongHolder longHolder = new LongHolder();
 
-		public void reset() {
+		void reset() {
 			this.start = head;
 			this.curr = null;
 		}

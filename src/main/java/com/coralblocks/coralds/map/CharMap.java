@@ -135,7 +135,7 @@ public final class CharMap<E> implements Iterable<E> {
 		int position = 0;
 		int size;
 
-		public void reset() {
+		void reset() {
 			this.index = 0;
 			this.position = 0;
 			this.size = count;

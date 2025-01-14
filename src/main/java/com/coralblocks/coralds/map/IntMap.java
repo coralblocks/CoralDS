@@ -387,7 +387,7 @@ public class IntMap<E> implements Iterable<E> {
 		Entry<E> entry = null;
 		boolean wasRemoved = false;
 
-		public void reset() {
+		void reset() {
 			this.size = count;
 			this.index = 0;
 			this.dataIndex = 0;

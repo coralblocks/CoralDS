@@ -199,7 +199,7 @@ public class ArrayBag<E> implements Iterable<E> {
 
 		int counter;
 		
-		public void reset() {
+		void reset() {
 			counter = 0;
 		}
 

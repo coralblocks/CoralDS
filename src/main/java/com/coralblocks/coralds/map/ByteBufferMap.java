@@ -946,10 +946,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		Entry<E> entry = null;
 		boolean wasRemoved = false;
 		
-        /**
-         * Resets the iterator to the beginning of the map.
-         */
-		public final void reset() {
+		final void reset() {
 			this.size = count;
 			this.index = 0;
 			this.dataIndex = 0;

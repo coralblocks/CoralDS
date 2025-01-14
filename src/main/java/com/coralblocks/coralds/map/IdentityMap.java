@@ -425,10 +425,7 @@ public class IdentityMap<K, E> implements Iterable<E> {
 		Entry<K, E> entry = null;
 		boolean wasRemoved = false;
 
-		/**
-		 * Resets the iterator to the initial position.
-		 */
-		public void reset() {
+		void reset() {
 			this.size = count;
 			this.index = 0;
 			this.dataIndex = 0;

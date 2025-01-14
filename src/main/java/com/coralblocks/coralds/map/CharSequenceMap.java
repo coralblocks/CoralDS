@@ -481,7 +481,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
         /**
          * Resets the iterator to the beginning of the map.
          */
-		public final void reset() {
+		final void reset() {
 			this.size = count;
 			this.index = 0;
 			this.dataIndex = 0;

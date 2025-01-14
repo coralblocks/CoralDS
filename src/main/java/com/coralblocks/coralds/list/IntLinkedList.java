@@ -270,7 +270,7 @@ public class IntLinkedList implements Iterable<IntHolder> {
 		Entry curr;
 		final IntHolder intHolder = new IntHolder();
 
-		public void reset() {
+		void reset() {
 			this.start = head;
 			this.curr = null;
 		}
