@@ -16,9 +16,13 @@
 package com.coralblocks.coralds.list;
 
 import static org.junit.Assert.*;
-import org.junit.Test;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import org.junit.Test;
+
+import com.coralblocks.coralds.util.IntHolder;
 
 public class IntLinkedListTest {
 
@@ -148,7 +152,7 @@ public class IntLinkedListTest {
 		list.addLast(20);
 		list.addLast(30);
 
-		Iterator<IntLinkedList.IntHolder> it = list.iterator();
+		Iterator<IntHolder> it = list.iterator();
 		assertTrue("Iterator should have next (first call)", it.hasNext());
 		assertEquals("First element should be 10", 10, it.next().get());
 		assertTrue("Iterator should have next (second call)", it.hasNext());
@@ -165,7 +169,7 @@ public class IntLinkedListTest {
 		list.addLast(20);
 		list.addLast(30);
 
-		Iterator<IntLinkedList.IntHolder> it = list.iterator();
+		Iterator<IntHolder> it = list.iterator();
 		assertTrue(it.hasNext());
 		assertEquals(10, it.next().get());
 		it.remove(); // remove 10
@@ -192,7 +196,7 @@ public class IntLinkedListTest {
 		list.addLast(2);
 		list.addLast(3);
 
-		Iterator<IntLinkedList.IntHolder> it = list.iterator();
+		Iterator<IntHolder> it = list.iterator();
 		// Remove head
 		assertEquals(1, it.next().get());
 		it.remove(); // remove 1 (head)

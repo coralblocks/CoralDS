@@ -18,7 +18,7 @@ package com.coralblocks.coralds.list;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.coralblocks.coralds.list.LongLinkedList.LongHolder;
+import com.coralblocks.coralds.util.LongHolder;
 import com.coralblocks.coralpool.ObjectBuilder;
 import com.coralblocks.coralpool.ObjectPool;
 import com.coralblocks.coralpool.TieredObjectPool;
@@ -31,10 +31,7 @@ import com.coralblocks.coralpool.TieredObjectPool;
  */
 public class LongLinkedList implements Iterable<LongHolder> {
 	
-	/**
-	 * A holder for a long value (primitive) that will be used by the iterator.
-	 */
-	public static class LongHolder {
+	static class LongHolderImpl implements LongHolder {
 		
 		long value = 0;
 		
@@ -43,11 +40,7 @@ public class LongLinkedList implements Iterable<LongHolder> {
 			return this;
 		}
 		
-		/**
-		 * Return the long value
-		 * 
-		 * @return the long value
-		 */
+		@Override
 		public final long get() {
 			return value;
 		}
@@ -232,7 +225,7 @@ public class LongLinkedList implements Iterable<LongHolder> {
 
 		Entry start;
 		Entry curr;
-		final LongHolder longHolder = new LongHolder();
+		final LongHolderImpl longHolder = new LongHolderImpl();
 
 		void reset() {
 			this.start = head;
@@ -244,10 +237,6 @@ public class LongLinkedList implements Iterable<LongHolder> {
 			return start != null;
 		}
 
-		/**
-		 * Return the next long
-		 * <p>This method returns a shared LongHolder object, which will be overwritten by subsequent calls.</p>
-		 */
 		@Override
 		public final LongHolder next() {
 

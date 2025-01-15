@@ -23,6 +23,8 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.coralblocks.coralds.util.LongHolder;
+
 public class LongLinkedListTest {
 
     private LongLinkedList list;
@@ -148,7 +150,7 @@ public class LongLinkedListTest {
         list.addLast(20L);
         list.addLast(30L);
 
-        Iterator<LongLinkedList.LongHolder> it = list.iterator();
+        Iterator<LongHolder> it = list.iterator();
         assertTrue("Iterator should have next initially", it.hasNext());
         assertEquals(10L, it.next().get());
 
@@ -169,16 +171,16 @@ public class LongLinkedListTest {
         list.addLast(30L);
 
         // We'll remove the middle element (20) via iterator
-        Iterator<LongLinkedList.LongHolder> it = list.iterator();
+        Iterator<LongHolder> it = list.iterator();
 
         // Move to first element
         assertTrue(it.hasNext());
-        LongLinkedList.LongHolder first = it.next();
+        LongHolder first = it.next();
         assertEquals(10L, first.get());
 
         // Move to second element
         assertTrue(it.hasNext());
-        LongLinkedList.LongHolder second = it.next();
+        LongHolder second = it.next();
         assertEquals(20L, second.get());
 
         // Remove the second element
@@ -188,7 +190,7 @@ public class LongLinkedListTest {
         // Now the list should be 10 -> 30
         // Check the third element in iteration
         assertTrue(it.hasNext());
-        LongLinkedList.LongHolder third = it.next();
+        LongHolder third = it.next();
         assertEquals(30L, third.get());
 
         // No more elements
@@ -207,11 +209,11 @@ public class LongLinkedListTest {
         list.addLast(200L);
         list.addLast(300L);
 
-        Iterator<LongLinkedList.LongHolder> it = list.iterator();
+        Iterator<LongHolder> it = list.iterator();
 
         // Remove the first (100) via iterator
         assertTrue(it.hasNext());
-        LongLinkedList.LongHolder first = it.next();
+        LongHolder first = it.next();
         assertEquals(100L, first.get());
         it.remove(); 
         assertEquals("Size should now be 2", 2, list.size());
@@ -219,7 +221,7 @@ public class LongLinkedListTest {
         // Now the list is 200 -> 300
         // Remove the middle (which is also the new first in iteration)
         assertTrue(it.hasNext());
-        LongLinkedList.LongHolder second = it.next();
+        LongHolder second = it.next();
         assertEquals(200L, second.get());
         it.remove();
         assertEquals("Size should now be 1", 1, list.size());
@@ -227,7 +229,7 @@ public class LongLinkedListTest {
         // Now the list is 300
         // Remove the last (300) via iterator
         assertTrue(it.hasNext());
-        LongLinkedList.LongHolder third = it.next();
+        LongHolder third = it.next();
         assertEquals(300L, third.get());
         it.remove();
         assertEquals("Size should now be 0", 0, list.size());

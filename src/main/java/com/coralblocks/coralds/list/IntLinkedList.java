@@ -18,7 +18,7 @@ package com.coralblocks.coralds.list;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.coralblocks.coralds.list.IntLinkedList.IntHolder;
+import com.coralblocks.coralds.util.IntHolder;
 import com.coralblocks.coralpool.ObjectBuilder;
 import com.coralblocks.coralpool.ObjectPool;
 import com.coralblocks.coralpool.TieredObjectPool;
@@ -31,10 +31,7 @@ import com.coralblocks.coralpool.TieredObjectPool;
  */
 public class IntLinkedList implements Iterable<IntHolder> {
 	
-	/**
-	 * A holder for an integer value (primitive) that will be used by the iterator.
-	 */
-	public static class IntHolder {
+	static class IntHolderImpl implements IntHolder {
 		
 		int value = 0;
 		
@@ -43,11 +40,7 @@ public class IntLinkedList implements Iterable<IntHolder> {
 			return this;
 		}
 		
-		/**
-		 * Return the integer value
-		 * 
-		 * @return the integer value
-		 */
+		@Override
 		public final int get() {
 			return value;
 		}
@@ -232,7 +225,7 @@ public class IntLinkedList implements Iterable<IntHolder> {
 
 		Entry start;
 		Entry curr;
-		final IntHolder intHolder = new IntHolder();
+		final IntHolderImpl intHolder = new IntHolderImpl();
 
 		void reset() {
 			this.start = head;
@@ -244,10 +237,6 @@ public class IntLinkedList implements Iterable<IntHolder> {
 			return start != null;
 		}
 
-		/**
-		 * Return the next integer
-		 * <p>This method returns a shared IntHolder object, which will be overwritten by subsequent calls.</p>
-		 */
 		@Override
 		public final IntHolder next() {
 
