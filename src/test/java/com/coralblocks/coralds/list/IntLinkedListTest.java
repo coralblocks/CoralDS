@@ -18,6 +18,7 @@ package com.coralblocks.coralds.list;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class IntLinkedListTest {
 
@@ -34,9 +35,7 @@ public class IntLinkedListTest {
 		list.addFirst(100);
 		assertFalse("List should not be empty after addFirst", list.isEmpty());
 		assertEquals("List size should be 1 after addFirst", 1, list.size());
-		IntLinkedList.NullableInt firstValue = list.first();
-		assertFalse("first() should not be null after adding an element", firstValue.isNull());
-		assertEquals("The value returned by first() should match the added value", 100, firstValue.getValue());
+		assertEquals("The value returned by first() should match the added value", 100, list.first());
 	}
 
 	@Test
@@ -45,9 +44,7 @@ public class IntLinkedListTest {
 		list.addLast(200);
 		assertFalse("List should not be empty after addLast", list.isEmpty());
 		assertEquals("List size should be 1 after addLast", 1, list.size());
-		IntLinkedList.NullableInt lastValue = list.last();
-		assertFalse("last() should not be null after adding an element", lastValue.isNull());
-		assertEquals("The value returned by last() should match the added value", 200, lastValue.getValue());
+		assertEquals("The value returned by last() should match the added value", 200, list.last());
 	}
 
 	@Test
@@ -58,58 +55,42 @@ public class IntLinkedListTest {
 		list.addLast(3);
 
 		assertEquals("Size should be 3 after adding 3 elements", 3, list.size());
-		assertEquals("First element should be 1", 1, list.first().getValue());
-		assertEquals("Last element should be 3", 3, list.last().getValue());
+		assertEquals("First element should be 1", 1, list.first());
+		assertEquals("Last element should be 3", 3, list.last());
 	}
 
-	@Test
+	@Test(expected = NoSuchElementException.class)
 	public void testRemoveFirst() {
 		IntLinkedList list = new IntLinkedList(10);
-		// Remove from an empty list
-		IntLinkedList.NullableInt removed = list.removeFirst();
-		assertTrue("Removing from empty list should result in a nullified NullableInt", removed.isNull());
 
 		list.addFirst(10);
 		list.addFirst(20);
 		assertEquals("Size should be 2 after adding two elements", 2, list.size());
 
-		removed = list.removeFirst();
-		assertFalse("Removed element should not be null", removed.isNull());
-		assertEquals("Removed element should be 20 (LIFO from head)", 20, removed.getValue());
+		assertEquals("Removed element should be 20 (LIFO from head)", 20, list.removeFirst());
 		assertEquals("Size should decrease to 1 after removeFirst", 1, list.size());
 
-		removed = list.removeFirst();
-		assertFalse("Removed element should not be null", removed.isNull());
-		assertEquals("Removed element should be 10", 10, removed.getValue());
+		assertEquals("Removed element should be 10", 10, list.removeFirst());
 		assertEquals("Size should be 0 after removing both elements", 0, list.size());
 
-		removed = list.removeFirst();
-		assertTrue("No more elements, removeFirst should return nullified NullableInt", removed.isNull());
+		list.removeFirst();
 	}
 
-	@Test
+	@Test(expected = NoSuchElementException.class)
 	public void testRemoveLast() {
 		IntLinkedList list = new IntLinkedList(10);
-		// Remove from an empty list
-		IntLinkedList.NullableInt removed = list.removeLast();
-		assertTrue("Removing from empty list should result in a nullified NullableInt", removed.isNull());
 
 		list.addLast(100);
 		list.addLast(200);
 		assertEquals("Size should be 2 after adding two elements", 2, list.size());
 
-		removed = list.removeLast();
-		assertFalse("Removed element should not be null", removed.isNull());
-		assertEquals("Removed element should be 200", 200, removed.getValue());
+		assertEquals("Removed element should be 200", 200, list.removeLast());
 		assertEquals("Size should decrease to 1 after removeLast", 1, list.size());
 
-		removed = list.removeLast();
-		assertFalse("Removed element should not be null", removed.isNull());
-		assertEquals("Removed element should be 100", 100, removed.getValue());
+		assertEquals("Removed element should be 100", 100, list.removeLast());
 		assertEquals("Size should be 0 after removing both elements", 0, list.size());
 
-		removed = list.removeLast();
-		assertTrue("No more elements, removeLast should return nullified NullableInt", removed.isNull());
+		list.removeLast();
 	}
 
 	@Test
@@ -148,15 +129,16 @@ public class IntLinkedListTest {
 		assertTrue("List should be empty again", list.isEmpty());
 	}
 
-	@Test
-	public void testFirstAndLastOnEmptyList() {
+	@Test(expected = NoSuchElementException.class)
+	public void testFirstOnEmptyList() {
 		IntLinkedList list = new IntLinkedList(10);
-
-		IntLinkedList.NullableInt first = list.first();
-		assertTrue("first() on empty list should return a nullified NullableInt", first.isNull());
-
-		IntLinkedList.NullableInt last = list.last();
-		assertTrue("last() on empty list should return a nullified NullableInt", last.isNull());
+		list.first();
+	}
+	
+	@Test(expected = NoSuchElementException.class)
+	public void testLastOnEmptyList() {
+		IntLinkedList list = new IntLinkedList(10);
+		list.last();
 	}
 
 	@Test
@@ -226,7 +208,7 @@ public class IntLinkedListTest {
 		assertEquals("Size after removing tail via iterator", 1, list.size());
 
 		// Only middle remains
-		assertEquals("Remaining element should be 2 as both head(1) and tail(3) are removed", 2, list.first().getValue());
-		assertEquals("Remaining element should also be 2 as it's both head and tail", 2, list.last().getValue());
+		assertEquals("Remaining element should be 2 as both head(1) and tail(3) are removed", 2, list.first());
+		assertEquals("Remaining element should also be 2 as it's both head and tail", 2, list.last());
 	}
 }

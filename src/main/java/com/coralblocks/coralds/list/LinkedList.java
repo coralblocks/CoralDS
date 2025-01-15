@@ -16,6 +16,7 @@
 package com.coralblocks.coralds.list;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.coralblocks.coralpool.ObjectBuilder;
 import com.coralblocks.coralpool.ObjectPool;
@@ -151,9 +152,10 @@ public class LinkedList<E> implements Iterable<E> {
 	 * Returns the element on the head of the list.
 	 * 
 	 * @return the first element in the list or null if the list is empty
+	 * @throws NoSuchElementException if the list is empty
 	 */
 	public E first() {
-		if (head == null) return null;
+		if (head == null) throw new NoSuchElementException();
 		return head.value;
 	}
 	
@@ -161,9 +163,10 @@ public class LinkedList<E> implements Iterable<E> {
 	 * Removes the element from the head of the list.
 	 * 
 	 * @return the first element from the list that was removed or null if the list is empty
+	 * @throws NoSuchElementException if the list is empty
 	 */
 	public E removeFirst() {
-		if (head == null) return null;
+		if (head == null) throw new NoSuchElementException();
 		Entry<E> entry = head;
 		head = head.next;
 		if (head != null) head.prev = null;
@@ -176,10 +179,11 @@ public class LinkedList<E> implements Iterable<E> {
 	/**
 	 * Returns the element on the tail of the list.
 	 * 
-	 * @return the last element in the list or null if the list is empty
+	 * @return the last element in the list
+	 * @throws NoSuchElementException if the list is empty
 	 */
 	public E last() {
-		if (tail == null) return null;
+		if (tail == null) throw new NoSuchElementException();
 		return tail.value;
 	}
 	
@@ -187,9 +191,10 @@ public class LinkedList<E> implements Iterable<E> {
 	 * Removes the element from the tail of the list.
 	 * 
 	 * @return the last element from the list that was removed or null if the list is empty
+	 * @throws NoSuchElementException if the list is empty
 	 */
 	public E removeLast() {
-		if (tail == null) return null;
+		if (tail == null) throw new NoSuchElementException();
 		Entry<E> entry = tail;
 		tail = tail.prev;
 		if (tail != null) tail.next = null;

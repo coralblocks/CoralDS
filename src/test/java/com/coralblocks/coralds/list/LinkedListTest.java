@@ -18,6 +18,7 @@ package com.coralblocks.coralds.list;
 import static org.junit.Assert.*;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,12 +33,18 @@ public class LinkedListTest {
         list = new LinkedList<>(INITIAL_CAPACITY);
     }
     
-    @Test
-    public void testNewListIsEmpty() {
+    @Test(expected = NoSuchElementException.class)
+    public void testNewListIsEmptyFirst() {
         assertTrue("New list should be empty", list.isEmpty());
         assertEquals("New list should have size 0", 0, list.size());
-        assertNull("First element should be null", list.first());
-        assertNull("Last element should be null", list.last());
+        list.first();
+    }
+    
+    @Test(expected = NoSuchElementException.class)
+    public void testNewListIsEmptyLast() {
+        assertTrue("New list should be empty", list.isEmpty());
+        assertEquals("New list should have size 0", 0, list.size());
+        list.last();
     }
     
     @Test
@@ -68,7 +75,6 @@ public class LinkedListTest {
     
     @Test
     public void testRemoveFirst() {
-        assertNull("Remove from empty list should return null", list.removeFirst());
         
         list.addFirst("A");
         list.addFirst("B");
@@ -84,13 +90,10 @@ public class LinkedListTest {
         
         assertEquals("Should remove A", "A", list.removeFirst());
         assertTrue("List should be empty", list.isEmpty());
-        assertNull("First should be null", list.first());
-        assertNull("Last should be null", list.last());
     }
     
     @Test
     public void testRemoveLast() {
-        assertNull("Remove from empty list should return null", list.removeLast());
         
         list.addLast("A");
         list.addLast("B");
@@ -106,8 +109,6 @@ public class LinkedListTest {
         
         assertEquals("Should remove A", "A", list.removeLast());
         assertTrue("List should be empty", list.isEmpty());
-        assertNull("First should be null", list.first());
-        assertNull("Last should be null", list.last());
     }
     
     @Test
@@ -119,8 +120,6 @@ public class LinkedListTest {
         list.clear();
         assertTrue("List should be empty after clear", list.isEmpty());
         assertEquals("Size should be 0 after clear", 0, list.size());
-        assertNull("First should be null after clear", list.first());
-        assertNull("Last should be null after clear", list.last());
     }
     
     @Test

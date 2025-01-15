@@ -16,6 +16,7 @@
 package com.coralblocks.coralds.list;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.coralblocks.coralds.list.LongLinkedList.LongHolder;
 import com.coralblocks.coralpool.ObjectBuilder;
@@ -52,47 +53,6 @@ public class LongLinkedList implements Iterable<LongHolder> {
 		}
 	}
 	
-	/**
-	 * Represents a long value that may be null.
-	 */
-	public static class NullableLong {
-		
-		boolean isNull;
-		long value;
-		
-		/**
-		 * Returns whether this NullableLong is null.
-		 *
-		 * @return true if this NullableLong is null; false otherwise
-		 */
-		public final boolean isNull() {
-			return isNull;
-		}
-		
-		/**
-		 * Returns the value of this NullableLong if it is not null;
-		 * throws NullPointerException otherwise.
-		 *
-		 * @return the long value
-		 * @throws NullPointerException if this NullableLong is null
-		 */
-		public final long getValue() {
-			if (isNull) throw new NullPointerException();
-			return value;
-		}
-		
-		final NullableLong set(long value) {
-			this.isNull = false;
-			this.value = value;
-			return this;
-		}
-		
-		final NullableLong nullify() {
-			this.isNull = true;
-			return this;
-		}
-	}
-
 	private static class Entry {
 		long value = 0;
 		Entry next = null;
@@ -104,7 +64,6 @@ public class LongLinkedList implements Iterable<LongHolder> {
 	private Entry head = null;
 	private Entry tail = null;
 	private int size = 0;
-	private final NullableLong nullableLong = new NullableLong();
 
 	/**
 	 * Creates a LongLinkedList.
@@ -197,62 +156,58 @@ public class LongLinkedList implements Iterable<LongHolder> {
 	
 	/**
 	 * Returns the element on the head of the list.
-	 * <p>This method returns a shared NullableLong object, which will be overwritten by subsequent calls.</p>
-	 * <p>If the list is empty, the returned NullableLong will have isNull() == true.</p>
 	 *
-	 * @return a shared NullableLong representing the first element in the list, or a nullified NullableLong if empty
+	 * @return the element on the head of the list
+	 * @throws NoSuchElementException if the list is empty
 	 */
-	public NullableLong first() {
-		if (head == null) return nullableLong.nullify();
-		return nullableLong.set(head.value);
+	public long first() {
+		if (head == null) throw new NoSuchElementException();
+		return head.value;
 	}
 	
 	/**
 	 * Removes the element from the head of the list.
-	 * <p>This method returns a shared NullableLong object, which will be overwritten by subsequent calls.</p>
-	 * <p>If the list is empty, the returned NullableLong will have isNull() == true.</p>
 	 *
-	 * @return a shared NullableLong representing the removed element, or a nullified NullableLong if empty
+	 * @return the element from the head of the list
+	 * @throws NoSuchElementException if the list is empty
 	 */
-	public NullableLong removeFirst() {
-		if (head == null) return nullableLong.nullify();
+	public long removeFirst() {
+		if (head == null) throw new NoSuchElementException();
 		Entry entry = head;
 		head = head.next;
 		if (head != null) head.prev = null;
 		long toReturn = entry.value;
 		releaseEntryBackToPool(entry);
 		if (--size == 0) tail = null;
-		return nullableLong.set(toReturn);
+		return toReturn;
 	}
 	
 	/**
 	 * Returns the element on the tail of the list.
-	 * <p>This method returns a shared NullableLong object, which will be overwritten by subsequent calls.</p>
-	 * <p>If the list is empty, the returned NullableLong will have isNull() == true.</p>
 	 *
-	 * @return a shared NullableLong representing the last element in the list, or a nullified NullableLong if empty
+	 * @return the element on the tail of the list
+	 * @throws NoSuchElementException if the list is empty
 	 */
-	public NullableLong last() {
-		if (tail == null) return nullableLong.nullify();
-		return nullableLong.set(tail.value);
+	public long last() {
+		if (tail == null) throw new NoSuchElementException();
+		return tail.value;
 	}
 	
 	/**
 	 * Removes the element from the tail of the list.
-	 * <p>This method returns a shared NullableLong object, which will be overwritten by subsequent calls.</p>
-	 * <p>If the list is empty, the returned NullableLong will have isNull() == true.</p>
 	 *
-	 * @return a shared NullableLong representing the removed element, or a nullified NullableLong if empty
+	 * @return the element from the tail of the list
+	 * @throws NoSuchElementException if the list is empty
 	 */
-	public NullableLong removeLast() {
-		if (tail == null) return nullableLong.nullify();
+	public long removeLast() {
+		if (tail == null) throw new NoSuchElementException();
 		Entry entry = tail;
 		tail = tail.prev;
 		if (tail != null) tail.next = null;
 		long toReturn = entry.value;
 		releaseEntryBackToPool(entry);
 		if (--size == 0) head = null;
-		return nullableLong.set(toReturn);
+		return toReturn;
 	}
 	
 	/**

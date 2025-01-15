@@ -18,6 +18,7 @@ package com.coralblocks.coralds.list;
 import static org.junit.Assert.*;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,14 +48,10 @@ public class LongLinkedListTest {
         assertEquals("Size should be 1 after adding one element", 1, list.size());
 
         // Check the first element
-        LongLinkedList.NullableLong nullableLong = list.first();
-        assertFalse("NullableLong should not be null", nullableLong.isNull());
-        assertEquals("First element should be 100", 100L, nullableLong.getValue());
+        assertEquals("First element should be 100", 100L, list.first());
 
         // Remove it
-        LongLinkedList.NullableLong removed = list.removeFirst();
-        assertFalse("Removed NullableLong should not be null", removed.isNull());
-        assertEquals("Removed element should be 100", 100L, removed.getValue());
+        assertEquals("Removed element should be 100", 100L, list.removeFirst());
 
         // Check that the list is empty again
         assertTrue("List should be empty after removing the only element", list.isEmpty());
@@ -70,14 +67,10 @@ public class LongLinkedListTest {
         assertEquals("Size should be 1 after adding one element", 1, list.size());
 
         // Check the last element
-        LongLinkedList.NullableLong nullableLong = list.last();
-        assertFalse("NullableLong should not be null", nullableLong.isNull());
-        assertEquals("Last element should be 200", 200L, nullableLong.getValue());
+        assertEquals("Last element should be 200", 200L, list.last());
 
         // Remove it
-        LongLinkedList.NullableLong removed = list.removeLast();
-        assertFalse("Removed NullableLong should not be null", removed.isNull());
-        assertEquals("Removed element should be 200", 200L, removed.getValue());
+        assertEquals("Removed element should be 200", 200L, list.removeLast());
 
         // Check that the list is empty again
         assertTrue("List should be empty after removing the only element", list.isEmpty());
@@ -95,20 +88,16 @@ public class LongLinkedListTest {
         assertEquals("Size should be 4", 4, list.size());
 
         // Check first element
-        LongLinkedList.NullableLong first = list.first();
-        assertFalse(first.isNull());
-        assertEquals("First element should be 2", 2L, first.getValue());
+        assertEquals("First element should be 2", 2L, list.first());
 
         // Check last element
-        LongLinkedList.NullableLong last = list.last();
-        assertFalse(last.isNull());
-        assertEquals("Last element should be 4", 4L, last.getValue());
+        assertEquals("Last element should be 4", 4L, list.last());
 
         // Remove them one by one, checking order
-        assertEquals(2L, list.removeFirst().getValue()); // now 1,3,4
-        assertEquals(4L, list.removeLast().getValue());  // now 1,3
-        assertEquals(1L, list.removeFirst().getValue()); // now 3
-        assertEquals(3L, list.removeLast().getValue());  // now empty
+        assertEquals(2L, list.removeFirst()); // now 1,3,4
+        assertEquals(4L, list.removeLast());  // now 1,3
+        assertEquals(1L, list.removeFirst()); // now 3
+        assertEquals(3L, list.removeLast());  // now empty
 
         assertTrue("List should be empty after removing all elements", list.isEmpty());
     }
@@ -132,31 +121,24 @@ public class LongLinkedListTest {
         assertEquals("Size should remain 0", 0, list.size());
     }
 
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void testRemoveFirstFromEmptyList() {
-        LongLinkedList.NullableLong removed = list.removeFirst();
-        assertTrue("Removed NullableLong should be null if list is empty", removed.isNull());
+        list.removeFirst();
     }
 
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void testRemoveLastFromEmptyList() {
-        LongLinkedList.NullableLong removed = list.removeLast();
-        assertTrue("Removed NullableLong should be null if list is empty", removed.isNull());
+        list.removeLast();
     }
 
-    @Test
-    public void testFirstAndLastFromEmptyList() {
-        LongLinkedList.NullableLong first = list.first();
-        LongLinkedList.NullableLong last = list.last();
-        assertTrue("First NullableLong should be null if list is empty", first.isNull());
-        assertTrue("Last NullableLong should be null if list is empty", last.isNull());
+    @Test(expected = NoSuchElementException.class)
+    public void testFirstFromEmptyList() {
+        list.first();
     }
-
-    @Test(expected = NullPointerException.class)
-    public void testNullableLongThrowsNPEWhenNull() {
-        // If the list is empty, the shared NullableLong is always nullified.
-        // Trying to getValue() on that should throw NPE.
-        list.first().getValue();
+    
+    @Test(expected = NoSuchElementException.class)
+    public void testLastFromEmptyList() {
+        list.last();
     }
 
     @Test
@@ -214,8 +196,8 @@ public class LongLinkedListTest {
 
         // Double-check the remaining list order
         // First element should be 10, last should be 30
-        assertEquals(10L, list.first().getValue());
-        assertEquals(30L, list.last().getValue());
+        assertEquals(10L, list.first());
+        assertEquals(30L, list.last());
     }
 
     @Test
@@ -262,17 +244,7 @@ public class LongLinkedListTest {
         list.addLast(5L);
         list.addLast(10L);
 
-        LongLinkedList.NullableLong first = list.first();   // shared object
-        assertFalse(first.isNull());
-        assertEquals(5L, first.getValue());
-
-        LongLinkedList.NullableLong last = list.last();     // overwrites the same shared object
-        assertFalse(last.isNull());
-        assertEquals(10L, last.getValue());
-
-        // Now 'first' is referencing the same shared object as 'last'
-        // The last call set the shared object's value to 10
-        // So if we call getValue() on 'first' again, it should show 10 (overwritten)
-        assertEquals("Should have been overwritten to 10", 10L, first.getValue());
+        assertEquals(5L, list.first());
+        assertEquals(10L, list.last());
     }
 }

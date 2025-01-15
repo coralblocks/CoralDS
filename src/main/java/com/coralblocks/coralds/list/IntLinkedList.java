@@ -16,6 +16,7 @@
 package com.coralblocks.coralds.list;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.coralblocks.coralds.list.IntLinkedList.IntHolder;
 import com.coralblocks.coralpool.ObjectBuilder;
@@ -52,47 +53,6 @@ public class IntLinkedList implements Iterable<IntHolder> {
 		}
 	}
 	
-	/**
-	 * Represents an integer value that may be null.
-	 */
-	public static class NullableInt {
-		
-		boolean isNull;
-		int value;
-		
-		/**
-		 * Returns whether this NullableInt is null.
-		 *
-		 * @return true if this NullableInt is null; false otherwise
-		 */
-		public final boolean isNull() {
-			return isNull;
-		}
-		
-		/**
-		 * Returns the value of this NullableInt if it is not null;
-		 * throws NullPointerException otherwise.
-		 *
-		 * @return the integer value
-		 * @throws NullPointerException if this NullableInt is null
-		 */
-		public final int getValue() {
-			if (isNull) throw new NullPointerException();
-			return value;
-		}
-		
-		final NullableInt set(int value) {
-			this.isNull = false;
-			this.value = value;
-			return this;
-		}
-		
-		final NullableInt nullify() {
-			this.isNull = true;
-			return this;
-		}
-	}
-
 	private static class Entry {
 		int value = 0;
 		Entry next = null;
@@ -104,7 +64,6 @@ public class IntLinkedList implements Iterable<IntHolder> {
 	private Entry head = null;
 	private Entry tail = null;
 	private int size = 0;
-	private final NullableInt nullableInt = new NullableInt();
 
 	/**
 	 * Creates a IntLinkedList.
@@ -197,62 +156,58 @@ public class IntLinkedList implements Iterable<IntHolder> {
 	
 	/**
 	 * Returns the element on the head of the list.
-	 * <p>This method returns a shared NullableInt object, which will be overwritten by subsequent calls.</p>
-	 * <p>If the list is empty, the returned NullableInt will have isNull() == true.</p>
 	 *
-	 * @return a shared NullableInt representing the first element in the list, or a nullified NullableInt if empty
+	 * @return the element on the head of the list
+	 * @throws NoSuchElementException if the list is empty
 	 */
-	public NullableInt first() {
-		if (head == null) return nullableInt.nullify();
-		return nullableInt.set(head.value);
+	public int first() {
+		if (head == null) throw new NoSuchElementException();
+		return head.value;
 	}
 	
 	/**
 	 * Removes the element from the head of the list.
-	 * <p>This method returns a shared NullableInt object, which will be overwritten by subsequent calls.</p>
-	 * <p>If the list is empty, the returned NullableInt will have isNull() == true.</p>
 	 *
-	 * @return a shared NullableInt representing the removed element, or a nullified NullableInt if empty
+	 * @return the element from the head of the list
+	 * @throws NoSuchElementException if the list is empty
 	 */
-	public NullableInt removeFirst() {
-		if (head == null) return nullableInt.nullify();
+	public int removeFirst() {
+		if (head == null) throw new NoSuchElementException();
 		Entry entry = head;
 		head = head.next;
 		if (head != null) head.prev = null;
 		int toReturn = entry.value;
 		releaseEntryBackToPool(entry);
 		if (--size == 0) tail = null;
-		return nullableInt.set(toReturn);
+		return toReturn;
 	}
 	
 	/**
 	 * Returns the element on the tail of the list.
-	 * <p>This method returns a shared NullableInt object, which will be overwritten by subsequent calls.</p>
-	 * <p>If the list is empty, the returned NullableInt will have isNull() == true.</p>
 	 *
-	 * @return a shared NullableInt representing the last element in the list, or a nullified NullableInt if empty
+	 * @return the element on the tail of the list
+	 * @throws NoSuchElementException if the list is empty
 	 */
-	public NullableInt last() {
-		if (tail == null) return nullableInt.nullify();
-		return nullableInt.set(tail.value);
+	public int last() {
+		if (tail == null) throw new NoSuchElementException();
+		return tail.value;
 	}
 	
 	/**
 	 * Removes the element from the tail of the list.
-	 * <p>This method returns a shared NullableInt object, which will be overwritten by subsequent calls.</p>
-	 * <p>If the list is empty, the returned NullableInt will have isNull() == true.</p>
 	 *
-	 * @return a shared NullableInt representing the removed element, or a nullified NullableInt if empty
+	 * @return the element on the tail of the list
+	 * @throws NoSuchElementException if the list is empty
 	 */
-	public NullableInt removeLast() {
-		if (tail == null) return nullableInt.nullify();
+	public int removeLast() {
+		if (tail == null) throw new NoSuchElementException();
 		Entry entry = tail;
 		tail = tail.prev;
 		if (tail != null) tail.next = null;
 		int toReturn = entry.value;
 		releaseEntryBackToPool(entry);
 		if (--size == 0) head = null;
-		return nullableInt.set(toReturn);
+		return toReturn;
 	}
 	
 	/**
