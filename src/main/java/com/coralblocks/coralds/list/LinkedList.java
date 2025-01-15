@@ -114,6 +114,15 @@ public class LinkedList<E> implements Iterable<E> {
 	}
 	
 	/**
+	 * Adds an element to the tail of the list. (same as {@link #addLast(Object)})
+	 * 
+	 * @param value the value to be added
+	 */
+	public void add(E value) {
+		addLast(value);
+	}
+	
+	/**
 	 * Adds an element to the tail of the list.
 	 * 
 	 * @param value the value to be added

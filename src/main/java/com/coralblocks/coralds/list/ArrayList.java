@@ -131,7 +131,7 @@ public class ArrayList<E> implements Iterable<E> {
 	}
 
 	/**
-	 * Adds an element at the end of the list.
+	 * Adds an element at the end of the list. (same as {@link #addLast(Object)})
 	 *
 	 * @param element the element to be added
 	 */
@@ -145,7 +145,7 @@ public class ArrayList<E> implements Iterable<E> {
 	}
 	
 	/**
-	 * Adds an element at the end of the list (same as {@link #add(Object)}).
+	 * Adds an element at the end of the list.
 	 *
 	 * @param element the element to be added
 	 */

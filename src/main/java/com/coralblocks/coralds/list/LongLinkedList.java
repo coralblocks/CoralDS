@@ -167,6 +167,15 @@ public class LongLinkedList implements Iterable<LongHolder> {
 	}
 	
 	/**
+	 * Adds an element to the tail of the list.  (same as {@link #addLast(long)})
+	 * 
+	 * @param value the value to be added
+	 */
+	public void add(long value) {
+		addLast(value);
+	}
+	
+	/**
 	 * Adds an element to the tail of the list.
 	 * 
 	 * @param value the value to be added

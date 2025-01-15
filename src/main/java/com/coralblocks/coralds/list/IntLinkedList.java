@@ -167,6 +167,15 @@ public class IntLinkedList implements Iterable<IntHolder> {
 	}
 	
 	/**
+	 * Adds an element to the tail of the list. (same as {@link #addLast(int)})
+	 * 
+	 * @param value the value to be added
+	 */
+	public void add(int value) {
+		addLast(value);
+	}
+	
+	/**
 	 * Adds an element to the tail of the list.
 	 * 
 	 * @param value the value to be added
