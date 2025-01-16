@@ -33,10 +33,10 @@ import com.coralblocks.coralds.list.LinkedList;
 public class ArrayBag<E> implements Iterable<E> {
 	
 	/** The default growth factor */
-	public static float DEFAULT_GROWTH_FACTOR = 1.75f;
+	public static final float DEFAULT_GROWTH_FACTOR = 1.75f;
 	
 	/* Our LinkedList does not produce any garbage, not even when it grows */
-	private final static int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
+	private static final int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
 	private E[] array;
 	private LinkedList<SoftReference<E[]>> oldArrays = new LinkedList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);

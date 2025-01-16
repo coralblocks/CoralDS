@@ -56,7 +56,7 @@ public class LongArrayList implements Iterable<LongHolder> {
 	 */
 	public static final float DEFAULT_GROWTH_FACTOR = 1.75f;
 	
-	private final static int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
+	private static final int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
 	private long[] array;
 	private int size = 0;

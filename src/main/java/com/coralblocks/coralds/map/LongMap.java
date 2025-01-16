@@ -43,10 +43,10 @@ import com.coralblocks.coralpool.ObjectPool;
 public class LongMap<E> implements Iterable<E> {
 	
 	/** The default initial capacity if not provided in the constructor */
-	public static int DEFAULT_INITIAL_CAPACITY = 128;
+	public static final int DEFAULT_INITIAL_CAPACITY = 128;
 	
 	/** The default load factor if not provided in the constructor */
-	public static float DEFAULT_LOAD_FACTOR = 0.80f;
+	public static final float DEFAULT_LOAD_FACTOR = 0.80f;
 	
 	private static final int SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE = 32;
 	
