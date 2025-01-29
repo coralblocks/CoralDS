@@ -41,7 +41,7 @@ public class IntLinkedList implements Iterable<IntHolder> {
 		}
 		
 		@Override
-		public final int get() {
+		public int get() {
 			return value;
 		}
 	}
@@ -233,12 +233,12 @@ public class IntLinkedList implements Iterable<IntHolder> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return start != null;
 		}
 
 		@Override
-		public final IntHolder next() {
+		public IntHolder next() {
 
 			this.curr = start;
 			
@@ -250,7 +250,7 @@ public class IntLinkedList implements Iterable<IntHolder> {
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 			
 			boolean isTail = curr == tail;
 			boolean isHead = curr == head;

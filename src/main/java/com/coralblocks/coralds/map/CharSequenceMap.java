@@ -226,7 +226,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
      *
      * @return the number of key-value mappings
      */
-	public final int size() {
+	public int size() {
 		return count;
 	}
 
@@ -236,7 +236,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
      *
      * @return a {@code CharSequence} containing the current key
      */
-	public final CharSequence getCurrIteratorKey() {
+	public CharSequence getCurrIteratorKey() {
 		return currIteratorKey;
 	}
 
@@ -245,7 +245,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
      *
      * @return {@code true} if the map contains no key-value mappings, {@code false} otherwise
      */
-	public final boolean isEmpty() {
+	public boolean isEmpty() {
 		return size() == 0;
 	}
 
@@ -255,7 +255,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
      * @param key the {@code CharSequence} key to search for
      * @return {@code true} if the key exists in the map, {@code false} otherwise
      */
-	public final boolean containsKey(CharSequence key) {
+	public boolean containsKey(CharSequence key) {
 		
 		return get(key) != null;
 	}
@@ -275,7 +275,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
      * @return the associated value, or {@code null} if the key does not exist
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed
      */
-	public final E get(CharSequence key) {
+	public E get(CharSequence key) {
 		
 		if (key.length() > maxKeyLength) return null;
 
@@ -353,7 +353,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
      * @return the previous value associated with the key, or {@code null} if there was no mapping
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed or the value is {@code null}
      */
-	public final E put(CharSequence key, E value) {
+	public E put(CharSequence key, E value) {
 		
 		ensureMaxKeyLength(key.length());
 
@@ -408,7 +408,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
      * @return the previous value associated with the key, or {@code null} if there was no mapping
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed
      */
-	public final E remove(CharSequence key) {
+	public E remove(CharSequence key) {
 		
 		if (key.length() > maxKeyLength) return null;
 
@@ -451,7 +451,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
     /**
      * Removes all mappings from the map. The map will be empty after this call returns.
      */
-	public final void clear() {
+	public void clear() {
 
 		for(int index = data.length - 1; index >= 0; index--) {
 
@@ -492,12 +492,12 @@ public class CharSequenceMap<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return index < size;
 		}
 
 		@Override
-		public final E next() {
+		public E next() {
 
 			if (index >= size) throw new NoSuchElementException();
 
@@ -527,7 +527,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 
 			if (wasRemoved || entry == null) {
 				throw new NoSuchElementException();

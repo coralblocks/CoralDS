@@ -35,7 +35,7 @@ public class LongSet implements Iterable<LongHolder> {
 		}
 		
 		@Override
-		public final long get() {
+		public long get() {
 			return value;
 		}
 	}
@@ -156,18 +156,18 @@ public class LongSet implements Iterable<LongHolder> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return iter.hasNext();
 		}
 
 		@Override
-		public final LongHolder next() {
+		public LongHolder next() {
 			iter.next();
 			return longHolderImpl.set(map.getCurrIteratorKey());
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 			iter.remove();
 		}
 	}

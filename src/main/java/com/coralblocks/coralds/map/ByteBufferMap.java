@@ -387,7 +387,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      *
      * @return the number of key-value mappings
      */
-	public final int size() {
+	public int size() {
 		return count;
 	}
 
@@ -397,7 +397,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      *
      * @return a {@code ByteBuffer} containing the current key
      */
-	public final ByteBuffer getCurrIteratorKey() {
+	public ByteBuffer getCurrIteratorKey() {
 		return currIteratorKey;
 	}
 
@@ -406,7 +406,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      *
      * @return {@code true} if the map contains no key-value mappings, {@code false} otherwise
      */
-	public final boolean isEmpty() {
+	public boolean isEmpty() {
 		return size() == 0;
 	}
 
@@ -416,7 +416,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @param key the key to search for
      * @return {@code true} if the key exists in the map, {@code false} otherwise
      */
-	public final boolean containsKey(byte[] key) {
+	public boolean containsKey(byte[] key) {
 		
 		return get(key) != null;
 	}
@@ -427,7 +427,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @param key the {@code ByteBuffer} key to search for
      * @return {@code true} if the key exists in the map, {@code false} otherwise
      */
-	public final boolean containsKey(ByteBuffer key) {
+	public boolean containsKey(ByteBuffer key) {
 		
 		return get(key) != null;
 	}
@@ -440,7 +440,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @param len   the length of the key segment
      * @return {@code true} if the key segment exists in the map, {@code false} otherwise
      */
-	public final boolean containsKey(byte[] key, int start, int len) {
+	public boolean containsKey(byte[] key, int start, int len) {
 
 		return get(key, start, len) != null;
 	}
@@ -460,7 +460,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @return the associated value, or {@code null} if the key does not exist
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed
      */
-	public final E get(byte[] key) {
+	public E get(byte[] key) {
 		
 		if (key.length > maxKeyLength) return null;
 
@@ -490,7 +490,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @return the associated value, or {@code null} if the key does not exist
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed
      */
-	public final E get(ByteBuffer key) {
+	public E get(ByteBuffer key) {
 		
 		if (key.remaining() > maxKeyLength) return null;
 
@@ -522,7 +522,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @return the associated value, or {@code null} if the key segment does not exist
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed
      */
-	public final E get(byte[] key, int start, int len) {
+	public E get(byte[] key, int start, int len) {
 		
 		if (len > maxKeyLength) return null;
 
@@ -601,7 +601,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @return the previous value associated with the key, or {@code null} if there was no mapping
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed or the value is {@code null}
      */
-	public final E put(byte[] key, E value) {
+	public E put(byte[] key, E value) {
 		
 		ensureMaxKeyLength(key.length);
 
@@ -660,7 +660,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @return the previous value associated with the key, or {@code null} if there was no mapping
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed or the value is {@code null}
      */
-	public final E put(ByteBuffer key, E value) {
+	public E put(ByteBuffer key, E value) {
 		
 		ensureMaxKeyLength(key.remaining());
 
@@ -723,7 +723,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @return the previous value associated with the key segment, or {@code null} if there was no mapping
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed or the value is {@code null}
      */
-	public final E put(byte[] key, int start, int len, E value) {
+	public E put(byte[] key, int start, int len, E value) {
 		
 		ensureMaxKeyLength(len);
 
@@ -780,7 +780,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @return the previous value associated with the key, or {@code null} if there was no mapping
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed
      */
-	public final E remove(ByteBuffer key) {
+	public E remove(ByteBuffer key) {
 		
 		if (key.remaining() > maxKeyLength) return null;
 
@@ -827,7 +827,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @return the previous value associated with the key, or {@code null} if there was no mapping
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed
      */
-	public final E remove(byte[] key) {
+	public E remove(byte[] key) {
 		
 		if (key.length > maxKeyLength) return null;
 
@@ -876,7 +876,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
      * @return the previous value associated with the key segment, or {@code null} if there was no mapping
      * @throws IllegalArgumentException if the key length exceeds the maximum allowed
      */
-	public final E remove(byte[] key, int start, int len) {
+	public E remove(byte[] key, int start, int len) {
 		
 		if (len > maxKeyLength) return null;
 
@@ -919,7 +919,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
     /**
      * Removes all mappings from the map. The map will be empty after this call returns.
      */
-	public final void clear() {
+	public void clear() {
 
 		for(int index = data.length - 1; index >= 0; index--) {
 
@@ -957,12 +957,12 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return index < size;
 		}
 
 		@Override
-		public final E next() {
+		public E next() {
 
 			if (index >= size) throw new NoSuchElementException();
 
@@ -993,7 +993,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 
 			if (wasRemoved || entry == null) {
 				throw new NoSuchElementException();

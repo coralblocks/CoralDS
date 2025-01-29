@@ -141,18 +141,18 @@ public class Set<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return iter.hasNext();
 		}
 
 		@Override
-		public final E next() {
+		public E next() {
 			iter.next();
 			return map.getCurrIteratorKey();
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 			iter.remove();
 		}
 	}

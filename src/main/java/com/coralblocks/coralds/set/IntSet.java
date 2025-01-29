@@ -35,7 +35,7 @@ public class IntSet implements Iterable<IntHolder> {
 		}
 		
 		@Override
-		public final int get() {
+		public int get() {
 			return value;
 		}
 	}
@@ -156,18 +156,18 @@ public class IntSet implements Iterable<IntHolder> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return iter.hasNext();
 		}
 
 		@Override
-		public final IntHolder next() {
+		public IntHolder next() {
 			iter.next();
 			return intHolderImpl.set(map.getCurrIteratorKey());
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 			iter.remove();
 		}
 	}

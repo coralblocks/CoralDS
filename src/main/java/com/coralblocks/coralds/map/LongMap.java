@@ -147,7 +147,7 @@ public class LongMap<E> implements Iterable<E> {
 	 * 
 	 * @return the current key of the last iterated element
 	 */
-	public final long getCurrIteratorKey() {
+	public long getCurrIteratorKey() {
 		return currIteratorKey;
 	}
 
@@ -398,12 +398,12 @@ public class LongMap<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return index < size;
 		}
 
 		@Override
-		public final E next() {
+		public E next() {
 
 			if (index >= size) throw new NoSuchElementException();
 
@@ -433,7 +433,7 @@ public class LongMap<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 
 			if (wasRemoved || entry == null) {
 				throw new NoSuchElementException();

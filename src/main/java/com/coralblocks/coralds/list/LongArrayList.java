@@ -41,7 +41,7 @@ public class LongArrayList implements Iterable<LongHolder> {
 		}
 		
 		@Override
-		public final long get() {
+		public long get() {
 			return value;
 		}
 	}
@@ -309,18 +309,18 @@ public class LongArrayList implements Iterable<LongHolder> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return currIndex < size;
 		}
 
 		@Override
-		public final LongHolder next() {
+		public LongHolder next() {
 			if (currIndex == size) throw new NoSuchElementException();
 			return longHolderImpl.set(array[currIndex++]);
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 			if (currIndex == 0) throw new NoSuchElementException();
 			LongArrayList.this.remove(--currIndex);
 		}

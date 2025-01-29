@@ -41,7 +41,7 @@ public class LongLinkedList implements Iterable<LongHolder> {
 		}
 		
 		@Override
-		public final long get() {
+		public long get() {
 			return value;
 		}
 	}
@@ -233,12 +233,12 @@ public class LongLinkedList implements Iterable<LongHolder> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return start != null;
 		}
 
 		@Override
-		public final LongHolder next() {
+		public LongHolder next() {
 
 			this.curr = start;
 			
@@ -250,7 +250,7 @@ public class LongLinkedList implements Iterable<LongHolder> {
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 			
 			boolean isTail = curr == tail;
 			boolean isHead = curr == head;

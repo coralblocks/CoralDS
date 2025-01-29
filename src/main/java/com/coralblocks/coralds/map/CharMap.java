@@ -29,7 +29,7 @@ import java.util.NoSuchElementException;
  * 
  * @param <E> the entry type this hash map will hold
  */
-public final class CharMap<E> implements Iterable<E> {
+public class CharMap<E> implements Iterable<E> {
 
 	@SuppressWarnings("unchecked")
 	private final E[] data = (E[]) new Object[128];
@@ -60,7 +60,7 @@ public final class CharMap<E> implements Iterable<E> {
      * @param key the char key whose presence in this map is to be tested
      * @return true if this map contains a mapping for the specified key
      */
-	public final boolean containsKey(char key) {
+	public boolean containsKey(char key) {
 		return data[convert(key)] != null;
 	}
 
@@ -74,7 +74,7 @@ public final class CharMap<E> implements Iterable<E> {
      * @return the previous value associated with the key, or null if there was no mapping for the key
      * @throws NullPointerException if the specified value is null
      */
-	public final E put(char key, E value) {
+	public E put(char key, E value) {
 
 		ensureNotNull(value);
 		
@@ -98,7 +98,7 @@ public final class CharMap<E> implements Iterable<E> {
      * @param key the char key whose associated value is to be returned
      * @return the value to which the specified key is mapped, or null if this map contains no mapping for the key
      */
-	public final E get(char key) {
+	public E get(char key) {
 		return data[convert(key)];
 	}
 
@@ -108,7 +108,7 @@ public final class CharMap<E> implements Iterable<E> {
      * @param key the char key whose mapping is to be removed from the map
      * @return the previous value associated with the key, or null if there was no mapping for the key
      */
-	public final E remove(char key) {
+	public E remove(char key) {
 		int index = convert(key);
 		E old = data[index];
 		data[index] = null;
@@ -125,7 +125,7 @@ public final class CharMap<E> implements Iterable<E> {
 	 * 
 	 * @return the current key of the last iterated element
 	 */
-	public final char getCurrIteratorKey() {
+	public char getCurrIteratorKey() {
 		return currIteratorKey;
 	}
 
@@ -142,12 +142,12 @@ public final class CharMap<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return position < size;
 		}
 
 		@Override
-		public final E next() {
+		public E next() {
 			
 			if (position >= size) {
 				throw new NoSuchElementException();
@@ -179,7 +179,7 @@ public final class CharMap<E> implements Iterable<E> {
 	 * @return the same instance of the iterator
 	 */
 	@Override
-	public final Iterator<E> iterator() {
+	public Iterator<E> iterator() {
 		iter.reset();
 		return iter;
 	}
@@ -189,14 +189,14 @@ public final class CharMap<E> implements Iterable<E> {
      *
      * @return true if this map contains no key-value mappings,
      */
-	public final boolean isEmpty() {
+	public boolean isEmpty() {
 		return count == 0;
 	}
 
     /**
      * Removes all mappings from this map, leaving it empty.
      */
-	public final void clear() {
+	public void clear() {
 		for (int i = 0; i < data.length; i++) {
 			data[i] = null;
 		}
@@ -208,7 +208,7 @@ public final class CharMap<E> implements Iterable<E> {
      *
      * @return the number of key-value mappings in this map
      */
-	public final int size() {
+	public int size() {
 		return count;
 	}
 }

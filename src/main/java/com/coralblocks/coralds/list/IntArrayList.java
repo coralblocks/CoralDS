@@ -41,7 +41,7 @@ public class IntArrayList implements Iterable<IntHolder> {
 		}
 		
 		@Override
-		public final int get() {
+		public int get() {
 			return value;
 		}
 	}
@@ -309,18 +309,18 @@ public class IntArrayList implements Iterable<IntHolder> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return currIndex < size;
 		}
 
 		@Override
-		public final IntHolder next() {
+		public IntHolder next() {
 			if (currIndex == size) throw new NoSuchElementException();
 			return intHolderImpl.set(array[currIndex++]);
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 			if (currIndex == 0) throw new NoSuchElementException();
 			IntArrayList.this.remove(--currIndex);
 		}

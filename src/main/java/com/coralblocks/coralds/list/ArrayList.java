@@ -305,18 +305,18 @@ public class ArrayList<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return currIndex < size;
 		}
 
 		@Override
-		public final E next() {
+		public E next() {
 			if (currIndex == size) throw new NoSuchElementException();
 			return array[currIndex++];
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 			if (currIndex == 0) throw new NoSuchElementException();
 			ArrayList.this.remove(--currIndex);
 		}

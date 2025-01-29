@@ -233,12 +233,12 @@ public class LinkedList<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final boolean hasNext() {
+		public boolean hasNext() {
 			return start != null;
 		}
 
 		@Override
-		public final E next() {
+		public E next() {
 
 			this.curr = start;
 			
@@ -250,7 +250,7 @@ public class LinkedList<E> implements Iterable<E> {
 		}
 
 		@Override
-		public final void remove() {
+		public void remove() {
 			
 			boolean isTail = curr == tail;
 			boolean isHead = curr == head;
