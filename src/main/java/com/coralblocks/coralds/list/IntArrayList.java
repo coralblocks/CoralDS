@@ -140,6 +140,13 @@ public class IntArrayList implements Iterable<IntHolder> {
 	public void clearSoftReferences() {
 		oldArrays.clear();
 	}
+	
+	/**
+	 * Remove all elements from this list, making its size equal to zero.
+	 */
+	public void clear() {
+		size = 0;
+	}
 
 	/**
 	 * Adds an element at the end of the list. (same as {@link #addLast(int)})

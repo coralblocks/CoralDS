@@ -129,6 +129,18 @@ public class ArrayList<E> implements Iterable<E> {
 	public void clearSoftReferences() {
 		oldArrays.clear();
 	}
+	
+	/**
+	 * Remove all elements from this list, making its size equal to zero.
+	 */
+	public void clear() {
+		
+		for(int i = 0; i < size; i++) {
+			array[i] = null;
+		}
+		
+		size = 0;
+	}
 
 	/**
 	 * Adds an element at the end of the list. (same as {@link #addLast(Object)})
