@@ -1,15 +1,15 @@
 # CoralDS
 Garbage-free, single-threaded data-structures (maps, sets and lists) optimized for speed.
 
-## Maps
+### Maps
 
-Map, CharMap, ByteMap, IntMap, LongMap, ByteBufferMap, CharSequenceMap and IdentityMap.
+`Map`, `CharMap`, `ByteMap`, `IntMap`, `LongMap`, `ByteBufferMap`, `CharSequenceMap` and `IdentityMap`.
 
-## Lists
+### Lists
 
-ArrayList, IntArrayList, LongArrayList, LinkedList, IntLinkedList and LongLinkedList.
+`ArrayList`, `IntArrayList`, `LongArrayList`, `LinkedList`, `IntLinkedList` and `LongLinkedList`.
 
-## Sets
+### Sets
 
-Set, IntSet and LongSet
+`Set`, `IntSet` and `LongSet`.
 
