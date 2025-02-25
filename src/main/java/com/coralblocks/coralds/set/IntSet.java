@@ -22,6 +22,9 @@ import com.coralblocks.coralds.util.IntHolder;
 
 /**
  * Represents a set of integers backed by an {@link IntMap}.
+ * 
+ * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
+ * words, it will break if used concurrently by multiple threads.</p>
  */
 public class IntSet implements Iterable<IntHolder> {
 	

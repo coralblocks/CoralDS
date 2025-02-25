@@ -22,6 +22,9 @@ import com.coralblocks.coralds.util.LongHolder;
 
 /**
  * Represents a set of longs backed by an {@link LongMap}.
+ * 
+ * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
+ * words, it will break if used concurrently by multiple threads.</p>
  */
 public class LongSet implements Iterable<LongHolder> {
 	

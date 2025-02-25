@@ -21,6 +21,9 @@ import com.coralblocks.coralds.map.IdentityMap;
 /**
  * A set implementation that uses identity equality (==) for comparing its elements.
  * This set is backed by an {@link com.coralblocks.coralds.map.IdentityMap}.
+ * 
+ * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
+ * words, it will break if used concurrently by multiple threads.</p>
  *
  * @param <E> the type of elements maintained by this set
  */
