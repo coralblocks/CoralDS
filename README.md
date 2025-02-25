@@ -11,5 +11,5 @@ Garbage-free, single-threaded data-structures (maps, sets and lists) optimized f
 
 ### Sets
 
-`Set`, `IntSet` and `LongSet`.
+`Set`, `IntSet`, `LongSet` and `IdentitySet`.
 
