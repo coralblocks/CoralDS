@@ -7,7 +7,7 @@ Garbage-free, single-threaded data-structures (maps, sets and lists) optimized f
 
 ### Lists
 
-`ArrayList`, `IntArrayList`, `LongArrayList`, `LinkedList`, `IntLinkedList`, `LongLinkedList` and `ArrayLinkedList`.
+`ArrayList`, `ArrayLinkedList`, `IntArrayList`, `LongArrayList`, `LinkedList`, `IntLinkedList` and `LongLinkedList`.
 
 ### Sets
 
