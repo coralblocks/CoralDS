@@ -1,5 +1,5 @@
 # CoralDS
-Garbage-free, single-threaded data-structures (maps, sets and lists) optimized for speed.
+Garbage-free, single-threaded data-structures (_maps_, _lists_ and _sets_) optimized for speed.
 
 ### Maps
 
