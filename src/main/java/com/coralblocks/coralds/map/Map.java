@@ -35,6 +35,7 @@ import com.coralblocks.coralpool.ObjectPool;
  * array is rehashed, and its capacity is always doubled. Thus, if the initial capacity
  * is a power of two, it remains a power of two after rehashing. An internal pool of
  * entry objects is also employed for memory reuse (garbage-free).
+ * </p>
  *
  * <p><b>Null handling:</b> Null keys and null values are not permitted.</p>
  *

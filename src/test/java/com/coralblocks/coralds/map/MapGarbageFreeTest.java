@@ -31,6 +31,7 @@ import org.junit.Test;
  * the JVM's per-thread allocation counter instead. The map, its pooled entries,
  * and all test data are created before measurement. Construction, rehashing, and
  * pool growth are therefore deliberately outside this test's scope.
+ * </p>
  */
 public class MapGarbageFreeTest {
 

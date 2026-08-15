@@ -35,10 +35,12 @@ import com.coralblocks.coralpool.ObjectPool;
  * array is rehashed, and its capacity is always doubled. Thus, if the initial capacity
  * is a power of two, it remains a power of two after rehashing. An internal pool of
  * entry objects is also employed for memory reuse (garbage-free).
+ * </p>
  * <p>
  * Iteration order is the order in which keys were first inserted. Replacing the value
  * associated with an existing key does not change its position. Removing and reinserting
  * a key places it at the end of the iteration order.
+ * </p>
  *
  * <p><b>Null handling:</b> Null keys and null values are not permitted.</p>
  *

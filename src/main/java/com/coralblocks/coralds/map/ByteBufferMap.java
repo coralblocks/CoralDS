@@ -102,6 +102,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
 	 * This no-argument constructor uses {@link #DEFAULT_INITIAL_CAPACITY},
 	 * {@link #DEFAULT_MAX_KEY_LENGTH}, {@link #DEFAULT_LOAD_FACTOR}, and
 	 * {@link #DEFAULT_IS_DIRECT_BUFFER} as defaults.
+	 * </p>
 	 */
 	public ByteBufferMap() {
 		this(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_KEY_LENGTH, DEFAULT_LOAD_FACTOR, DEFAULT_IS_DIRECT_BUFFER);
