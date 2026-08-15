@@ -234,6 +234,65 @@ public class LinkedList<E> implements Iterable<E> {
 	public int size() {
 		return size;
 	}
+
+	/**
+	 * Compares this list with another LinkedList by element value and order.
+	 *
+	 * @param o the object to compare with this list
+	 * @return true when both lists contain equal elements in the same order
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof LinkedList<?>)) return false;
+
+		LinkedList<?> other = (LinkedList<?>) o;
+		if (size != other.size) return false;
+
+		Entry<E> entry = head;
+		Entry<?> otherEntry = other.head;
+		while(entry != null) {
+			if (!entry.value.equals(otherEntry.value)) return false;
+			entry = entry.next;
+			otherEntry = otherEntry.next;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code based on the elements in this list and their order.
+	 *
+	 * @return this list's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 1;
+		Entry<E> entry = head;
+		while(entry != null) {
+			hash = 31 * hash + entry.value.hashCode();
+			entry = entry.next;
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns the elements in this list in iteration order.
+	 *
+	 * @return a readable representation of this list
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		Entry<E> entry = head;
+		while(entry != null) {
+			if (entry != head) sb.append(", ");
+			sb.append(entry.value == this ? "(this LinkedList)" : entry.value);
+			entry = entry.next;
+		}
+		sb.append(']');
+		return sb.toString();
+	}
 	
 	private class ReusableIterator implements Iterator<E> {
 

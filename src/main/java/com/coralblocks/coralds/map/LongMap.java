@@ -194,6 +194,67 @@ public class LongMap<E> implements Iterable<E> {
 		return size() == 0;
 	}
 
+	/**
+	 * Compares this map with another LongMap by key and value.
+	 *
+	 * @param o the object to compare with this map
+	 * @return true when both maps contain equal mappings
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof LongMap<?>)) return false;
+
+		LongMap<?> other = (LongMap<?>) o;
+		if (count != other.count) return false;
+
+		Iterator<E> iter = iterator();
+		while(iter.hasNext()) {
+			E value = iter.next();
+			Object otherValue = other.get(currIteratorKey);
+			if (otherValue == null || !value.equals(otherValue)) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns an order-independent hash code for this map's mappings.
+	 *
+	 * @return this map's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		Iterator<E> iter = iterator();
+		while(iter.hasNext()) {
+			E value = iter.next();
+			hash += Long.hashCode(currIteratorKey) ^ value.hashCode();
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns this map's key-value mappings.
+	 *
+	 * @return a readable representation of this map
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('{');
+		Iterator<E> iter = iterator();
+		boolean first = true;
+		while(iter.hasNext()) {
+			Object value = iter.next();
+			if (!first) sb.append(", ");
+			first = false;
+			sb.append(currIteratorKey).append('=');
+			sb.append(value == this ? "(this LongMap)" : value);
+		}
+		sb.append('}');
+		return sb.toString();
+	}
+
 	private final int toArrayIndex(long key) {
 		int hash = (int) (key ^ (key >>> 32));
 		if (isPowerOfTwo) {

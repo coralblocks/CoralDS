@@ -201,6 +201,68 @@ public class Map<K, E> implements Iterable<E> {
 		return size() == 0;
 	}
 
+	/**
+	 * Compares this map with another Map by key and value.
+	 *
+	 * @param o the object to compare with this map
+	 * @return true when both maps contain equal mappings
+	 */
+	@Override
+	@SuppressWarnings("rawtypes")
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof Map<?, ?>)) return false;
+
+		Map other = (Map) o;
+		if (count != other.count) return false;
+
+		Iterator<E> iter = iterator();
+		while(iter.hasNext()) {
+			E value = iter.next();
+			Object otherValue = other.get(currIteratorKey);
+			if (otherValue == null || !value.equals(otherValue)) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns an order-independent hash code for this map's mappings.
+	 *
+	 * @return this map's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		Iterator<E> iter = iterator();
+		while(iter.hasNext()) {
+			E value = iter.next();
+			hash += currIteratorKey.hashCode() ^ value.hashCode();
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns this map's key-value mappings.
+	 *
+	 * @return a readable representation of this map
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('{');
+		Iterator<E> iter = iterator();
+		boolean first = true;
+		while(iter.hasNext()) {
+			Object value = iter.next();
+			if (!first) sb.append(", ");
+			first = false;
+			sb.append(currIteratorKey == this ? "(this Map)" : currIteratorKey).append('=');
+			sb.append(value == this ? "(this Map)" : value);
+		}
+		sb.append('}');
+		return sb.toString();
+	}
+
 	private final int toArrayIndex(int hash) {
 		if (isPowerOfTwo) {
 			return (hash & 0x7FFFFFFF) & lengthMinusOne;

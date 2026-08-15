@@ -159,6 +159,62 @@ public class IntSet implements Iterable<IntHolder> {
 	public boolean isEmpty() {
 		return map.isEmpty();
 	}
+
+	/**
+	 * Compares this set with another IntSet by value.
+	 *
+	 * @param o the object to compare with this set
+	 * @return true when both sets contain the same values
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof IntSet)) return false;
+
+		IntSet other = (IntSet) o;
+		if (size() != other.size()) return false;
+
+		Iterator<IntHolder> iter = iterator();
+		while(iter.hasNext()) {
+			if (!other.contains(iter.next().get())) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns an order-independent hash code for this set's values.
+	 *
+	 * @return this set's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		Iterator<IntHolder> iter = iterator();
+		while(iter.hasNext()) {
+			hash += Integer.hashCode(iter.next().get());
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns this set's values.
+	 *
+	 * @return a readable representation of this set
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		Iterator<IntHolder> iter = iterator();
+		boolean first = true;
+		while(iter.hasNext()) {
+			if (!first) sb.append(", ");
+			first = false;
+			sb.append(iter.next().get());
+		}
+		sb.append(']');
+		return sb.toString();
+	}
 	
 	/**
 	 * Clears soft references in the underlying map.

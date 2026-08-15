@@ -319,7 +319,57 @@ public class IntArrayList implements Iterable<IntHolder> {
 	public boolean isEmpty() {
 		return size == 0;
 	}
-	
+
+	/**
+	 * Compares this list with another IntArrayList by value and order.
+	 *
+	 * @param o the object to compare with this list
+	 * @return true when both lists contain the same values in the same order
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof IntArrayList)) return false;
+
+		IntArrayList other = (IntArrayList) o;
+		if (size != other.size) return false;
+		for (int i = 0; i < size; i++) {
+			if (array[i] != other.array[i]) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code based on the values in this list and their order.
+	 *
+	 * @return this list's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 1;
+		for (int i = 0; i < size; i++) {
+			hash = 31 * hash + Integer.hashCode(array[i]);
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns the values in this list in iteration order.
+	 *
+	 * @return a readable representation of this list
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		for (int i = 0; i < size; i++) {
+			if (i > 0) sb.append(", ");
+			sb.append(array[i]);
+		}
+		sb.append(']');
+		return sb.toString();
+	}
+
 	private final IntHolderImpl intHolderImpl = new IntHolderImpl();
 	
 	private class ReusableIterator implements Iterator<IntHolder> {

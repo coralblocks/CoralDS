@@ -328,6 +328,58 @@ public class ArrayList<E> implements Iterable<E> {
 	public boolean isEmpty() {
 		return size == 0;
 	}
+
+	/**
+	 * Compares this list with another ArrayList by element value and order.
+	 *
+	 * @param o the object to compare with this list
+	 * @return true when both lists contain equal elements in the same order
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof ArrayList<?>)) return false;
+
+		ArrayList<?> other = (ArrayList<?>) o;
+		if (size != other.size) return false;
+
+		for (int i = 0; i < size; i++) {
+			if (!array[i].equals(other.array[i])) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code based on the elements in this list and their order.
+	 *
+	 * @return this list's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 1;
+		for (int i = 0; i < size; i++) {
+			hash = 31 * hash + array[i].hashCode();
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns the elements in this list in iteration order.
+	 *
+	 * @return a readable representation of this list
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		for (int i = 0; i < size; i++) {
+			if (i > 0) sb.append(", ");
+			Object element = array[i];
+			sb.append(element == this ? "(this ArrayList)" : element);
+		}
+		sb.append(']');
+		return sb.toString();
+	}
 	
 	private class ReusableIterator implements Iterator<E> {
 

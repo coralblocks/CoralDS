@@ -145,6 +145,64 @@ public class Set<E> implements Iterable<E> {
 	public boolean isEmpty() {
 		return map.isEmpty();
 	}
+
+	/**
+	 * Compares this set with another Set by element value.
+	 *
+	 * @param o the object to compare with this set
+	 * @return true when both sets contain equal elements
+	 */
+	@Override
+	@SuppressWarnings("rawtypes")
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof Set<?>)) return false;
+
+		Set other = (Set) o;
+		if (size() != other.size()) return false;
+
+		Iterator<E> iter = iterator();
+		while(iter.hasNext()) {
+			if (!other.contains(iter.next())) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns an order-independent hash code for this set's elements.
+	 *
+	 * @return this set's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		Iterator<E> iter = iterator();
+		while(iter.hasNext()) {
+			hash += iter.next().hashCode();
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns this set's elements.
+	 *
+	 * @return a readable representation of this set
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		Iterator<E> iter = iterator();
+		boolean first = true;
+		while(iter.hasNext()) {
+			Object element = iter.next();
+			if (!first) sb.append(", ");
+			first = false;
+			sb.append(element == this ? "(this Set)" : element);
+		}
+		sb.append(']');
+		return sb.toString();
+	}
 	
 	/**
 	 * Clears any soft references from the underlying {@link Map} structure.

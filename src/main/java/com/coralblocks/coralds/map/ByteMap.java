@@ -208,4 +208,60 @@ public class ByteMap<E> implements Iterable<E> {
 	public int size() {
 		return count;
 	}
+
+	/**
+	 * Compares this map with another ByteMap by key and value.
+	 *
+	 * @param o the object to compare with this map
+	 * @return true when both maps contain equal mappings
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof ByteMap<?>)) return false;
+
+		ByteMap<?> other = (ByteMap<?>) o;
+		if (count != other.count) return false;
+		for (int i = 0; i < data.length; i++) {
+			Object value = data[i];
+			Object otherValue = other.data[i];
+			if (value == null ? otherValue != null : !value.equals(otherValue)) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns an order-independent hash code for this map's mappings.
+	 *
+	 * @return this map's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		for (int i = 0; i < data.length; i++) {
+			if (data[i] != null) hash += Byte.hashCode((byte) i) ^ data[i].hashCode();
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns this map's key-value mappings.
+	 *
+	 * @return a readable representation of this map
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('{');
+		boolean first = true;
+		for (int i = 0; i < data.length; i++) {
+			if (data[i] == null) continue;
+			if (!first) sb.append(", ");
+			first = false;
+			sb.append((byte) i).append('=');
+			sb.append(data[i] == this ? "(this ByteMap)" : data[i]);
+		}
+		sb.append('}');
+		return sb.toString();
+	}
 }

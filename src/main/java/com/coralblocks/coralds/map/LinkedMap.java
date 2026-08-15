@@ -214,6 +214,66 @@ public class LinkedMap<K, E> implements Iterable<E> {
 		return size() == 0;
 	}
 
+	/**
+	 * Compares this map with another LinkedMap by key and value.
+	 *
+	 * @param o the object to compare with this map
+	 * @return true when both maps contain equal mappings, regardless of insertion order
+	 */
+	@Override
+	@SuppressWarnings("rawtypes")
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof LinkedMap<?, ?>)) return false;
+
+		LinkedMap other = (LinkedMap) o;
+		if (count != other.count) return false;
+
+		Entry<K, E> entry = head;
+		while(entry != null) {
+			Object otherValue = other.get(entry.key);
+			if (otherValue == null || !entry.value.equals(otherValue)) return false;
+			entry = entry.after;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns an order-independent hash code for this map's mappings.
+	 *
+	 * @return this map's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		Entry<K, E> entry = head;
+		while(entry != null) {
+			hash += entry.key.hashCode() ^ entry.value.hashCode();
+			entry = entry.after;
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns this map's key-value mappings in insertion order.
+	 *
+	 * @return a readable representation of this map
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('{');
+		Entry<K, E> entry = head;
+		while(entry != null) {
+			if (entry != head) sb.append(", ");
+			sb.append(entry.key == this ? "(this LinkedMap)" : entry.key).append('=');
+			sb.append(entry.value == this ? "(this LinkedMap)" : entry.value);
+			entry = entry.after;
+		}
+		sb.append('}');
+		return sb.toString();
+	}
+
 	private final int toArrayIndex(int hash) {
 		if (isPowerOfTwo) {
 			return (hash & 0x7FFFFFFF) & lengthMinusOne;

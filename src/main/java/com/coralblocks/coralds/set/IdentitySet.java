@@ -133,6 +133,64 @@ public class IdentitySet<E> implements Iterable<E> {
 	}
 
 	/**
+	 * Compares this set with another IdentitySet by element identity.
+	 *
+	 * @param o the object to compare with this set
+	 * @return true when both sets contain the same object references
+	 */
+	@Override
+	@SuppressWarnings("rawtypes")
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof IdentitySet<?>)) return false;
+
+		IdentitySet other = (IdentitySet) o;
+		if (size() != other.size()) return false;
+
+		Iterator<E> iter = iterator();
+		while(iter.hasNext()) {
+			if (!other.contains(iter.next())) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns an order-independent hash code based on element identity.
+	 *
+	 * @return this set's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		Iterator<E> iter = iterator();
+		while(iter.hasNext()) {
+			hash += System.identityHashCode(iter.next());
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns this set's elements.
+	 *
+	 * @return a readable representation of this set
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		Iterator<E> iter = iterator();
+		boolean first = true;
+		while(iter.hasNext()) {
+			Object element = iter.next();
+			if (!first) sb.append(", ");
+			first = false;
+			sb.append(element == this ? "(this IdentitySet)" : element);
+		}
+		sb.append(']');
+		return sb.toString();
+	}
+
+	/**
 	 * Returns an iterator over the elements in this set.
 	 * Note that the same instance of the iterator is returned every time to avoid creating garbage for the GC.
 	 *

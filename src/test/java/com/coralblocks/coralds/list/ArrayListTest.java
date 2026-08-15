@@ -66,6 +66,25 @@ public class ArrayListTest {
 		assertEquals(ArrayList.DEFAULT_GROWTH_FACTOR, list.getGrowthFactor(), 0f);
 	}
 
+	@Test
+	public void testEqualsHashCodeAndToString() {
+		ArrayList<String> first = new ArrayList<>(2);
+		first.add("A");
+		first.add("B");
+
+		ArrayList<String> second = new ArrayList<>(8, 2f);
+		second.add("A");
+		second.add("B");
+
+		assertEquals(first, second);
+		assertEquals(first.hashCode(), second.hashCode());
+		assertEquals("[A, B]", first.toString());
+
+		second.removeLast();
+		second.add("C");
+		assertNotEquals(first, second);
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructorWithInvalidCapacity() {
 		new ArrayList<>(0);

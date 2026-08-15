@@ -111,6 +111,64 @@ public class ArrayLinkedList<E> implements Iterable<E> {
 	public final int size() {
 		return count;
 	}
+
+	/**
+	 * Compares this list with another ArrayLinkedList by element value and order.
+	 *
+	 * @param o the object to compare with this list
+	 * @return true when both lists contain equal elements in the same order
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof ArrayLinkedList<?>)) return false;
+
+		ArrayLinkedList<?> other = (ArrayLinkedList<?>) o;
+		if (count != other.count) return false;
+
+		Iterator<E> iter = iterator();
+		Iterator<?> otherIter = other.iterator();
+		while(iter.hasNext()) {
+			if (!iter.next().equals(otherIter.next())) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code based on the elements in this list and their order.
+	 *
+	 * @return this list's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 1;
+		Iterator<E> iter = iterator();
+		while(iter.hasNext()) {
+			hash = 31 * hash + iter.next().hashCode();
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns the elements in this list in iteration order.
+	 *
+	 * @return a readable representation of this list
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		Iterator<E> iter = iterator();
+		boolean first = true;
+		while(iter.hasNext()) {
+			Object element = iter.next();
+			if (!first) sb.append(", ");
+			first = false;
+			sb.append(element == this ? "(this ArrayLinkedList)" : element);
+		}
+		sb.append(']');
+		return sb.toString();
+	}
 	
     /**
      * Removes all elements from this list. If the list size exceeds the array

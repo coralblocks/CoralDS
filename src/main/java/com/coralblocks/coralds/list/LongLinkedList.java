@@ -233,6 +233,65 @@ public class LongLinkedList implements Iterable<LongHolder> {
 	public int size() {
 		return size;
 	}
+
+	/**
+	 * Compares this list with another LongLinkedList by value and order.
+	 *
+	 * @param o the object to compare with this list
+	 * @return true when both lists contain the same values in the same order
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof LongLinkedList)) return false;
+
+		LongLinkedList other = (LongLinkedList) o;
+		if (size != other.size) return false;
+
+		Entry entry = head;
+		Entry otherEntry = other.head;
+		while(entry != null) {
+			if (entry.value != otherEntry.value) return false;
+			entry = entry.next;
+			otherEntry = otherEntry.next;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a hash code based on the values in this list and their order.
+	 *
+	 * @return this list's hash code
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 1;
+		Entry entry = head;
+		while(entry != null) {
+			hash = 31 * hash + Long.hashCode(entry.value);
+			entry = entry.next;
+		}
+		return hash;
+	}
+
+	/**
+	 * Returns the values in this list in iteration order.
+	 *
+	 * @return a readable representation of this list
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		Entry entry = head;
+		while(entry != null) {
+			if (entry != head) sb.append(", ");
+			sb.append(entry.value);
+			entry = entry.next;
+		}
+		sb.append(']');
+		return sb.toString();
+	}
 	
 	private class ReusableIterator implements Iterator<LongHolder> {
 
