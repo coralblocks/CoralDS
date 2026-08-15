@@ -3,7 +3,7 @@ Garbage-free, single-threaded data-structures (_maps_, _lists_ and _sets_) optim
 
 ### Maps
 
-`Map`, `CharMap`, `ByteMap`, `IntMap`, `LongMap`, `ByteBufferMap`, `CharSequenceMap` and `IdentityMap`.
+`Map`, `LinkedMap`, `CharMap`, `ByteMap`, `IntMap`, `LongMap`, `ByteBufferMap`, `CharSequenceMap` and `IdentityMap`.
 
 ### Lists
 
@@ -11,5 +11,5 @@ Garbage-free, single-threaded data-structures (_maps_, _lists_ and _sets_) optim
 
 ### Sets
 
-`Set`, `IntSet`, `LongSet` and `IdentitySet`.
+`Set`, `LinkedSet`, `IntSet`, `LongSet` and `IdentitySet`.
 
