@@ -163,7 +163,7 @@ public class ArrayListTest {
 	}
 
 	@Test
-	public void testInsertAtTail() {
+	public void testInsertBeforeTail() {
 		list.add("A");
 		list.add("B");
 		list.insert(1, "C");
@@ -190,7 +190,7 @@ public class ArrayListTest {
 	public void testInsertOutOfBounds() {
 		list.add("A");
 		list.add("B");
-		list.insert(3, "X");  // index == size is valid only with add(), not insert()
+		list.insert(3, "X");  // index is greater than size (2)
 	}
 
 	@Test
@@ -248,6 +248,9 @@ public class ArrayListTest {
 			list.add("Element-" + i);
 		}
 		assertEquals(65, list.size());
+		for(int i = 0; i < 65; i++) {
+			assertEquals("Element-" + i, list.get(i));
+		}
 	}
 
 	@Test
@@ -267,7 +270,7 @@ public class ArrayListTest {
 		assertFalse(it.hasNext());
 	}
 
-	@Test(expected = NoSuchElementException.class)
+	@Test
 	public void testIteratorNextBeyondSize() {
 		list.add("A");
 
@@ -275,8 +278,7 @@ public class ArrayListTest {
 		assertTrue(it.hasNext());
 		assertEquals("A", it.next());
 
-		// This should throw NoSuchElementException
-		it.next();
+		assertThrows(NoSuchElementException.class, () -> it.next());
 	}
 
 	@Test
@@ -401,6 +403,7 @@ public class ArrayListTest {
 
 		// calling iterator() again returns the same underlying ReusableIterator
 		Iterator<String> it2 = list.iterator();
+		assertSame(it1, it2);
 		assertTrue(it2.hasNext());
 		assertEquals("A", it2.next());
 		assertTrue(it2.hasNext());

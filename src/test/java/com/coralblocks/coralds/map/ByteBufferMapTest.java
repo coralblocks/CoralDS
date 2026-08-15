@@ -18,6 +18,7 @@ package com.coralblocks.coralds.map;
 import static org.junit.Assert.*;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,10 @@ public class ByteBufferMapTest {
     private static final int INITIAL_CAPACITY = 16;
     private static final float LOAD_FACTOR = 0.75f;
     private static final short MAX_KEY_LENGTH = 32;
+
+    private static byte[] bytes(String value) {
+        return value.getBytes(StandardCharsets.US_ASCII);
+    }
     
     @Before
     public void setUp() {
@@ -36,9 +41,9 @@ public class ByteBufferMapTest {
     
     @Test
     public void testBasicOperations() {
-        byte[] key1 = "a".getBytes();
-        byte[] key2 = "longkey".getBytes();
-        byte[] key3 = "verylongkey123".getBytes();
+        byte[] key1 = bytes("a");
+        byte[] key2 = bytes("longkey");
+        byte[] key3 = bytes("verylongkey123");
         
         // Test put and get with different key lengths
         assertNull(map.put(key1, "Short"));
@@ -60,9 +65,9 @@ public class ByteBufferMapTest {
     
     @Test
     public void testByteBufferOperations() {
-        ByteBuffer key1 = ByteBuffer.wrap("x".getBytes());
-        ByteBuffer key2 = ByteBuffer.wrap("mediumkey".getBytes());
-        ByteBuffer key3 = ByteBuffer.wrap("verylongkey12345".getBytes());
+        ByteBuffer key1 = ByteBuffer.wrap(bytes("x"));
+        ByteBuffer key2 = ByteBuffer.wrap(bytes("mediumkey"));
+        ByteBuffer key3 = ByteBuffer.wrap(bytes("verylongkey12345"));
         
         // Test put and get with ByteBuffer of different lengths
         assertNull(map.put(key1, "One"));
@@ -77,7 +82,7 @@ public class ByteBufferMapTest {
     
     @Test
     public void testPartialKeyOperations() {
-        byte[] key = "abcdefghijklmnop".getBytes();
+        byte[] key = bytes("abcdefghijklmnop");
         
         // Test put and get with different length partial keys
         assertNull(map.put(key, 0, 3, "ABC"));
@@ -92,9 +97,9 @@ public class ByteBufferMapTest {
     
     @Test
     public void testRemoveOperations() {
-        byte[] key1 = "tiny".getBytes();
-        byte[] key2 = "mediumsized".getBytes();
-        byte[] key3 = "verylongsizedkey".getBytes();
+        byte[] key1 = bytes("tiny");
+        byte[] key2 = bytes("mediumsized");
+        byte[] key3 = bytes("verylongsizedkey");
         
         map.put(key1, "Small");
         map.put(key2, "Medium");
@@ -118,22 +123,22 @@ public class ByteBufferMapTest {
     public void testRehashing() {
         // Fill map with keys of varying lengths
         for (int i = 0; i < 20; i++) {
-            byte[] key = ("key" + "x".repeat(i)).getBytes(); // Each key has different length
+            byte[] key = bytes("key" + "x".repeat(i)); // Each key has different length
             map.put(key, "value" + i);
         }
         
         // Verify all entries are still accessible
         for (int i = 0; i < 20; i++) {
-            byte[] key = ("key" + "x".repeat(i)).getBytes();
+            byte[] key = bytes("key" + "x".repeat(i));
             assertEquals("value" + i, map.get(key));
         }
     }
     
     @Test
     public void testIterator() {
-        byte[] key1 = "a".getBytes();
-        byte[] key2 = "mediumkey".getBytes();
-        byte[] key3 = "verylongkey123".getBytes();
+        byte[] key1 = bytes("a");
+        byte[] key2 = bytes("mediumkey");
+        byte[] key3 = bytes("verylongkey123");
         
         map.put(key1, "Small");
         map.put(key2, "Medium");
@@ -149,9 +154,9 @@ public class ByteBufferMapTest {
     
     @Test
     public void testIteratorRemove() {
-        byte[] key1 = "x".getBytes();
-        byte[] key2 = "mediumkey".getBytes();
-        byte[] key3 = "verylongkey123".getBytes();
+        byte[] key1 = bytes("x");
+        byte[] key2 = bytes("mediumkey");
+        byte[] key3 = bytes("verylongkey123");
         
         map.put(key1, "Small");
         map.put(key2, "Medium");
@@ -180,9 +185,9 @@ public class ByteBufferMapTest {
     
     @Test
     public void testGetCurrIteratorKey() {
-        byte[] key1 = "a".getBytes();
-        byte[] key2 = "mediumkey".getBytes();
-        byte[] key3 = "verylongkey123".getBytes();
+        byte[] key1 = bytes("a");
+        byte[] key2 = bytes("mediumkey");
+        byte[] key3 = bytes("verylongkey123");
         
         map.put(key1, "Short");
         map.put(key2, "Medium");
@@ -218,8 +223,8 @@ public class ByteBufferMapTest {
     
     @Test
     public void testIteratorKeyWithRemoval() {
-        byte[] key1 = "short".getBytes();
-        byte[] key2 = "mediumsized".getBytes();
+        byte[] key1 = bytes("short");
+        byte[] key2 = bytes("mediumsized");
         
         map.put(key1, "Value1");
         map.put(key2, "Value2");
@@ -253,22 +258,22 @@ public class ByteBufferMapTest {
     
     @Test(expected = IllegalArgumentException.class)
     public void testNullValueNotAllowed() {
-        map.put("key".getBytes(), null);
+        map.put(bytes("key"), null);
     }
     
     @Test
     public void testEmptyMap() {
         assertTrue(map.isEmpty());
         assertEquals(0, map.size());
-        assertNull(map.get("nonexistent".getBytes()));
+        assertNull(map.get(bytes("nonexistent")));
     }
     
     @Test
     public void testCollisions() {
-        // Create keys that might have the same hash code but different lengths
-        byte[] key1 = {1, 2, 3};
-        byte[] key2 = {1, 2, 3, 4};
-        byte[] key3 = {1, 2, 3, 4, 5};
+        // These distinct keys all have the same polynomial hash code (31).
+        byte[] key1 = {0, 31};
+        byte[] key2 = {1, 0};
+        byte[] key3 = {2, -31};
         
         map.put(key1, "Three");
         map.put(key2, "Four");

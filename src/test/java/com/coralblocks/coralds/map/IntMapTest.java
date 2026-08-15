@@ -326,20 +326,20 @@ public class IntMapTest {
         mapRegular.put(2, "two");
         
         Iterator<String> iter = mapRegular.iterator();
-        iter.next();
+        String value = iter.next();
         int key = mapRegular.getCurrIteratorKey();
-        assertEquals(mapRegular.get(key), "one");
+        assertEquals(value, mapRegular.get(key));
     }
     
     @Test
     public void testGetCurrentIteratorKey2() {
     	mapPowerOfTwo.put(1, "one");
-    	mapPowerOfTwo.put(2, "two");
+		mapPowerOfTwo.put(2, "two");
         
         Iterator<String> iter = mapPowerOfTwo.iterator();
-        iter.next();
+        String value = iter.next();
         int key = mapPowerOfTwo.getCurrIteratorKey();
-        assertEquals(mapPowerOfTwo.get(key), "one");
+        assertEquals(value, mapPowerOfTwo.get(key));
     }
     
     @Test

@@ -159,6 +159,6 @@ public class CharMapTest {
         // Get iterator again (should be reset)
         Iterator<String> iterator2 = map.iterator();
         assertTrue(iterator2.hasNext());
-        assertEquals(iterator1, iterator2); // Should be same instance
+        assertSame(iterator1, iterator2);
     }
 }

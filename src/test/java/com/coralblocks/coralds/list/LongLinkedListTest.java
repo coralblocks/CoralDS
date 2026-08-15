@@ -239,10 +239,7 @@ public class LongLinkedListTest {
     }
 
     @Test
-    public void testSharedNullableLongOverwrittenBehavior() {
-        // This is a more advanced test to illustrate that first() and last()
-        // return a shared NullableLong object.
-
+    public void testFirstAndLast() {
         list.addLast(5L);
         list.addLast(10L);
 

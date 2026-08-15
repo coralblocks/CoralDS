@@ -212,7 +212,9 @@ public class ByteMapTest {
         assertFalse(iterator.hasNext());
         
         // Reuse the same iterator
-        iterator = map.iterator();
+        Iterator<String> reusedIterator = map.iterator();
+        assertSame(iterator, reusedIterator);
+        iterator = reusedIterator;
         
         // Second iteration
         assertTrue(iterator.hasNext());

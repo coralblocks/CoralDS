@@ -326,20 +326,20 @@ public class LongMapTest {
         mapRegular.put(2L, "two");
         
         Iterator<String> iter = mapRegular.iterator();
-        iter.next();
+        String value = iter.next();
         long key = mapRegular.getCurrIteratorKey();
-        assertEquals(mapRegular.get(key), "one");
+        assertEquals(value, mapRegular.get(key));
     }
     
     @Test
     public void testGetCurrentIteratorKey2() {
     	mapPowerOfTwo.put(1L, "one");
-    	mapPowerOfTwo.put(2L, "two");
+		mapPowerOfTwo.put(2L, "two");
         
         Iterator<String> iter = mapPowerOfTwo.iterator();
-        iter.next();
+        String value = iter.next();
         long key = mapPowerOfTwo.getCurrIteratorKey();
-        assertEquals(mapPowerOfTwo.get(key), "one");
+        assertEquals(value, mapPowerOfTwo.get(key));
     }
     
     @Test

@@ -190,6 +190,8 @@ public class LongArrayListTest {
 		list.add(30);
 		
 		assertEquals("Size should be 3 after adding 3 elements", 3, list.size());
+		assertEquals("Element at index 0 should remain 10", 10, list.get(0));
+		assertEquals("Element at index 1 should remain 20", 20, list.get(1));
 		assertEquals("Element at index 2 should be 30", 30, list.get(2));
 	}
 	
@@ -225,14 +227,14 @@ public class LongArrayListTest {
 		assertFalse("Iterator should not have next after last element", it.hasNext());
 	}
 	
-	@Test(expected = NoSuchElementException.class)
+	@Test
 	public void testIteratorNextBeyondEnd() {
 		LongArrayList list = new LongArrayList();
 		list.add(10);
 		
 		Iterator<LongHolder> it = list.iterator();
 		it.next(); // 10
-		it.next(); // Should throw NoSuchElementException
+		assertThrows(NoSuchElementException.class, () -> it.next());
 	}
 	
 	@Test

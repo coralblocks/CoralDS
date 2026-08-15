@@ -171,7 +171,7 @@ public class LinkedMapTest {
 	}
 
 	@Test
-	public void testClearAndPoolReuse() {
+	public void testClearAndSubsequentInsertions() {
 		LinkedMap<Key, String> map = new LinkedMap<>(4);
 		Key a = new Key(1, 1);
 		Key b = new Key(2, 2);

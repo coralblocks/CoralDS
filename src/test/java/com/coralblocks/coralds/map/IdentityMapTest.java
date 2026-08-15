@@ -234,17 +234,17 @@ public class IdentityMapTest {
 
 		assertTrue("There should be a next element", it.hasNext());
 		Integer value1 = it.next();
-		assertTrue("Value should be either 111 or 222", value1.equals(111) || value1.equals(222));
 		String currKey1 = map.getCurrIteratorKey();
 		assertNotNull("Current iterator key should not be null", currKey1);
-		assertTrue("Current key should be 'Key1' or 'Key2'", currKey1.equals("Key1") || currKey1.equals("Key2"));
+		assertEquals("Current key should map to the iterated value", value1, map.get(currKey1));
 
 		assertTrue("There should be a next element", it.hasNext());
 		Integer value2 = it.next();
-		assertTrue("Value should be the other one", value2.equals(111) || value2.equals(222));
 		String currKey2 = map.getCurrIteratorKey();
 		assertNotNull("Current iterator key should not be null", currKey2);
-		assertNotEquals("The key should have changed", currKey1, currKey2);
+		assertNotSame("The key should have changed", currKey1, currKey2);
+		assertEquals("Current key should map to the iterated value", value2, map.get(currKey2));
+		assertFalse("Iterator should have no more elements", it.hasNext());
 	}
 
 	/**
@@ -258,26 +258,21 @@ public class IdentityMapTest {
 		map.put("K3", 3);
 
 		Iterator<Integer> it = map.iterator();
+		int expectedSize = map.size();
 
-		assertTrue("Iterator should have a next element", it.hasNext());
-		assertEquals(Integer.valueOf(1), it.next());
-		it.remove();  // Removes the element with key "K1"
-		assertFalse("Map should not contain 'K1' after iterator.remove()", map.containsKey("K1"));
-		assertEquals("Map size should be 2 now", 2, map.size());
+		while(it.hasNext()) {
+			Integer value = it.next();
+			String key = map.getCurrIteratorKey();
 
-		assertTrue("Iterator should have a next element", it.hasNext());
-		assertEquals(Integer.valueOf(2), it.next());
-		it.remove();  // Removes the element with key "K2"
-		assertFalse("Map should not contain 'K2' after iterator.remove()", map.containsKey("K2"));
-		assertEquals("Map size should be 1 now", 1, map.size());
+			assertEquals("Current key should map to the iterated value", value, map.get(key));
 
-		assertTrue("Iterator should have a next element", it.hasNext());
-		assertEquals(Integer.valueOf(3), it.next());
-		it.remove();  // Removes the element with key "K3"
-		assertFalse("Map should not contain 'K3' after iterator.remove()", map.containsKey("K3"));
-		assertEquals("Map size should be 0 now", 0, map.size());
+			it.remove();
 
-		assertFalse("Iterator should have no more elements", it.hasNext());
+			assertFalse("Removed key should no longer be present", map.containsKey(key));
+			assertEquals("Map size should decrease after iterator.remove()", --expectedSize, map.size());
+		}
+
+		assertTrue("Map should be empty after removing every iterated entry", map.isEmpty());
 	}
 
 	/**

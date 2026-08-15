@@ -143,12 +143,12 @@ public class CharSequenceMapTest {
         assertTrue(map.containsKey("key3"));
     }
     
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testIteratorNextBeyondEnd() {
         map.put("key1", "value1");
         Iterator<String> iterator = map.iterator();
         iterator.next(); // First element
-        iterator.next(); // Should throw NoSuchElementException
+        assertThrows(NoSuchElementException.class, () -> iterator.next());
     }
     
     @Test(expected = NoSuchElementException.class)
@@ -158,13 +158,13 @@ public class CharSequenceMapTest {
         iterator.remove(); // Should throw NoSuchElementException
     }
     
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testIteratorDoubleRemove() {
         map.put("key1", "value1");
         Iterator<String> iterator = map.iterator();
         iterator.next();
         iterator.remove();
-        iterator.remove(); // Should throw NoSuchElementException
+        assertThrows(NoSuchElementException.class, () -> iterator.remove());
     }
     
     @Test
@@ -188,7 +188,7 @@ public class CharSequenceMapTest {
     
     @Test
     public void testHashCollisions() {
-        // Create strings that might have the same hash code
+        // These distinct strings have the same polynomial hash code.
         map.put("Aa", "value1");
         map.put("BB", "value2"); // 'BB' has same hash code as 'Aa'
         

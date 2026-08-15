@@ -63,7 +63,7 @@ public class IntLinkedListTest {
 		assertEquals("Last element should be 3", 3, list.last());
 	}
 
-	@Test(expected = NoSuchElementException.class)
+	@Test
 	public void testRemoveFirst() {
 		IntLinkedList list = new IntLinkedList(10);
 
@@ -77,10 +77,10 @@ public class IntLinkedListTest {
 		assertEquals("Removed element should be 10", 10, list.removeFirst());
 		assertEquals("Size should be 0 after removing both elements", 0, list.size());
 
-		list.removeFirst();
+		assertThrows(NoSuchElementException.class, () -> list.removeFirst());
 	}
 
-	@Test(expected = NoSuchElementException.class)
+	@Test
 	public void testRemoveLast() {
 		IntLinkedList list = new IntLinkedList(10);
 
@@ -94,7 +94,7 @@ public class IntLinkedListTest {
 		assertEquals("Removed element should be 100", 100, list.removeLast());
 		assertEquals("Size should be 0 after removing both elements", 0, list.size());
 
-		list.removeLast();
+		assertThrows(NoSuchElementException.class, () -> list.removeLast());
 	}
 
 	@Test

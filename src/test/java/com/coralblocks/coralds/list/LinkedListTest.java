@@ -173,13 +173,14 @@ public class LinkedListTest {
         iter1.next();
         
         Iterator<String> iter2 = list.iterator();
+        assertSame("LinkedList should reuse its iterator instance", iter1, iter2);
         assertTrue("New iterator should start from beginning", iter2.hasNext());
         assertEquals("First element should be A", "A", iter2.next());
     }
     
     @Test
-    public void testObjectPooling() {
-        // Test that the pool is being used by adding and removing elements
+    public void testOperationsAfterPoolGrowth() {
+        // Grow beyond the initial pool capacity, release all entries, and use the list again.
         for (int i = 0; i < INITIAL_CAPACITY * 2; i++) {
             list.addLast("Test" + i);
         }
