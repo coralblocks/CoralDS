@@ -22,6 +22,8 @@ import com.coralblocks.coralds.map.Map;
 /**
  * A set implementation built on top of a {@link Map} for storing unique elements.
  * 
+ * <p><b>Null handling:</b> Null elements are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
  * words, it will break if used concurrently by multiple threads.</p>
  *

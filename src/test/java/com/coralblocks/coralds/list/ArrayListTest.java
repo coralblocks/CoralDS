@@ -81,6 +81,11 @@ public class ArrayListTest {
 		assertEquals("C", list.get(2));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddRejectsNull() {
+		list.add(null);
+	}
+
 	@Test
 	public void testAddLast() {
 		list.addLast("X");
@@ -88,6 +93,11 @@ public class ArrayListTest {
 		assertEquals(2, list.size());
 		assertEquals("X", list.get(0));
 		assertEquals("Y", list.get(1));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddLastRejectsNull() {
+		list.addLast(null);
 	}
 
 	@Test
@@ -100,6 +110,11 @@ public class ArrayListTest {
 		assertEquals("A", list.get(0));
 		assertEquals("B", list.get(1));
 		assertEquals("C", list.get(2));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddFirstRejectsNull() {
+		list.addFirst(null);
 	}
 
 	@Test
@@ -184,6 +199,11 @@ public class ArrayListTest {
 		assertEquals("A", list.get(0));
 		assertEquals("B", list.get(1));
 		assertEquals("C", list.get(2));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInsertRejectsNull() {
+		list.insert(0, null);
 	}
 
 	@Test(expected = IndexOutOfBoundsException.class)

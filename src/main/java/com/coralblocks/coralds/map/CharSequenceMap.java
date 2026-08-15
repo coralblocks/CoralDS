@@ -38,6 +38,8 @@ import com.coralblocks.coralpool.ObjectPool;
  * modulus operator (%). When the map reaches its load factor threshold, its capacity is doubled,
  * preserving the power-of-two property if the initial capacity was a power of two.</p>
  *
+ * <p><b>Null handling:</b> Null keys and null values are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by
  * <b>single-threaded systems</b>. In other words, it will break if used concurrently by multiple
  * threads.</p>
@@ -165,13 +167,16 @@ public class CharSequenceMap<E> implements Iterable<E> {
      */
 	@SuppressWarnings("unchecked")
 	public CharSequenceMap(int initialCapacity, short maxKeyLength, float loadFactor) {
+		if (initialCapacity <= 0) throw new IllegalArgumentException("Bad initial capacity: " + initialCapacity);
+		if (maxKeyLength < 0) throw new IllegalArgumentException("Bad maximum key length: " + maxKeyLength);
+		if (!Float.isFinite(loadFactor) || loadFactor <= 0f) throw new IllegalArgumentException("Bad load factor: " + loadFactor);
 		
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;
 		this.length = initialCapacity;
 		this.loadFactor = loadFactor;
-		this.threshold = Math.round(initialCapacity * loadFactor);
+		this.threshold = Math.max(1, Math.round(initialCapacity * loadFactor));
 		this.maxKeyLength = maxKeyLength;
 		
 		ObjectBuilder<Entry<E>> builder = new ObjectBuilder<Entry<E>>() {
@@ -311,7 +316,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
 		lengthMinusOne = newCapacity - 1;
 		length = newCapacity;
 
-		threshold = Math.round(newCapacity * loadFactor);
+		threshold = Math.max(1, Math.round(newCapacity * loadFactor));
 
 		for(int i = oldCapacity - 1; i >= 0; i--) {
 
@@ -466,6 +471,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
 		}
 
 		count = 0;
+		currIteratorKey = null;
 	}
 
 	private class ReusableIterator implements Iterator<E> {
@@ -489,6 +495,7 @@ public class CharSequenceMap<E> implements Iterable<E> {
 			this.next = data[0];
 			this.entry = null;
 			this.wasRemoved = false;
+			currIteratorKey = null;
 		}
 
 		@Override
@@ -540,6 +547,8 @@ public class CharSequenceMap<E> implements Iterable<E> {
 			} else {
 				prev.next = next;
 			}
+
+			currIteratorKey = null;
 
 			releaseEntry(entry);
 

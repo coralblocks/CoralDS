@@ -35,6 +35,8 @@ import com.coralblocks.coralpool.ObjectPool;
  * threshold, the internal array is rehashed, and its capacity is doubled, preserving the power-of-two property if the
  * initial capacity was a power of two.</p>
  * 
+ * <p><b>Null handling:</b> Null values are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
  * words, it will break if used concurrently by multiple threads.</p>
  *
@@ -100,12 +102,15 @@ public class LongMap<E> implements Iterable<E> {
 	 */
 	@SuppressWarnings("unchecked")
 	public LongMap(int initialCapacity, float loadFactor) {
+		if (initialCapacity <= 0) throw new IllegalArgumentException("Bad initial capacity: " + initialCapacity);
+		if (!Float.isFinite(loadFactor) || loadFactor <= 0f) throw new IllegalArgumentException("Bad load factor: " + loadFactor);
+
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;
 		this.length = initialCapacity;
 		this.loadFactor = loadFactor;
-		this.threshold = Math.round(initialCapacity * loadFactor);
+		this.threshold = Math.max(1, Math.round(initialCapacity * loadFactor));
 		
 		ObjectBuilder<Entry<E>> builder = new ObjectBuilder<Entry<E>>() {
 			@Override
@@ -170,10 +175,11 @@ public class LongMap<E> implements Iterable<E> {
 	}
 
 	private final int toArrayIndex(long key) {
+		int hash = (int) (key ^ (key >>> 32));
 		if (isPowerOfTwo) {
-			return (((int) key) & 0x7FFFFFFF) & lengthMinusOne;
+			return (hash & 0x7FFFFFFF) & lengthMinusOne;
 		} else {
-			return (((int) key) & 0x7FFFFFFF) % length;
+			return (hash & 0x7FFFFFFF) % length;
 		}
 	}
 
@@ -236,7 +242,7 @@ public class LongMap<E> implements Iterable<E> {
 		lengthMinusOne = newCapacity - 1;
 		length = newCapacity;
 
-		threshold = Math.round(newCapacity * loadFactor);
+		threshold = Math.max(1, Math.round(newCapacity * loadFactor));
 
 		for(int i = oldCapacity - 1; i >= 0; i--) {
 

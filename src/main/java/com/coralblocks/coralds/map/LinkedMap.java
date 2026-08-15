@@ -40,6 +40,8 @@ import com.coralblocks.coralpool.ObjectPool;
  * associated with an existing key does not change its position. Removing and reinserting
  * a key places it at the end of the iteration order.
  *
+ * <p><b>Null handling:</b> Null keys and null values are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
  * words, it will break if used concurrently by multiple threads.</p>
  * 
@@ -117,12 +119,15 @@ public class LinkedMap<K, E> implements Iterable<E> {
 	 */
 	@SuppressWarnings("unchecked")
 	public LinkedMap(int initialCapacity, float loadFactor) {
+		if (initialCapacity <= 0) throw new IllegalArgumentException("Bad initial capacity: " + initialCapacity);
+		if (!Float.isFinite(loadFactor) || loadFactor <= 0f) throw new IllegalArgumentException("Bad load factor: " + loadFactor);
+
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;
 		this.length = initialCapacity;
 		this.loadFactor = loadFactor;
-		this.threshold = Math.round(initialCapacity * loadFactor);
+		this.threshold = Math.max(1, Math.round(initialCapacity * loadFactor));
 		
 		ObjectBuilder<Entry<K, E>> builder = new ObjectBuilder<Entry<K, E>>() {
 			@Override
@@ -262,7 +267,7 @@ public class LinkedMap<K, E> implements Iterable<E> {
 		lengthMinusOne = newCapacity - 1;
 		length = newCapacity;
 
-		threshold = Math.round(newCapacity * loadFactor);
+		threshold = Math.max(1, Math.round(newCapacity * loadFactor));
 
 		for(int i = oldCapacity - 1; i >= 0; i--) {
 
@@ -274,7 +279,7 @@ public class LinkedMap<K, E> implements Iterable<E> {
 
 				old = old.next;
 
-				int index = toArrayIndex(e.key.hashCode());
+				int index = toArrayIndex(e.hash);
 
 				e.next = data[index];
 
@@ -408,6 +413,8 @@ public class LinkedMap<K, E> implements Iterable<E> {
 
 				E oldValue = e.value;
 
+				if (currIteratorKey == e.key) currIteratorKey = null;
+
 				releaseEntryBackToPool(e);
 
 				count--;
@@ -442,6 +449,7 @@ public class LinkedMap<K, E> implements Iterable<E> {
 		head = null;
 		tail = null;
 		count = 0;
+		currIteratorKey = null;
 	}
 
 	private class ReusableIterator implements Iterator<E> {
@@ -458,6 +466,7 @@ public class LinkedMap<K, E> implements Iterable<E> {
 			this.next = head;
 			this.entry = null;
 			this.wasRemoved = false;
+			currIteratorKey = null;
 		}
 
 		@Override
@@ -511,6 +520,8 @@ public class LinkedMap<K, E> implements Iterable<E> {
 			}
 
 			removeFromLinkedList(entry);
+
+			currIteratorKey = null;
 
 			releaseEntryBackToPool(entry);
 

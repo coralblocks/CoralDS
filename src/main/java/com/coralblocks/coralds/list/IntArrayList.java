@@ -26,6 +26,8 @@ import com.coralblocks.coralds.util.IntHolder;
  * This implementation automatically grows when needed and
  * maintains references to old arrays using soft references to delay garbage collection.
  * 
+ * <p><b>Null handling:</b> This list stores primitive values, so null elements are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>, 
  * it will break if used concurrently by multiple threads.</p>
  */
@@ -104,7 +106,7 @@ public class IntArrayList implements Iterable<IntHolder> {
 	public IntArrayList(int initialCapacity, float growthFactor) {
 		
 		if (initialCapacity <= 0) throw new IllegalArgumentException("Bad initial capacity: " + initialCapacity);
-		if (growthFactor <= 1f) throw new IllegalArgumentException("Bad growth factor: " + growthFactor);
+		if (!Float.isFinite(growthFactor) || growthFactor <= 1f) throw new IllegalArgumentException("Bad growth factor: " + growthFactor);
 		
 		this.array = new int[initialCapacity];
 		this.growthFactor = growthFactor;
@@ -303,9 +305,11 @@ public class IntArrayList implements Iterable<IntHolder> {
 	private class ReusableIterator implements Iterator<IntHolder> {
 
 		int currIndex;
+		boolean canRemove;
 		
 		void reset() {
 			currIndex = 0;
+			canRemove = false;
 		}
 
 		@Override
@@ -315,14 +319,16 @@ public class IntArrayList implements Iterable<IntHolder> {
 
 		@Override
 		public IntHolder next() {
-			if (currIndex == size) throw new NoSuchElementException();
+			if (currIndex >= size) throw new NoSuchElementException();
+			canRemove = true;
 			return intHolderImpl.set(array[currIndex++]);
 		}
 
 		@Override
 		public void remove() {
-			if (currIndex == 0) throw new NoSuchElementException();
+			if (!canRemove) throw new NoSuchElementException();
 			IntArrayList.this.remove(--currIndex);
+			canRemove = false;
 		}
 	}
 	

@@ -39,6 +39,8 @@ import com.coralblocks.coralpool.ObjectPool;
  * modulus operator (%). When the map reaches its load factor threshold, its capacity is doubled,
  * preserving the power-of-two property if the initial capacity was a power of two.</p>
  *
+ * <p><b>Null handling:</b> Null keys and null values are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by
  * <b>single-threaded systems</b>. In other words, it will break if used concurrently by multiple
  * threads.</p>
@@ -292,13 +294,16 @@ public class ByteBufferMap<E> implements Iterable<E> {
 	 */
     @SuppressWarnings("unchecked")
 	public ByteBufferMap(int initialCapacity, short maxKeyLength, float loadFactor, boolean isDirectBuffer) {
+		if (initialCapacity <= 0) throw new IllegalArgumentException("Bad initial capacity: " + initialCapacity);
+		if (maxKeyLength < 0) throw new IllegalArgumentException("Bad maximum key length: " + maxKeyLength);
+		if (!Float.isFinite(loadFactor) || loadFactor <= 0f) throw new IllegalArgumentException("Bad load factor: " + loadFactor);
 
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;
 		this.length = initialCapacity;
 		this.loadFactor = loadFactor;
-		this.threshold = Math.round(initialCapacity * loadFactor);
+		this.threshold = Math.max(1, Math.round(initialCapacity * loadFactor));
 		this.maxKeyLength = maxKeyLength;
 
 		ObjectBuilder<Entry<E>> builder = new ObjectBuilder<Entry<E>>() {
@@ -453,6 +458,12 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		if (len > maxKeyLength) throw new IllegalArgumentException("Key is too big: " + len + " (max=" + maxKeyLength + ")");
 	}
 
+	private static final void ensureValidRange(byte[] key, int start, int len) {
+		if (start < 0 || len < 0 || start > key.length - len) {
+			throw new IndexOutOfBoundsException("Start: " + start + ", Length: " + len + ", Array length: " + key.length);
+		}
+	}
+
     /**
      * Retrieves the value associated with the specified key.
      *
@@ -524,6 +535,8 @@ public class ByteBufferMap<E> implements Iterable<E> {
      */
 	public E get(byte[] key, int start, int len) {
 		
+		ensureValidRange(key, start, len);
+		
 		if (len > maxKeyLength) return null;
 
 		int hash = hashCode(key, start, len);
@@ -558,7 +571,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		lengthMinusOne = newCapacity - 1;
 		length = newCapacity;
 
-		threshold = Math.round(newCapacity * loadFactor);
+		threshold = Math.max(1, Math.round(newCapacity * loadFactor));
 
 		for(int i = oldCapacity - 1; i >= 0; i--) {
 
@@ -725,6 +738,8 @@ public class ByteBufferMap<E> implements Iterable<E> {
      */
 	public E put(byte[] key, int start, int len, E value) {
 		
+		ensureValidRange(key, start, len);
+		
 		ensureMaxKeyLength(len);
 
 		ensureNotNull(value);
@@ -878,6 +893,8 @@ public class ByteBufferMap<E> implements Iterable<E> {
      */
 	public E remove(byte[] key, int start, int len) {
 		
+		ensureValidRange(key, start, len);
+		
 		if (len > maxKeyLength) return null;
 
 		int hash = hashCode(key, start, len);
@@ -934,6 +951,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		}
 
 		count = 0;
+		currIteratorKey = null;
 	}
 
 	private class ReusableIterator implements Iterator<E> {
@@ -954,6 +972,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
 			this.next = data[0];
 			this.entry = null;
 			this.wasRemoved = false;
+			currIteratorKey = null;
 		}
 
 		@Override
@@ -1006,6 +1025,8 @@ public class ByteBufferMap<E> implements Iterable<E> {
 			} else {
 				prev.next = next;
 			}
+
+			currIteratorKey = null;
 
 			releaseEntry(entry);
 

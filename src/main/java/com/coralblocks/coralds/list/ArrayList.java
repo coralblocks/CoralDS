@@ -25,6 +25,8 @@ import java.util.NoSuchElementException;
  * This implementation automatically grows when needed and
  * maintains references to old arrays using soft references to delay garbage collection.
  * 
+ * <p><b>Null handling:</b> Null elements are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>, 
  * it will break if used concurrently by multiple threads.</p>
  *
@@ -91,7 +93,7 @@ public class ArrayList<E> implements Iterable<E> {
 	public ArrayList(int initialCapacity, float growthFactor) {
 		
 		if (initialCapacity <= 0) throw new IllegalArgumentException("Bad initial capacity: " + initialCapacity);
-		if (growthFactor <= 1f) throw new IllegalArgumentException("Bad growth factor: " + growthFactor);
+		if (!Float.isFinite(growthFactor) || growthFactor <= 1f) throw new IllegalArgumentException("Bad growth factor: " + growthFactor);
 		
 		this.array = (E[]) new Object[initialCapacity];
 		this.growthFactor = growthFactor;
@@ -142,12 +144,19 @@ public class ArrayList<E> implements Iterable<E> {
 		size = 0;
 	}
 
+	private final void ensureNotNull(E element) {
+		if (element == null) throw new IllegalArgumentException("Method cannot receive null value!");
+	}
+
 	/**
 	 * Adds an element at the end of the list. (same as {@link #addLast(Object)})
 	 *
 	 * @param element the element to be added
+	 * @throws IllegalArgumentException if {@code element} is null
 	 */
 	public void add(E element) {
+
+		ensureNotNull(element);
 		
 		if (size == array.length) {
 			grow();
@@ -160,6 +169,7 @@ public class ArrayList<E> implements Iterable<E> {
 	 * Adds an element at the end of the list.
 	 *
 	 * @param element the element to be added
+	 * @throws IllegalArgumentException if {@code element} is null
 	 */
 	public void addLast(E element) {
 		add(element);
@@ -169,6 +179,7 @@ public class ArrayList<E> implements Iterable<E> {
 	 * Inserts an element at the beginning of the list.
 	 *
 	 * @param element the element to be added
+	 * @throws IllegalArgumentException if {@code element} is null
 	 */
 	public void addFirst(E element) {
 		insert(0, element);
@@ -216,6 +227,7 @@ public class ArrayList<E> implements Iterable<E> {
 	 *
 	 * @param index   the position at which to insert the new element
 	 * @param element the element to be inserted
+	 * @throws IllegalArgumentException if {@code element} is null
 	 * @throws IndexOutOfBoundsException if {@code index} is out of range (index &lt; 0 || index &gt; size)
 	 */
 	public void insert(int index, E element) {
@@ -226,6 +238,7 @@ public class ArrayList<E> implements Iterable<E> {
 		}
 		
 		checkBounds(index);
+		ensureNotNull(element);
 		
 		if (size == array.length) {
 			grow();
@@ -299,9 +312,11 @@ public class ArrayList<E> implements Iterable<E> {
 	private class ReusableIterator implements Iterator<E> {
 
 		int currIndex;
+		boolean canRemove;
 		
 		void reset() {
 			currIndex = 0;
+			canRemove = false;
 		}
 
 		@Override
@@ -311,14 +326,16 @@ public class ArrayList<E> implements Iterable<E> {
 
 		@Override
 		public E next() {
-			if (currIndex == size) throw new NoSuchElementException();
+			if (currIndex >= size) throw new NoSuchElementException();
+			canRemove = true;
 			return array[currIndex++];
 		}
 
 		@Override
 		public void remove() {
-			if (currIndex == 0) throw new NoSuchElementException();
+			if (!canRemove) throw new NoSuchElementException();
 			ArrayList.this.remove(--currIndex);
+			canRemove = false;
 		}
 	}
 	

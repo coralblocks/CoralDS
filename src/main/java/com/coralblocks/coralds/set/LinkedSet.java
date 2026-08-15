@@ -23,6 +23,8 @@ import com.coralblocks.coralds.map.LinkedMap;
  * An insertion-ordered set implementation built on top of a {@link LinkedMap}
  * for storing unique elements.
  * 
+ * <p><b>Null handling:</b> Null elements are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
  * words, it will break if used concurrently by multiple threads.</p>
  *

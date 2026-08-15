@@ -16,6 +16,7 @@
 package com.coralblocks.coralds.list;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * A hybrid list implementation that stores elements in a fixed-size array first,
@@ -27,6 +28,8 @@ import java.util.Iterator;
  * exceeds the array capacity, subsequent elements are stored in an underlying
  * {@link LinkedList}.</p>
  * 
+ * <p><b>Null handling:</b> Null elements are not permitted.</p>
+ *
  *  <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>, in other words, 
  *  it will break if used concurrently by multiple threads.</p>
  * 
@@ -59,6 +62,8 @@ public class ArrayLinkedList<E> implements Iterable<E> {
      * @param entry the element to be added
      */
 	public final void addLast(E entry) {
+		if (entry == null) throw new IllegalArgumentException("Method cannot receive null value!");
+
 		if (count >= array.length) {
 			linkedList.addLast(entry);
 		} else {
@@ -130,6 +135,7 @@ public class ArrayLinkedList<E> implements Iterable<E> {
 
 		@Override
 		public final E next() {
+			if (counter >= count) throw new NoSuchElementException();
 			
 			E toReturn;
 			

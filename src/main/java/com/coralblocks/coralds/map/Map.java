@@ -36,6 +36,8 @@ import com.coralblocks.coralpool.ObjectPool;
  * is a power of two, it remains a power of two after rehashing. An internal pool of
  * entry objects is also employed for memory reuse (garbage-free).
  *
+ * <p><b>Null handling:</b> Null keys and null values are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>. In other
  * words, it will break if used concurrently by multiple threads.</p>
  * 
@@ -107,12 +109,15 @@ public class Map<K, E> implements Iterable<E> {
 	 */
 	@SuppressWarnings("unchecked")
 	public Map(int initialCapacity, float loadFactor) {
+		if (initialCapacity <= 0) throw new IllegalArgumentException("Bad initial capacity: " + initialCapacity);
+		if (!Float.isFinite(loadFactor) || loadFactor <= 0f) throw new IllegalArgumentException("Bad load factor: " + loadFactor);
+
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;
 		this.length = initialCapacity;
 		this.loadFactor = loadFactor;
-		this.threshold = Math.round(initialCapacity * loadFactor);
+		this.threshold = Math.max(1, Math.round(initialCapacity * loadFactor));
 		
 		ObjectBuilder<Entry<K, E>> builder = new ObjectBuilder<Entry<K, E>>() {
 			@Override
@@ -250,7 +255,7 @@ public class Map<K, E> implements Iterable<E> {
 		lengthMinusOne = newCapacity - 1;
 		length = newCapacity;
 
-		threshold = Math.round(newCapacity * loadFactor);
+		threshold = Math.max(1, Math.round(newCapacity * loadFactor));
 
 		for(int i = oldCapacity - 1; i >= 0; i--) {
 
@@ -262,7 +267,7 @@ public class Map<K, E> implements Iterable<E> {
 
 				old = old.next;
 
-				int index = toArrayIndex(e.key.hashCode());
+				int index = toArrayIndex(e.hash);
 
 				e.next = data[index];
 
@@ -366,6 +371,8 @@ public class Map<K, E> implements Iterable<E> {
 
 				E oldValue = e.value;
 
+				if (currIteratorKey == e.key) currIteratorKey = null;
+
 				releaseEntryBackToPool(e);
 
 				count--;
@@ -398,6 +405,7 @@ public class Map<K, E> implements Iterable<E> {
 		}
 
 		count = 0;
+		currIteratorKey = null;
 	}
 
 	private class ReusableIterator implements Iterator<E> {
@@ -418,6 +426,7 @@ public class Map<K, E> implements Iterable<E> {
 			this.next = data[0];
 			this.entry = null;
 			this.wasRemoved = false;
+			currIteratorKey = null;
 		}
 
 		@Override
@@ -470,6 +479,8 @@ public class Map<K, E> implements Iterable<E> {
 				prev.next = next;
 			}
 
+			currIteratorKey = null;
+
 			releaseEntryBackToPool(entry);
 
 			entry = null;
@@ -490,4 +501,3 @@ public class Map<K, E> implements Iterable<E> {
 		return reusableIter;
 	}
 }
-

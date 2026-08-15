@@ -25,6 +25,8 @@ import com.coralblocks.coralpool.TieredObjectPool;
 /**
  * A fast and garbage-free double-linked list.
  * 
+ * <p><b>Null handling:</b> Null elements are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>, in other words, 
  *  it will break if used concurrently by multiple threads.</p>
  * 
@@ -239,6 +241,7 @@ public class LinkedList<E> implements Iterable<E> {
 
 		@Override
 		public E next() {
+			if (start == null) throw new NoSuchElementException();
 
 			this.curr = start;
 			
@@ -251,6 +254,7 @@ public class LinkedList<E> implements Iterable<E> {
 
 		@Override
 		public void remove() {
+			if (curr == null) throw new NoSuchElementException();
 			
 			boolean isTail = curr == tail;
 			boolean isHead = curr == head;

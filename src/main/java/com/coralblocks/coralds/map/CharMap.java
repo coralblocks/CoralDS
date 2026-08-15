@@ -72,7 +72,7 @@ public class CharMap<E> implements Iterable<E> {
      * @param key the char key with which the specified value is to be associated
      * @param value the value to be associated with the specified key (must not be null)
      * @return the previous value associated with the key, or null if there was no mapping for the key
-     * @throws NullPointerException if the specified value is null
+     * @throws IllegalArgumentException if the specified value is null
      */
 	public E put(char key, E value) {
 

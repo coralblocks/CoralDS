@@ -26,6 +26,8 @@ import com.coralblocks.coralpool.TieredObjectPool;
 /**
  * A fast and garbage-free double-linked list of integer primitives.
  * 
+ * <p><b>Null handling:</b> This list stores primitive values, so null elements are not permitted.</p>
+ *
  * <p><b>NOTE:</b> This data structure is designed on purpose to be used by <b>single-threaded systems</b>, 
  * it will break if used concurrently by multiple threads.</p>
  */
@@ -239,6 +241,7 @@ public class IntLinkedList implements Iterable<IntHolder> {
 
 		@Override
 		public IntHolder next() {
+			if (start == null) throw new NoSuchElementException();
 
 			this.curr = start;
 			
@@ -251,6 +254,7 @@ public class IntLinkedList implements Iterable<IntHolder> {
 
 		@Override
 		public void remove() {
+			if (curr == null) throw new NoSuchElementException();
 			
 			boolean isTail = curr == tail;
 			boolean isHead = curr == head;
