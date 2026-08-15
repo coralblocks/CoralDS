@@ -82,12 +82,14 @@ public class ByteBufferMap<E> implements Iterable<E> {
 	private Entry<E>[] data;
 	private int lengthMinusOne;
 	private int length;
+	private final int initialCapacity;
 	private int count;
 	private int threshold;
 	private float loadFactor;
 	private ByteBuffer currIteratorKey = null;
 	private final boolean isPowerOfTwo;
 	private final int maxKeyLength;
+	private final boolean isDirectBuffer;
 	
 	private final ObjectPool<Entry<E>> entryPool;
 
@@ -299,6 +301,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		if (maxKeyLength < 0) throw new IllegalArgumentException("Bad maximum key length: " + maxKeyLength);
 		if (!Float.isFinite(loadFactor) || loadFactor <= 0f) throw new IllegalArgumentException("Bad load factor: " + loadFactor);
 
+		this.initialCapacity = initialCapacity;
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;
@@ -306,6 +309,7 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		this.loadFactor = loadFactor;
 		this.threshold = Math.max(1, Math.round(initialCapacity * loadFactor));
 		this.maxKeyLength = maxKeyLength;
+		this.isDirectBuffer = isDirectBuffer;
 
 		ObjectBuilder<Entry<E>> builder = new ObjectBuilder<Entry<E>>() {
 			@Override
@@ -315,6 +319,42 @@ public class ByteBufferMap<E> implements Iterable<E> {
 		};
 
 		this.entryPool = new ArrayObjectPool<Entry<E>>(threshold, builder, 2f);
+	}
+
+	/**
+	 * Returns the initial capacity supplied when this map was constructed.
+	 *
+	 * @return the original initial capacity
+	 */
+	public int getInitialCapacity() {
+		return initialCapacity;
+	}
+
+	/**
+	 * Returns the maximum key length supplied when this map was constructed.
+	 *
+	 * @return the configured maximum key length
+	 */
+	public short getMaxKeyLength() {
+		return (short) maxKeyLength;
+	}
+
+	/**
+	 * Returns the load factor supplied when this map was constructed.
+	 *
+	 * @return the configured load factor
+	 */
+	public float getLoadFactor() {
+		return loadFactor;
+	}
+
+	/**
+	 * Returns whether direct buffers were requested when this map was constructed.
+	 *
+	 * @return true when entry keys use direct buffers
+	 */
+	public boolean isDirectBuffer() {
+		return isDirectBuffer;
 	}
 	
 	private static final int hashCode(byte[] src) {

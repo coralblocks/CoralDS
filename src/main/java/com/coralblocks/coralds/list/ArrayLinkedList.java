@@ -53,6 +53,15 @@ public class ArrayLinkedList<E> implements Iterable<E> {
 		this.array = (E[]) new Object[arraySize];
 		this.linkedList = new LinkedList<E>(arraySize);
 	}
+
+	/**
+	 * Returns the array size supplied when this list was constructed.
+	 *
+	 * @return the configured array size
+	 */
+	public int getArraySize() {
+		return array.length;
+	}
 	
     /**
      * Adds a new element at the end of the list. If the current size is still

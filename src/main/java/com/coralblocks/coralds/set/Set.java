@@ -70,6 +70,24 @@ public class Set<E> implements Iterable<E> {
 	public Set(int initialCapacity, float loadFactor) {
 		this.map = new Map<E, Object>(initialCapacity, loadFactor);
 	}
+
+	/**
+	 * Returns the initial capacity supplied when this set was constructed.
+	 *
+	 * @return the original initial capacity
+	 */
+	public int getInitialCapacity() {
+		return map.getInitialCapacity();
+	}
+
+	/**
+	 * Returns the load factor supplied when this set was constructed.
+	 *
+	 * @return the configured load factor
+	 */
+	public float getLoadFactor() {
+		return map.getLoadFactor();
+	}
 	
 	/**
 	 * Adds the specified value to this Set if it is not already present.

@@ -55,6 +55,7 @@ public class LongLinkedList implements Iterable<LongHolder> {
 	}
 	
 	private final ObjectPool<Entry> entryPool;
+	private final int initialCapacity;
 	
 	private Entry head = null;
 	private Entry tail = null;
@@ -66,6 +67,7 @@ public class LongLinkedList implements Iterable<LongHolder> {
 	 * @param initialCapacity the initial number of preallocated internal entries
 	 */
 	public LongLinkedList(int initialCapacity) {
+		this.initialCapacity = initialCapacity;
 		
 		ObjectBuilder<Entry> builder = new ObjectBuilder<Entry>() {
 			@Override
@@ -75,6 +77,15 @@ public class LongLinkedList implements Iterable<LongHolder> {
 		};
 
 		this.entryPool = new TieredObjectPool<Entry>(initialCapacity, builder);
+	}
+
+	/**
+	 * Returns the initial capacity supplied when this list was constructed.
+	 *
+	 * @return the original initial capacity
+	 */
+	public int getInitialCapacity() {
+		return initialCapacity;
 	}
 	
 	private Entry getEntryFromPool() {

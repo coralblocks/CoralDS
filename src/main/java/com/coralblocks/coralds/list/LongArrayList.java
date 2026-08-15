@@ -62,6 +62,7 @@ public class LongArrayList implements Iterable<LongHolder> {
 	
 	private long[] array;
 	private int size = 0;
+	private final int initialCapacity;
 	private final float growthFactor;
 	private final LinkedList<SoftReference<long[]>> oldArrays = new LinkedList<>(SOFT_REFERENCE_LINKED_LIST_INITIAL_SIZE);
 	
@@ -109,7 +110,26 @@ public class LongArrayList implements Iterable<LongHolder> {
 		if (!Float.isFinite(growthFactor) || growthFactor <= 1f) throw new IllegalArgumentException("Bad growth factor: " + growthFactor);
 		
 		this.array = new long[initialCapacity];
+		this.initialCapacity = initialCapacity;
 		this.growthFactor = growthFactor;
+	}
+
+	/**
+	 * Returns the initial capacity supplied when this list was constructed.
+	 *
+	 * @return the original initial capacity
+	 */
+	public int getInitialCapacity() {
+		return initialCapacity;
+	}
+
+	/**
+	 * Returns the growth factor supplied when this list was constructed.
+	 *
+	 * @return the configured growth factor
+	 */
+	public float getGrowthFactor() {
+		return growthFactor;
 	}
 	
 	private final void checkBounds(int index) {

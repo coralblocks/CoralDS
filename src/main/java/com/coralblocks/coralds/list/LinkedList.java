@@ -41,6 +41,7 @@ public class LinkedList<E> implements Iterable<E> {
 	}
 	
 	private final ObjectPool<Entry<E>> entryPool;
+	private final int initialCapacity;
 	
 	private Entry<E> head = null;
 	private Entry<E> tail = null;
@@ -52,6 +53,7 @@ public class LinkedList<E> implements Iterable<E> {
 	 * @param initialCapacity the initial number of preallocated internal entries
 	 */
 	public LinkedList(int initialCapacity) {
+		this.initialCapacity = initialCapacity;
 		
 		ObjectBuilder<Entry<E>> builder = new ObjectBuilder<Entry<E>>() {
 			@Override
@@ -61,6 +63,15 @@ public class LinkedList<E> implements Iterable<E> {
 		};
 
 		this.entryPool = new TieredObjectPool<Entry<E>>(initialCapacity, builder);
+	}
+
+	/**
+	 * Returns the initial capacity supplied when this list was constructed.
+	 *
+	 * @return the original initial capacity
+	 */
+	public int getInitialCapacity() {
+		return initialCapacity;
 	}
 	
 	private Entry<E> getEntryFromPool() {

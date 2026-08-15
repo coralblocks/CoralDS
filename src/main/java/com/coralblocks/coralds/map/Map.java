@@ -70,6 +70,7 @@ public class Map<K, E> implements Iterable<E> {
 
 	private int lengthMinusOne;
 	private int length;
+	private final int initialCapacity;
 	private final boolean isPowerOfTwo;
 
 	private int count;
@@ -113,6 +114,7 @@ public class Map<K, E> implements Iterable<E> {
 		if (initialCapacity <= 0) throw new IllegalArgumentException("Bad initial capacity: " + initialCapacity);
 		if (!Float.isFinite(loadFactor) || loadFactor <= 0f) throw new IllegalArgumentException("Bad load factor: " + loadFactor);
 
+		this.initialCapacity = initialCapacity;
 		this.isPowerOfTwo = MathUtils.isPowerOfTwo(initialCapacity);
 		this.data = new Entry[initialCapacity];
 		this.lengthMinusOne = initialCapacity - 1;
@@ -128,6 +130,24 @@ public class Map<K, E> implements Iterable<E> {
 		};
 		
 		this.entryPool = new ArrayObjectPool<Entry<K, E>>(threshold, builder, 2f);
+	}
+
+	/**
+	 * Returns the initial capacity supplied when this map was constructed.
+	 *
+	 * @return the original initial capacity
+	 */
+	public int getInitialCapacity() {
+		return initialCapacity;
+	}
+
+	/**
+	 * Returns the load factor supplied when this map was constructed.
+	 *
+	 * @return the configured load factor
+	 */
+	public float getLoadFactor() {
+		return loadFactor;
 	}
 	
 	int getCurrentArrayLength() {

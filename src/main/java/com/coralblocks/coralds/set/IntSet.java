@@ -84,6 +84,24 @@ public class IntSet implements Iterable<IntHolder> {
 	public IntSet(int initialCapacity, float loadFactor) {
 		this.map = new IntMap<Object>(initialCapacity, loadFactor);
 	}
+
+	/**
+	 * Returns the initial capacity supplied when this set was constructed.
+	 *
+	 * @return the original initial capacity
+	 */
+	public int getInitialCapacity() {
+		return map.getInitialCapacity();
+	}
+
+	/**
+	 * Returns the load factor supplied when this set was constructed.
+	 *
+	 * @return the configured load factor
+	 */
+	public float getLoadFactor() {
+		return map.getLoadFactor();
+	}
 	
 	/**
 	 * Adds the specified value to the set if it is not already present.

@@ -56,6 +56,14 @@ public class ArrayListTest {
 		ArrayList<Integer> customList = new ArrayList<>(32, 1.8f);
 		assertTrue(customList.isEmpty());
 		assertEquals(0, customList.size());
+		assertEquals(32, customList.getInitialCapacity());
+		assertEquals(1.8f, customList.getGrowthFactor(), 0f);
+	}
+
+	@Test
+	public void testDefaultConstructorConfiguration() {
+		assertEquals(ArrayList.DEFAULT_INITIAL_CAPACITY, list.getInitialCapacity());
+		assertEquals(ArrayList.DEFAULT_GROWTH_FACTOR, list.getGrowthFactor(), 0f);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
