@@ -8,6 +8,7 @@ Garbage-free, single-threaded data-structures (maps, lists and sets) optimized f
 - Null keys, values and elements are not accepted.
 - Primitive-specialized collections avoid boxing for `byte`, `char`, `int` and `long` keys or elements.
 - Familiar operations cover adding, finding, removing, clearing and iterating over data.
+- All data structures provide `equals()`, `hashCode()` and `toString()` implementations.
 - Capacities and load factors can be configured for collections that use hash tables or resizable storage.
 
 ## Maps
