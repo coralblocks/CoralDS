@@ -218,12 +218,12 @@ public class IdentityMap<K, E> implements Iterable<E> {
 	 * @return true when both maps contain the same identity-keyed mappings
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
 	public boolean equals(Object o) {
 		if (o == this) return true;
-		if (!(o instanceof IdentityMap<?, ?>)) return false;
+		if (!(o instanceof IdentityMap<?, ?> candidate)) return false;
 
-		IdentityMap other = (IdentityMap) o;
+		@SuppressWarnings("unchecked")
+		IdentityMap<? super K, ?> other = (IdentityMap<? super K, ?>) candidate;
 		if (count != other.count) return false;
 
 		Iterator<E> iter = iterator();

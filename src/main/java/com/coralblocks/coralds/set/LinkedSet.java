@@ -154,12 +154,12 @@ public class LinkedSet<E> implements Iterable<E> {
 	 * @return true when both sets contain equal elements, regardless of insertion order
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
 	public boolean equals(Object o) {
 		if (o == this) return true;
-		if (!(o instanceof LinkedSet<?>)) return false;
+		if (!(o instanceof LinkedSet<?> candidate)) return false;
 
-		LinkedSet other = (LinkedSet) o;
+		@SuppressWarnings("unchecked")
+		LinkedSet<? super E> other = (LinkedSet<? super E>) candidate;
 		if (size() != other.size()) return false;
 
 		Iterator<E> iter = iterator();

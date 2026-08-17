@@ -221,12 +221,12 @@ public class LinkedMap<K, E> implements Iterable<E> {
 	 * @return true when both maps contain equal mappings, regardless of insertion order
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
 	public boolean equals(Object o) {
 		if (o == this) return true;
-		if (!(o instanceof LinkedMap<?, ?>)) return false;
+		if (!(o instanceof LinkedMap<?, ?> candidate)) return false;
 
-		LinkedMap other = (LinkedMap) o;
+		@SuppressWarnings("unchecked")
+		LinkedMap<? super K, ?> other = (LinkedMap<? super K, ?>) candidate;
 		if (count != other.count) return false;
 
 		Entry<K, E> entry = head;

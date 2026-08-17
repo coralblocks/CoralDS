@@ -208,12 +208,12 @@ public class Map<K, E> implements Iterable<E> {
 	 * @return true when both maps contain equal mappings
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
 	public boolean equals(Object o) {
 		if (o == this) return true;
-		if (!(o instanceof Map<?, ?>)) return false;
+		if (!(o instanceof Map<?, ?> candidate)) return false;
 
-		Map other = (Map) o;
+		@SuppressWarnings("unchecked")
+		Map<? super K, ?> other = (Map<? super K, ?>) candidate;
 		if (count != other.count) return false;
 
 		Iterator<E> iter = iterator();

@@ -139,12 +139,12 @@ public class IdentitySet<E> implements Iterable<E> {
 	 * @return true when both sets contain the same object references
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
 	public boolean equals(Object o) {
 		if (o == this) return true;
-		if (!(o instanceof IdentitySet<?>)) return false;
+		if (!(o instanceof IdentitySet<?> candidate)) return false;
 
-		IdentitySet other = (IdentitySet) o;
+		@SuppressWarnings("unchecked")
+		IdentitySet<? super E> other = (IdentitySet<? super E>) candidate;
 		if (size() != other.size()) return false;
 
 		Iterator<E> iter = iterator();
